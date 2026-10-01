@@ -16,6 +16,8 @@ const SOURCE_LABELS: Record<string, string> = {
   'lets-talk': "Let's Talk",
   'lets-collaborate': "Let's Collaborate",
   'get-started': 'Get Started',
+  'Website enquiry': 'Website enquiry',
+  'Website booking': 'Website booking',
 };
 
 const STATUSES = ['new', 'in_review', 'contacted', 'closed'] as const;
@@ -33,6 +35,8 @@ interface Lead {
   focusArea?: string;
   topic?: string;
   outline?: string;
+  message?: string;
+  organization?: string;
   timeline?: string;
   preferredDate?: string;
   status: string;
@@ -167,8 +171,8 @@ export const LeadsPanel: React.FC = () => {
 
                   <p className="text-sm font-semibold text-slate-100 truncate">
                     {lead.name || 'Unnamed contact'}
-                    {lead.organisation ? (
-                      <span className="font-normal text-slate-400"> · {lead.organisation}</span>
+                    {lead.organisation || lead.organization ? (
+                      <span className="font-normal text-slate-400"> · {lead.organisation || lead.organization}</span>
                     ) : null}
                   </p>
 
@@ -196,9 +200,9 @@ export const LeadsPanel: React.FC = () => {
 
               {open && (
                 <div className="px-4 pb-4 border-t border-slate-800 pt-4 space-y-3">
-                  {lead.outline && (
+                  {(lead.message || lead.outline) && (
                     <p className="text-xs text-slate-400 leading-relaxed whitespace-pre-wrap bg-[#050a12] p-3.5 rounded-xl border border-slate-800">
-                      {lead.outline}
+                      {lead.message || lead.outline}
                     </p>
                   )}
 

@@ -71,7 +71,7 @@ export function AdminContentProvider({ children }: { children: ReactNode }) {
       setSyncStatus('saving');
       setSyncError(null);
       // Only the new content tree is stored. Anything an older version of the site left in the
-      // database (including the old farm template) is dropped on the first publish.
+      // database (including content from older versions of the site) is dropped on the first publish.
       const res = await saveContent({ content: draft }, note);
       if (!res.ok) {
         setSyncStatus('error');

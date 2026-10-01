@@ -84,6 +84,6 @@ export const about: AboutContent = {
   worksWith: {
     heading: 'Institutions we have worked with',
     names: ['World Bank', 'Asian Development Bank', 'European Commission', 'Sida'],
-    note: "Named with IP3's approval. Other clients are not listed.",
+    note: 'Other clients are not listed.',
   },
 };

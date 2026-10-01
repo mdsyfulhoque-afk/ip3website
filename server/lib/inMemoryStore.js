@@ -3,7 +3,7 @@ import path from 'path';
 
 /**
  * In-memory fallback store when MongoDB is not configured or offline.
- * Provides durable local file persistence during local testing / AI Studio preview.
+ * Provides local file persistence of published content while developing without a database.
  */
 
 const STORE_DIR = path.join(process.cwd(), 'data');

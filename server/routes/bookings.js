@@ -22,7 +22,8 @@ const bookLimiter = rateLimit({
 
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 const MEETING_MINUTES = Number(process.env.MEETING_MINUTES || 45);
-const MEET_LINK = process.env.MEETING_LINK || 'https://meet.google.com/ip3-advisory-session';
+// Only a real link is ever returned. If MEETING_LINK is not set, the team sends joining details by email.
+const MEET_LINK = process.env.MEETING_LINK || '';
 
 const newBookingId = () => `BK-${Math.floor(100000 + Math.random() * 900000)}`;
 

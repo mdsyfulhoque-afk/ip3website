@@ -16,10 +16,15 @@ import { listBookings, cancelBooking } from '../../lib/contentStore';
 interface Booking {
   _id: string;
   bookingId: string;
-  clientName: string;
-  clientEmail: string;
-  phone: string;
+  /** The API stores `name` and `email`; the older field names are read as a fallback. */
+  name?: string;
+  email?: string;
+  clientName?: string;
+  clientEmail?: string;
+  phone?: string;
+  organization?: string;
   companyName?: string;
+  topic?: string;
   serviceTitle?: string;
   date: string;
   timeSlot: string;
@@ -79,10 +84,10 @@ export const BookingsPanel: React.FC = () => {
         <div>
           <h2 className="text-2xl font-bold font-serif text-slate-100 flex items-center gap-2.5">
             <CalendarCheck className="w-5 h-5 text-[#e3a94b]" />
-            Consultation Schedule
+            Consultations
           </h2>
           <p className="text-xs text-slate-400 mt-1">
-            {total} booking{total === 1 ? '' : 's'}, each with its Google Meet room.
+            {total} booking{total === 1 ? '' : 's'}. Times are Dhaka time.
           </p>
         </div>
 
@@ -129,9 +134,9 @@ export const BookingsPanel: React.FC = () => {
               <div className="min-w-0">
                 <span className="font-mono text-xs font-bold text-[#e3a94b]">{b.bookingId}</span>
                 <p className="text-sm font-semibold text-slate-100 mt-1 truncate">
-                  {b.clientName}
-                  {b.companyName ? (
-                    <span className="font-normal text-slate-400"> · {b.companyName}</span>
+                  {b.name || b.clientName || 'Unnamed contact'}
+                  {b.organization || b.companyName ? (
+                    <span className="font-normal text-slate-400"> · {b.organization || b.companyName}</span>
                   ) : null}
                 </p>
               </div>
@@ -156,7 +161,7 @@ export const BookingsPanel: React.FC = () => {
               </div>
               <div className="flex justify-between gap-3">
                 <span>Practice focus</span>
-                <span className="font-semibold text-slate-100 truncate">{b.serviceTitle || '—'}</span>
+                <span className="font-semibold text-slate-100 truncate">{b.serviceTitle || b.topic || '—'}</span>
               </div>
               <div className="flex justify-between gap-3">
                 <span>Mode</span>
@@ -172,12 +177,14 @@ export const BookingsPanel: React.FC = () => {
               <div className="flex items-center gap-3 pt-1 text-slate-500">
                 <span className="flex items-center gap-1 truncate">
                   <Mail className="w-3 h-3 shrink-0" />
-                  {b.clientEmail}
+                  {b.email || b.clientEmail}
                 </span>
-                <span className="flex items-center gap-1 shrink-0">
-                  <Phone className="w-3 h-3" />
-                  {b.phone}
-                </span>
+                {b.phone ? (
+                  <span className="flex items-center gap-1 shrink-0">
+                    <Phone className="w-3 h-3" />
+                    {b.phone}
+                  </span>
+                ) : null}
               </div>
             </div>
 
@@ -196,7 +203,7 @@ export const BookingsPanel: React.FC = () => {
                   className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#e3a94b] hover:bg-[#c98a1e] text-slate-900 text-[11px] font-bold transition-colors"
                 >
                   <ExternalLink className="w-3 h-3" />
-                  {b.meetProvider === 'google' ? 'Join Meet' : 'Calendar link'}
+                  Open meeting link
                 </a>
               )}
 

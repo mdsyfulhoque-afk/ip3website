@@ -1,177 +1,111 @@
-# IP3 Platform — MERN (MongoDB · Express · React · Node) on Vercel
+# IP3 Consulting: website and content studio
 
-A production-ready build of the IP3 Agriscience & Precision Research Farm site:
-a public React front end, a password-gated `/admin` CMS console, an Express API,
-MongoDB Atlas for persistence, and Cloudinary as the media CDN.
+Public site for IP3 Consulting Limited (Institute for Public Policy and Practice, Dhaka), with a password-protected
+admin console, an Express API and MongoDB storage. It deploys to Vercel as static pages plus one serverless function.
 
-Everything the admin publishes is written to MongoDB and served to every
-visitor on every device. Nothing is stored in `localStorage`, and no image or
-video is ever kept as a base64 blob — uploads go straight from the browser to
-Cloudinary and only the resulting URL is stored.
+The home page is a scroll-driven 3D journey (Complexity, Evidence, Insight, Policy, Practice, Impact) that ends in the
+promise "From polycrisis to polysolution." Every other page is a fast, prerendered page that reads without JavaScript.
 
----
-
-## 1. Quick start
+## Quick start
 
 ```bash
 npm install
-cp .env.example .env        # then fill in the values (section 3)
-npm run db:seed             # loads the bundled default content into MongoDB
-npm run dev                 # http://localhost:3000  ·  admin at /admin
+cp .env.example .env          # see "Environment" below; nothing is required for local work
+npm run dev                   # http://localhost:3000   admin at /admin
 ```
 
-`npm run dev` boots **one** server on port 3000: Express owns `/api/*` and Vite
-runs in middleware mode for everything else, so development is same-origin — no
-CORS, no proxy, and the exact API that ships to production.
-
-Other scripts:
+With no `.env` the site runs from its bundled content and an in-memory store. In development only, the admin
+passphrase is `admin`. In production the admin refuses to sign anyone in until `JWT_SECRET` and an admin passphrase
+are set (see below), and every content write requires an admin session.
 
 | Script | What it does |
 | --- | --- |
-| `npm run build` | Vite production build into `dist/` (site + admin bundles) |
-| `npm start` | Serves `dist/` + the API from Node (for non-Vercel hosting) |
-| `npm run db:seed` | Seeds default content; no-op if content already exists |
-| `npm run db:seed:force` | Overwrites live content with the bundled defaults |
-| `npm run hash:password "pass"` | Prints a bcrypt `ADMIN_PASSWORD_HASH` |
-| `npm run lint` | TypeScript check (`tsc --noEmit`) |
+| `npm run dev` | Express API plus Vite in one process, one origin |
+| `npm run build` | Type-check, build the site and admin, then prerender every page to `dist/` |
+| `npm start` | Serves `dist/` and the API from Node (non-Vercel hosting) |
+| `npm test` | Unit tests (content rules, merge behaviour, 3D scene driver) |
+| `npm run check:placeholders` | Lists facts the owner still has to confirm (exits 1 while any remain) |
+| `npm run db:seed` / `db:seed:force` | Writes the bundled content to MongoDB (only if empty / always) |
+| `npm run hash:password "pass"` | Prints an `ADMIN_PASSWORD_HASH` |
+| `npm run assets` | Regenerates `public/contours.svg` and the favicon set |
 
----
+## How the content works
 
-## 2. Project structure
+All words on the site live in one typed tree, `SiteContent` (`src/content/types.ts`), with the shipped copy in
+`src/content/defaults/`. The site always paints the bundled copy first, then lays the published copy from the database
+over it (`src/content/merge.ts`). So there is never a blank screen, a missing field cannot break a page, and a database
+that still holds an older version of the site cannot bring old copy back, because the site only reads the `content` key.
+
+- **Edit**: sign in at `/admin`, open "Edit content". Changes are a draft held in your browser.
+- **Publish**: the Publish tab checks the draft (repeated slugs, broken cross-references, empty required fields),
+  writes it to the database and keeps a version. Any earlier version can be restored. Backups can be downloaded and loaded.
+- **Status**: portfolio entries and people carry `published`, `verify` or `placeholder`. Only `published` is shown.
+  Any field that reads "to be confirmed" is left out of the page rather than shown.
+- **New pages**: adding a sector, service, focus area or person in the editor creates its page at once. Until the next
+  deploy it renders in the browser; the next build also writes it as static HTML.
+- **Structure is code**: navigation, routes and the 3D scene's geometry (`src/content/journey.ts`) are not editable
+  in the admin. Their words are.
+
+## Structure
 
 ```
-ip3-platform/
-├── api/
-│   └── index.js               # Vercel serverless entry — re-exports the Express app
-├── server/                    # The API (plain ESM JavaScript)
-│   ├── app.js                 # App assembly: helmet, CORS, routers, error handling
-│   ├── lib/
-│   │   ├── db.js              # Cached Mongoose connection (serverless-safe)
-│   │   ├── auth.js            # bcrypt check, JWT httpOnly session, requireAdmin
-│   │   ├── cloudinary.js      # Signed direct uploads, asset deletion, thumbnails
-│   │   └── helpers.js         # asyncHandler, payload sanitising, validation
-│   ├── models/                # Content · Revision · Lead · Booking · Media
-│   └── routes/                # auth · content · leads · bookings · media · health
-├── src/                       # React front end
-│   ├── admin/                 # Gated CMS console (own bundle, own entry)
-│   ├── components/            # Sections, cards, modals, page shells
-│   ├── context/CMSContext.tsx # Loads from / publishes to MongoDB
-│   ├── data/                  # Bundled default content (seed payload)
-│   ├── lib/                   # apiClient · contentStore · mediaUploader
-│   └── types.ts
-├── scripts/
-│   ├── seed.ts                # Seeds MongoDB with the default content
-│   └── hash-password.js       # Generates ADMIN_PASSWORD_HASH
-├── server.js                  # Local dev/production server (Vite or dist)
-├── index.html · admin.html    # Two entry points → two bundles
-├── vercel.json · vite.config.ts · .env.example
+src/content/      types, bundled defaults, merge, validation, journey structure
+src/site/         layout, SEO, routes, pages (about, approach, focus, sectors, services, people, contact, privacy)
+src/site/home/    the 3D journey and the home sections
+src/webgl/        the scene (react-three-fiber)
+src/admin/        sign-in, content editor, publish, enquiries, consultations
+server/           Express API (auth, content, leads, bookings, media, health)
+scripts/          prerender, seed, asset generation, placeholder report
 ```
 
----
+Build output: `dist/<route>/index.html` for every page, `dist/200.html` (empty shell for routes created later),
+`dist/404.html`, `sitemap.xml`, `robots.txt`. Each page has its own title, description, canonical URL and structured data.
 
-## 3. Environment variables
+## Environment
 
-Set these in `.env` locally and in **Vercel → Settings → Environment Variables**.
-
-| Variable | Required | Notes |
+| Variable | Required | Purpose |
 | --- | --- | --- |
-| `MONGODB_URI` | yes | Atlas connection string |
-| `MONGODB_DB` | no | Database name (default `ip3`) |
-| `JWT_SECRET` | yes | Long random string; signs the admin session |
-| `ADMIN_PASSWORD_HASH` | yes* | bcrypt hash — preferred in production |
-| `ADMIN_PASSWORD` | yes* | Plaintext fallback if no hash is set |
-| `ADMIN_EMAIL` | no | Shown in the console (default `admin@ip3.org`) |
-| `SESSION_DAYS` | no | Session lifetime (default 7) |
-| `CLOUDINARY_CLOUD_NAME` / `_API_KEY` / `_API_SECRET` | yes | Media uploads |
-| `CLOUDINARY_FOLDER` | no | Upload folder (default `ip3`) |
-| `MEETING_LINK` / `MEETING_MINUTES` | no | Booking confirmation defaults |
-| `CORS_ORIGIN` | no | Only when the front end is on another domain |
-| `VITE_API_BASE_URL` | no | Only for a split deployment; leave empty on Vercel |
+| `JWT_SECRET` | production | Signs admin sessions. Without it, sign-in is refused in production. |
+| `ADMIN_PASSWORD_HASH` or `ADMIN_PASSWORD` | production | Admin passphrase (hash preferred). Without either, nobody can sign in in production. |
+| `ADMIN_EMAIL` | no | Shown as the author of published versions |
+| `MONGODB_URI`, `MONGODB_DB` | for persistence | Without them, enquiries and bookings live in memory and are lost on restart or cold start |
+| `CLOUDINARY_*` | for uploads | Signed direct image and video uploads from the editor |
+| `MEETING_LINK` | no | Returned with a booking confirmation only if set. If empty, the page says joining details will follow by email. |
+| `VITE_SITE_URL` | build | Public origin for canonical URLs, sitemap and structured data |
+| `CORS_ORIGIN`, `COOKIE_SAMESITE`, `VITE_API_BASE_URL` | only if the API is on another site | The default is same-origin with a Lax cookie |
 
-\* One of `ADMIN_PASSWORD_HASH` or `ADMIN_PASSWORD` must be set, or sign-in is
-disabled. Generate the hash with `npm run hash:password "your passphrase"`.
+First deploy: set the variables, run `npm run db:seed` once, then sign in and publish. If the database already holds
+content from an older version of the site, publish once (or run `npm run db:seed:force`) so the new content tree replaces it.
 
-In MongoDB Atlas, set **Network Access → 0.0.0.0/0**: Vercel's functions do not
-have fixed egress IPs.
+## Deploying to Vercel
 
----
+Import the repository. `vercel.json` already sets the build command, the `/api` function, the `/admin` rewrite, a
+fallback to `200.html` for routes that were not prerendered, security headers and long caching for hashed assets.
+Unknown addresses return the app shell with the not-found page (HTTP 200) so that routes created in the editor work
+without a redeploy.
 
-## 4. Deploying to Vercel
+## Motion, accessibility and fallbacks
 
-1. Push the repository to GitHub and import it in Vercel.
-2. Framework preset: **Other**. Build command `npm run build`, output `dist`.
-   (`vercel.json` already declares this.)
-3. Add every variable from section 3 to Production **and** Preview.
-4. Deploy.
-5. Seed the database once, from your machine, against the production URI:
-   `MONGODB_URI="<atlas uri>" npm run db:seed`
-6. Open `/admin`, sign in, and publish.
+- `?view=simple` (or the "3D scene" switch in the header) shows the same story without WebGL. It is chosen
+  automatically for reduced-motion, low-power and no-WebGL visitors, and if the 3D scene fails to start.
+- Every page is checked in a real browser at desktop and mobile widths for console errors, horizontal overflow and
+  axe-core violations. Keyboard focus is always visible; forms have labels and announced errors.
+- The pages carry their content in the HTML, so they read without JavaScript.
 
-`vercel.json` routes `/api/*` to the serverless function, `/admin*` to the admin
-bundle (with `X-Robots-Tag: noindex`), everything else to the site, and marks
-hashed assets immutable.
+## What the owner still needs to confirm
 
-Note: Vercel caps a serverless request body at ~4.5 MB. That is far above the
-content payload, and media never goes through the function — the browser uploads
-it directly to Cloudinary with a server-signed token.
+Run `npm run check:placeholders` for the live list. In short:
 
----
-
-## 5. API reference
-
-Public (no session):
-
-| Method | Route | Purpose |
-| --- | --- | --- |
-| `GET` | `/api/content` | Published content tree + version |
-| `POST` | `/api/leads` | Any enquiry form (rate limited, validated) |
-| `GET` | `/api/bookings/availability?date=` | Slots already taken |
-| `POST` | `/api/bookings` | Confirm a consultation slot |
-| `GET` | `/api/health` | Liveness, DB state, CDN state |
-
-Admin only (httpOnly JWT cookie):
-
-| Method | Route | Purpose |
-| --- | --- | --- |
-| `POST` | `/api/auth/login` · `/logout`, `GET /api/auth/me` | Session |
-| `PUT` | `/api/content` | Publish; writes a revision |
-| `GET` | `/api/content/revisions` | Revision history (metadata) |
-| `POST` | `/api/content/revisions/:id/restore` | Roll back |
-| `GET` `PATCH` `DELETE` | `/api/leads`, `/api/leads/:id` | Enquiry inbox |
-| `GET` `PATCH` | `/api/bookings`, `/api/bookings/:id/cancel` | Schedule |
-| `GET` `POST` `DELETE` | `/api/media`, `/api/media/:id` | Media library |
-| `GET` `POST` | `/api/media/config`, `/api/media/signature` | Cloudinary |
-
----
-
-## 6. How the pieces work
-
-**Content.** One `Content` document (`key: 'site'`) holds the whole tree plus a
-version number. Each publish also writes an immutable `Revision`, and the
-history is capped at `MAX_REVISIONS` (30) so the collection cannot grow without
-bound. Restoring a revision is itself a new publish, so history is never
-rewritten. The front end hydrates from `GET /api/content` on load and merges the
-stored document over the bundled defaults, so a key added by a newer build is
-never `undefined` against an older stored document.
-
-**Auth.** The passphrase is compared on the server against a bcrypt hash (or
-constant-time against a plaintext fallback) and never reaches the bundle. The
-session is a signed JWT in an httpOnly, `secure`, `sameSite` cookie — unreadable
-by any script in the page. Login is rate limited to 10 attempts per 10 minutes.
-There is no client-side fallback: if the API rejects the passphrase, there is no
-session.
-
-**Media.** The console asks `/api/media/signature` for a short-lived Cloudinary
-token, the browser `PUT`s the file straight to Cloudinary with an upload
-progress bar, and only the returned URL and metadata are recorded in MongoDB.
-Deleting an asset removes it from both the library and the CDN.
-
-**Bookings.** Double booking is prevented by a partial unique index on
-`{date, timeSlot}` for confirmed bookings — the database rejects the clash and
-the API answers `409 SLOT_TAKEN`, so two people clicking the same slot at the
-same moment cannot both succeed. Cancelling frees the slot again.
-
-**Resilience.** The Mongoose connection is cached on `globalThis`, so a warm
-Vercel lambda reuses one pool. An unreachable database returns `503
-DB_UNAVAILABLE` rather than a stack trace, and the console shows an offline
-state instead of pretending an edit was published.
+- One phone number (two different ones appeared on the old site; none is shown).
+- Which clients may be named. The four institutions listed on the About page (World Bank, Asian Development Bank,
+  European Commission, Sida) came from the old site's wording; confirm each, especially Sida.
+- Client, place and year for portfolio entries marked "to be confirmed", and the two entries held back as `verify`.
+- The Global LEAP year (the old site gave two different years) and the roles stated on entries that say "supported".
+- People: roles and practice areas as listed, and whether portraits may be published (monograms are used until then).
+- The privacy page wording: staff-only access, how long enquiries are kept, and that the server records the network
+  address and browser details sent with an enquiry.
+- Whether the videos hosted on ip3-bd.org should stay on the focus pages (they could not be played from the build
+  environment) and whether they need captions or transcripts.
+- The logo: the mark in the header is a placeholder drawn for this build, not IP3's registered logo.
+- Booking: bookings are stored as confirmed immediately. Decide whether that wording suits the team's process, and set
+  `MEETING_LINK` if a standing meeting room is used.

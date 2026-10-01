@@ -27,20 +27,29 @@ export function pageTitle(content: SiteContent, title: string): string {
   return !title || title === name ? `${name}: ${content.identity.descriptor}` : `${title} | ${name}`;
 }
 
+/** Search results show about 155 characters, so a longer description is cut at a word boundary. */
+export function clipDescription(text: string, max = 158): string {
+  const t = text.replace(/\s+/g, ' ').trim();
+  if (t.length <= max) return t;
+  const cut = t.slice(0, max - 1);
+  return `${cut.slice(0, cut.lastIndexOf(' ') > 80 ? cut.lastIndexOf(' ') : cut.length).replace(/[,;:.\s]+$/, '')}…`;
+}
+
 /** Everything that belongs in <head> for a page. One definition, used by the prerenderer and by the browser. */
 export function headTags(content: SiteContent, data: HeadData): HeadTag[] {
   const base = origin(content);
   const url = `${base}${data.path === '/' ? '/' : data.path.replace(/\/+$/, '')}`;
   const title = pageTitle(content, data.title);
+  const description = clipDescription(data.description);
   const image = `${base}${data.image || '/og-image.png'}`;
   const tags: HeadTag[] = [
     { tag: 'title', text: title },
-    { tag: 'meta', attrs: { name: 'description', content: data.description } },
+    { tag: 'meta', attrs: { name: 'description', content: description } },
     { tag: 'link', attrs: { rel: 'canonical', href: url } },
     { tag: 'meta', attrs: { property: 'og:type', content: 'website' } },
     { tag: 'meta', attrs: { property: 'og:site_name', content: content.identity.name } },
     { tag: 'meta', attrs: { property: 'og:title', content: title } },
-    { tag: 'meta', attrs: { property: 'og:description', content: data.description } },
+    { tag: 'meta', attrs: { property: 'og:description', content: description } },
     { tag: 'meta', attrs: { property: 'og:url', content: url } },
     { tag: 'meta', attrs: { property: 'og:image', content: image } },
     { tag: 'meta', attrs: { name: 'twitter:card', content: 'summary_large_image' } },

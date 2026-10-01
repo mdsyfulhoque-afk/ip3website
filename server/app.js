@@ -86,7 +86,7 @@ app.use('/api', (err, req, res, _next) => {
     err?.code === 'DB_NOT_CONFIGURED';
 
   if (isDbDown) {
-    console.warn('[AI Studio] Database offline or unconfigured:', err.message);
+    console.warn('[db] Database offline or unconfigured:', err.message);
     if (req.method === 'GET') {
       if (req.path === '/content' || req.path === '/content/') {
         return res.json({ data: null, version: 0, updatedAt: null, seeded: false });

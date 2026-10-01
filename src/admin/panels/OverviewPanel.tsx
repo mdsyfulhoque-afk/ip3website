@@ -35,7 +35,7 @@ export const OverviewPanel: React.FC<{ onNavigate: (tab: string) => void }> = ({
   const [health, setHealth] = useState<HealthInfo | null>(null);
   const [mediaCount, setMediaCount] = useState<number | null>(null);
 
-  // Counts come straight from MongoDB, so they are the same on every device.
+  // Counts come straight from the database, so they are the same on every device.
   useEffect(() => {
     let alive = true;
     void (async () => {
@@ -64,7 +64,7 @@ export const OverviewPanel: React.FC<{ onNavigate: (tab: string) => void }> = ({
           Overview
         </h2>
         <p className="text-xs text-slate-400 mt-1">
-          Live figures from MongoDB.
+          Live figures from the database.
         </p>
       </div>
 
@@ -109,8 +109,7 @@ export const OverviewPanel: React.FC<{ onNavigate: (tab: string) => void }> = ({
             <ExternalLink className="w-4 h-4 text-slate-500 group-hover:text-[#e3a94b] transition-colors" />
           </div>
           <p className="text-xs text-slate-400 mt-1.5 leading-relaxed">
-            Every contact form, Let's Talk, Let's Collaborate and Get Started submission,
-            stored in MongoDB with triage statuses.
+            Every enquiry sent through the website, stored with a status so you can see what has been dealt with.
           </p>
         </button>
 
@@ -123,7 +122,7 @@ export const OverviewPanel: React.FC<{ onNavigate: (tab: string) => void }> = ({
             <ExternalLink className="w-4 h-4 text-slate-500 group-hover:text-[#e3a94b] transition-colors" />
           </div>
           <p className="text-xs text-slate-400 mt-1.5 leading-relaxed">
-            Join or cancel scheduled sessions. Cancelling also removes the Google Calendar event.
+            See who has booked a conversation and when, and cancel a booking to free its time.
           </p>
         </button>
       </div>

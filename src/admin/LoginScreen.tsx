@@ -35,7 +35,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
           <div className="w-14 h-14 rounded-2xl bg-[#e3a94b]/12 border border-[#e3a94b]/30 flex items-center justify-center mx-auto mb-5">
             <ShieldCheck className="w-7 h-7 text-[#e3a94b]" />
           </div>
-          <h1 className="text-3xl font-extrabold font-serif tracking-tight">IP3 Admin Console</h1>
+          <h1 className="text-3xl font-extrabold font-serif tracking-tight">IP3 admin</h1>
           <p className="mt-2 text-sm text-slate-400 font-light">
             Enter the passphrase to edit site content and review enquiries.
           </p>
@@ -45,9 +45,9 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
           <div className="mb-5 p-3.5 rounded-xl bg-[#050a12] border border-slate-800 text-slate-400 text-xs leading-relaxed flex gap-2">
             <AlertCircle className="w-4 h-4 shrink-0 mt-0.5 text-[#e3a94b]" />
             <span>
-              The passphrase is verified on the server and the session is held in a
-              secure, httpOnly cookie. Anything you publish here writes straight to
-              MongoDB and is live for every visitor.
+              The passphrase is checked on the server and the session is kept in a
+              secure cookie that scripts on the page cannot read. Changes you make
+              stay a draft until you publish them.
             </span>
           </div>
 

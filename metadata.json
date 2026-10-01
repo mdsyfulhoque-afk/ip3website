@@ -1,8 +1,0 @@
-{
-  "name": "IP3 Agriscience & Precision Research Farm",
-  "description": "Discover IP3 Consulting, a translational policy studio and systems integrator helping governments, development partners and businesses turn policy intelligence into implementable solutions across climate, education, institutional effectiveness and digital governance.",
-  "requestFramePermissions": [],
-  "majorCapabilities": [
-    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
-  ]
-}

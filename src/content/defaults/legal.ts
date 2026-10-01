@@ -13,7 +13,9 @@ export const legal: LegalContent = {
         text: [
           'When you send an enquiry we collect your name, email address, organisation, the topic you choose and the message you write.',
           'When you book a conversation we also collect the date and time you choose.',
+          'To help us spot spam, the server also records the network address and browser details that arrive with an enquiry.',
           'We do not ask for anything else, and the site does not require you to create an account.',
+          'If you switch the 3D scene on or off, your choice is remembered in your own browser. It is not sent to us.',
         ],
       },
       {
