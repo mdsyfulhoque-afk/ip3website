@@ -23,17 +23,17 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
   };
 
   return (
-    <div className="min-h-screen w-full bg-[#050a12] text-slate-100 font-sans flex items-center justify-center p-5 selection:bg-[#ff7e67] selection:text-slate-900">
+    <div className="min-h-screen w-full bg-[#050a12] text-slate-100 font-sans flex items-center justify-center p-5 selection:bg-[#e3a94b] selection:text-slate-900">
       {/* Ambient backdrop */}
       <div className="pointer-events-none fixed inset-0 overflow-hidden">
-        <div className="absolute -top-40 -left-40 w-[38rem] h-[38rem] rounded-full bg-[#ff7e67]/8 blur-[130px]" />
+        <div className="absolute -top-40 -left-40 w-[38rem] h-[38rem] rounded-full bg-[#e3a94b]/8 blur-[130px]" />
         <div className="absolute -bottom-52 -right-32 w-[34rem] h-[34rem] rounded-full bg-[#081220] blur-[110px]" />
       </div>
 
       <div className="relative w-full max-w-md">
         <div className="text-center mb-8">
-          <div className="w-14 h-14 rounded-2xl bg-[#ff7e67]/12 border border-[#ff7e67]/30 flex items-center justify-center mx-auto mb-5">
-            <ShieldCheck className="w-7 h-7 text-[#ff7e67]" />
+          <div className="w-14 h-14 rounded-2xl bg-[#e3a94b]/12 border border-[#e3a94b]/30 flex items-center justify-center mx-auto mb-5">
+            <ShieldCheck className="w-7 h-7 text-[#e3a94b]" />
           </div>
           <h1 className="text-3xl font-extrabold font-serif tracking-tight">IP3 Admin Console</h1>
           <p className="mt-2 text-sm text-slate-400 font-light">
@@ -43,7 +43,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
 
         <div className="bg-[#081220] border border-slate-800 rounded-3xl shadow-2xl p-7 sm:p-8">
           <div className="mb-5 p-3.5 rounded-xl bg-[#050a12] border border-slate-800 text-slate-400 text-xs leading-relaxed flex gap-2">
-            <AlertCircle className="w-4 h-4 shrink-0 mt-0.5 text-[#ff7e67]" />
+            <AlertCircle className="w-4 h-4 shrink-0 mt-0.5 text-[#e3a94b]" />
             <span>
               The passphrase is verified on the server and the session is held in a
               secure, httpOnly cookie. Anything you publish here writes straight to
@@ -72,7 +72,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
                     if (error) clearError(null);
                   }}
                   placeholder="••••••••••••"
-                  className="w-full pl-10 pr-4 py-3 bg-[#050a12] border border-slate-800 rounded-xl text-slate-100 placeholder-slate-500 focus:outline-none focus:border-[#ff7e67] text-sm transition-colors"
+                  className="w-full pl-10 pr-4 py-3 bg-[#050a12] border border-slate-800 rounded-xl text-slate-100 placeholder-slate-500 focus:outline-none focus:border-[#e3a94b] text-sm transition-colors"
                 />
               </div>
             </div>
@@ -80,7 +80,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
             {error && (
               <div
                 role="alert"
-                className="p-3.5 rounded-xl bg-[#ff7e67]/10 border border-[#ff7e67]/40 text-[#ff7e67] text-xs font-medium flex items-center gap-2"
+                className="p-3.5 rounded-xl bg-[#e3a94b]/10 border border-[#e3a94b]/40 text-[#e3a94b] text-xs font-medium flex items-center gap-2"
               >
                 <AlertCircle className="w-4 h-4 shrink-0" />
                 <span>{error}</span>
@@ -90,7 +90,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
             <button
               type="submit"
               disabled={submitting || !password}
-              className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-[#ff7e67] hover:bg-[#e06a54] disabled:opacity-45 disabled:cursor-not-allowed text-slate-900 text-sm font-bold shadow-lg shadow-[#ff7e67]/20 transition-all cursor-pointer"
+              className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-[#e3a94b] hover:bg-[#c98a1e] disabled:opacity-45 disabled:cursor-not-allowed text-slate-900 text-sm font-bold shadow-lg shadow-[#e3a94b]/20 transition-all cursor-pointer"
             >
               {submitting ? (
                 <>

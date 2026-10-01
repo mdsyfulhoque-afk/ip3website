@@ -6,9 +6,17 @@ export const COOKIE_NAME = 'ip3_session';
 const SESSION_DAYS = Number(process.env.SESSION_DAYS || 7);
 const MAX_AGE_MS = SESSION_DAYS * 86400000;
 
+/** True on Vercel and anywhere NODE_ENV=production. Development conveniences are off here. */
+export function isProduction() {
+  return process.env.NODE_ENV === 'production' || Boolean(process.env.VERCEL);
+}
+
 function jwtSecret() {
-  const secret = process.env.JWT_SECRET || 'ip3-platform-secure-jwt-session-secret-key';
-  return secret;
+  const secret = process.env.JWT_SECRET;
+  if (secret) return secret;
+  // A well-known signing key would let anyone mint an admin session, so production refuses to start one.
+  if (isProduction()) throw new Error('JWT_SECRET is not set. Set it in the environment before signing in.');
+  return 'ip3-local-development-only-secret';
 }
 
 /** Constant-time comparison so a wrong passphrase leaks no timing information. */
@@ -22,7 +30,8 @@ function safeEqual(a = '', b = '') {
 /**
  * Verifies the administrator passphrase.
  * ADMIN_PASSWORD_HASH (a bcrypt hash) is preferred; ADMIN_PASSWORD is accepted
- * as a plain fallback for smaller deployments. Defaults to 'admin' if not set.
+ * as a plain fallback for smaller deployments. In development only, 'admin' works when neither is
+ * set. In production, with neither set, nobody can sign in.
  */
 export async function verifyPassword(password) {
   if (!password) return false;
@@ -30,13 +39,15 @@ export async function verifyPassword(password) {
   const hash = process.env.ADMIN_PASSWORD_HASH;
   if (hash) return bcrypt.compare(password, hash);
 
-  const plain = process.env.ADMIN_PASSWORD || 'admin';
+  const plain = process.env.ADMIN_PASSWORD || (isProduction() ? '' : 'admin');
+  if (!plain) return false;
   return safeEqual(password, plain);
 }
 
 export function cookieOptions() {
-  const isProd = process.env.NODE_ENV === 'production';
-  const sameSite = process.env.COOKIE_SAMESITE || (isProd ? 'none' : 'none');
+  // The site and the API share one origin, so Lax is enough. Set COOKIE_SAMESITE=none only if the
+  // API is deliberately served from a different site.
+  const sameSite = process.env.COOKIE_SAMESITE || 'lax';
   return {
     httpOnly: true,
     secure: true,

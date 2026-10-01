@@ -23,7 +23,7 @@ app.use(
     contentSecurityPolicy: false, // the static frontend is served separately
     crossOriginResourcePolicy: { policy: 'cross-origin' },
     crossOriginEmbedderPolicy: false,
-    frameguard: false,
+    frameguard: { action: 'sameorigin' },
   })
 );
 

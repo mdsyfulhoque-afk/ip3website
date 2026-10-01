@@ -78,7 +78,7 @@ export const BookingsPanel: React.FC = () => {
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h2 className="text-2xl font-bold font-serif text-slate-100 flex items-center gap-2.5">
-            <CalendarCheck className="w-5 h-5 text-[#ff7e67]" />
+            <CalendarCheck className="w-5 h-5 text-[#e3a94b]" />
             Consultation Schedule
           </h2>
           <p className="text-xs text-slate-400 mt-1">
@@ -96,7 +96,7 @@ export const BookingsPanel: React.FC = () => {
       </div>
 
       {error && (
-        <div className="p-3.5 rounded-xl bg-[#ff7e67]/10 border border-[#ff7e67]/40 text-[#ff7e67] text-xs font-medium flex items-center gap-2">
+        <div className="p-3.5 rounded-xl bg-[#e3a94b]/10 border border-[#e3a94b]/40 text-[#e3a94b] text-xs font-medium flex items-center gap-2">
           <AlertCircle className="w-4 h-4 shrink-0" />
           <span>{error}</span>
         </div>
@@ -104,7 +104,7 @@ export const BookingsPanel: React.FC = () => {
 
       {loading && bookings.length === 0 && (
         <div className="py-16 flex flex-col items-center gap-3 text-slate-500">
-          <Loader2 className="w-6 h-6 animate-spin text-[#ff7e67]" />
+          <Loader2 className="w-6 h-6 animate-spin text-[#e3a94b]" />
           <span className="text-xs">Loading consultations…</span>
         </div>
       )}
@@ -127,7 +127,7 @@ export const BookingsPanel: React.FC = () => {
           >
             <div className="flex items-start justify-between gap-3 mb-3">
               <div className="min-w-0">
-                <span className="font-mono text-xs font-bold text-[#ff7e67]">{b.bookingId}</span>
+                <span className="font-mono text-xs font-bold text-[#e3a94b]">{b.bookingId}</span>
                 <p className="text-sm font-semibold text-slate-100 mt-1 truncate">
                   {b.clientName}
                   {b.companyName ? (
@@ -139,7 +139,7 @@ export const BookingsPanel: React.FC = () => {
               <span
                 className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider border shrink-0 ${
                   b.status === 'confirmed'
-                    ? 'bg-[#ff7e67]/12 text-[#ff7e67] border-[#ff7e67]/30'
+                    ? 'bg-[#e3a94b]/12 text-[#e3a94b] border-[#e3a94b]/30'
                     : 'bg-slate-800/50 text-slate-400 border-slate-800'
                 }`}
               >
@@ -160,7 +160,7 @@ export const BookingsPanel: React.FC = () => {
               </div>
               <div className="flex justify-between gap-3">
                 <span>Mode</span>
-                <span className="font-semibold text-[#ff7e67] flex items-center gap-1">
+                <span className="font-semibold text-[#e3a94b] flex items-center gap-1">
                   {b.meetingMode === 'virtual' ? (
                     <Video className="w-3 h-3" />
                   ) : (
@@ -193,7 +193,7 @@ export const BookingsPanel: React.FC = () => {
                   href={b.meetLink}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#ff7e67] hover:bg-[#e06a54] text-slate-900 text-[11px] font-bold transition-colors"
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#e3a94b] hover:bg-[#c98a1e] text-slate-900 text-[11px] font-bold transition-colors"
                 >
                   <ExternalLink className="w-3 h-3" />
                   {b.meetProvider === 'google' ? 'Join Meet' : 'Calendar link'}
@@ -204,7 +204,7 @@ export const BookingsPanel: React.FC = () => {
                 <button
                   onClick={() => cancel(b)}
                   disabled={cancelling === b.bookingId}
-                  className="ml-auto flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#050a12] hover:bg-slate-800 text-slate-400 hover:text-[#ff7e67] text-[11px] font-bold border border-slate-800 transition-colors cursor-pointer disabled:opacity-50"
+                  className="ml-auto flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#050a12] hover:bg-slate-800 text-slate-400 hover:text-[#e3a94b] text-[11px] font-bold border border-slate-800 transition-colors cursor-pointer disabled:opacity-50"
                 >
                   {cancelling === b.bookingId ? (
                     <Loader2 className="w-3 h-3 animate-spin" />

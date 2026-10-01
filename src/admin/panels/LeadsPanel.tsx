@@ -84,7 +84,7 @@ export const LeadsPanel: React.FC = () => {
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h2 className="text-2xl font-bold font-serif text-slate-100 flex items-center gap-2.5">
-            <Inbox className="w-5 h-5 text-[#ff7e67]" />
+            <Inbox className="w-5 h-5 text-[#e3a94b]" />
             Enquiry Inbox
           </h2>
           <p className="text-xs text-slate-400 mt-1">
@@ -96,7 +96,7 @@ export const LeadsPanel: React.FC = () => {
           <select
             value={sourceFilter}
             onChange={(e) => setSourceFilter(e.target.value)}
-            className="px-3 py-2 bg-[#050a12] border border-slate-800 rounded-xl text-slate-100 text-xs focus:outline-none focus:border-[#ff7e67] cursor-pointer"
+            className="px-3 py-2 bg-[#050a12] border border-slate-800 rounded-xl text-slate-100 text-xs focus:outline-none focus:border-[#e3a94b] cursor-pointer"
           >
             <option value="">All sources</option>
             {Object.entries(SOURCE_LABELS).map(([value, label]) => (
@@ -117,7 +117,7 @@ export const LeadsPanel: React.FC = () => {
       </div>
 
       {error && (
-        <div className="p-3.5 rounded-xl bg-[#ff7e67]/10 border border-[#ff7e67]/40 text-[#ff7e67] text-xs font-medium flex items-center gap-2">
+        <div className="p-3.5 rounded-xl bg-[#e3a94b]/10 border border-[#e3a94b]/40 text-[#e3a94b] text-xs font-medium flex items-center gap-2">
           <AlertCircle className="w-4 h-4 shrink-0" />
           <span>{error}</span>
         </div>
@@ -125,7 +125,7 @@ export const LeadsPanel: React.FC = () => {
 
       {loading && leads.length === 0 && (
         <div className="py-16 flex flex-col items-center gap-3 text-slate-500">
-          <Loader2 className="w-6 h-6 animate-spin text-[#ff7e67]" />
+          <Loader2 className="w-6 h-6 animate-spin text-[#e3a94b]" />
           <span className="text-xs">Loading enquiries…</span>
         </div>
       )}
@@ -150,14 +150,14 @@ export const LeadsPanel: React.FC = () => {
               >
                 <div className="flex-1 min-w-0">
                   <div className="flex flex-wrap items-center gap-2 mb-1.5">
-                    <span className="font-mono text-xs font-bold text-[#ff7e67]">{lead.ticketId}</span>
+                    <span className="font-mono text-xs font-bold text-[#e3a94b]">{lead.ticketId}</span>
                     <span className="px-2 py-0.5 rounded-full bg-[#050a12] border border-slate-800 text-[10px] font-semibold uppercase tracking-wider text-slate-400">
                       {SOURCE_LABELS[lead.source] || lead.source}
                     </span>
                     <span
                       className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider border ${
                         lead.status === 'new'
-                          ? 'bg-[#ff7e67]/12 text-[#ff7e67] border-[#ff7e67]/30'
+                          ? 'bg-[#e3a94b]/12 text-[#e3a94b] border-[#e3a94b]/30'
                           : 'bg-slate-800/50 text-slate-400 border-slate-800'
                       }`}
                     >
@@ -232,7 +232,7 @@ export const LeadsPanel: React.FC = () => {
                         onClick={() => updateStatus(lead, status)}
                         className={`px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider border transition-colors cursor-pointer ${
                           lead.status === status
-                            ? 'bg-[#ff7e67] text-slate-900 border-[#ff7e67]'
+                            ? 'bg-[#e3a94b] text-slate-900 border-[#e3a94b]'
                             : 'bg-[#050a12] text-slate-400 border-slate-800 hover:border-slate-700'
                         }`}
                       >
@@ -244,7 +244,7 @@ export const LeadsPanel: React.FC = () => {
                       href={`mailto:${lead.email}?subject=Re:%20${lead.ticketId}`}
                       className="ml-auto flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-100 text-[11px] font-bold border border-slate-700 transition-colors"
                     >
-                      <Building2 className="w-3 h-3 text-[#ff7e67]" />
+                      <Building2 className="w-3 h-3 text-[#e3a94b]" />
                       Reply by email
                     </a>
                   </div>

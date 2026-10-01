@@ -1,142 +1,137 @@
 import React, { useState } from 'react';
 import {
-  LayoutDashboard,
-  Inbox,
   CalendarCheck,
-  Sliders,
-  LogOut,
-  ShieldCheck,
-  ExternalLink,
-  Loader2,
-  FileJson,
+  Check,
   Cloud,
   CloudOff,
-  Check,
+  ExternalLink,
+  Inbox,
+  LayoutDashboard,
+  Loader2,
+  LogOut,
+  Rocket,
+  ShieldCheck,
+  SquarePen,
 } from 'lucide-react';
-import { CMSProvider, useCMS } from '../context/CMSContext';
-import { AdminPanelModal } from '../components/AdminPanelModal';
-import { useAdminAuth } from './useAdminAuth';
+import { AdminContentProvider, useAdminContent } from './AdminContent';
+import { ContentEditor } from './ContentEditor';
 import { LoginScreen } from './LoginScreen';
-import { OverviewPanel } from './panels/OverviewPanel';
-import { LeadsPanel } from './panels/LeadsPanel';
 import { BookingsPanel } from './panels/BookingsPanel';
+import { LeadsPanel } from './panels/LeadsPanel';
+import { OverviewPanel } from './panels/OverviewPanel';
 import { PublishPanel } from './panels/PublishPanel';
+import { useAdminAuth } from './useAdminAuth';
 
 type TabId = 'overview' | 'leads' | 'bookings' | 'content' | 'publish';
 
 const TABS: { id: TabId; label: string; icon: React.ReactNode }[] = [
-  { id: 'overview', label: 'Overview', icon: <LayoutDashboard className="w-4 h-4" /> },
-  { id: 'leads', label: 'Enquiries', icon: <Inbox className="w-4 h-4" /> },
-  { id: 'bookings', label: 'Consultations', icon: <CalendarCheck className="w-4 h-4" /> },
-  { id: 'content', label: 'Content Studio', icon: <Sliders className="w-4 h-4" /> },
-  { id: 'publish', label: 'Publish', icon: <FileJson className="w-4 h-4" /> },
+  { id: 'overview', label: 'Overview', icon: <LayoutDashboard className="h-4 w-4" /> },
+  { id: 'leads', label: 'Enquiries', icon: <Inbox className="h-4 w-4" /> },
+  { id: 'bookings', label: 'Consultations', icon: <CalendarCheck className="h-4 w-4" /> },
+  { id: 'content', label: 'Edit content', icon: <SquarePen className="h-4 w-4" /> },
+  { id: 'publish', label: 'Publish', icon: <Rocket className="h-4 w-4" /> },
 ];
 
-/** Small live indicator for the CMS write-through status. */
-const SyncBadge: React.FC = () => {
-  const { syncStatus } = useCMS();
+/** Where the draft stands relative to the live site. */
+const StateBadge: React.FC = () => {
+  const { syncStatus, dirty } = useAdminContent();
 
-  const map: Record<string, { icon: React.ReactNode; text: string; tone: string }> = {
-    loading: { icon: <Loader2 className="w-3 h-3 animate-spin" />, text: 'Loading', tone: 'text-slate-400' },
-    saving: { icon: <Loader2 className="w-3 h-3 animate-spin" />, text: 'Saving', tone: 'text-slate-400' },
-    saved: { icon: <Check className="w-3 h-3" />, text: 'Saved locally', tone: 'text-[#ff7e67]' },
-    idle: { icon: <Cloud className="w-3 h-3" />, text: 'Ready', tone: 'text-slate-500' },
-    error: { icon: <CloudOff className="w-3 h-3" />, text: 'Save failed', tone: 'text-[#ff7e67]' },
-    offline: { icon: <CloudOff className="w-3 h-3" />, text: 'Offline', tone: 'text-[#ff7e67]' },
-  };
-
-  const s = map[syncStatus] || map.idle;
+  const view =
+    syncStatus === 'loading' || syncStatus === 'saving'
+      ? { icon: <Loader2 className="h-3 w-3 animate-spin" />, text: syncStatus === 'saving' ? 'Publishing' : 'Loading', tone: 'text-slate-400' }
+      : syncStatus === 'error' || syncStatus === 'offline'
+        ? { icon: <CloudOff className="h-3 w-3" />, text: syncStatus === 'error' ? 'Publish failed' : 'Offline', tone: 'text-[#e3a94b]' }
+        : dirty
+          ? { icon: <Cloud className="h-3 w-3" />, text: 'Unpublished changes', tone: 'text-[#e3a94b]' }
+          : { icon: <Check className="h-3 w-3" />, text: 'Matches the live site', tone: 'text-slate-400' };
 
   return (
     <span
-      className={`hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#050a12] border border-slate-800 text-[10px] font-bold uppercase tracking-wider ${s.tone}`}
+      role="status"
+      className={`hidden items-center gap-1.5 rounded-full border border-slate-800 bg-[#050a12] px-2.5 py-1 text-xs font-semibold sm:flex ${view.tone}`}
     >
-      {s.icon}
-      {s.text}
+      {view.icon}
+      {view.text}
     </span>
   );
 };
 
 const AdminShell: React.FC<{ onSignOut: () => void }> = ({ onSignOut }) => {
   const [tab, setTab] = useState<TabId>('overview');
+  const { dirty } = useAdminContent();
 
   return (
-    <div className="min-h-screen bg-[#050a12] text-slate-100 font-sans antialiased selection:bg-[#ff7e67] selection:text-slate-900">
-      <header className="sticky top-0 z-30 bg-[#050a12]/95 backdrop-blur-md border-b border-slate-800">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <div className="h-16 flex items-center gap-4">
-            <div className="flex items-center gap-2.5 shrink-0">
-              <div className="w-8 h-8 rounded-xl bg-[#ff7e67]/12 border border-[#ff7e67]/30 flex items-center justify-center">
-                <ShieldCheck className="w-4 h-4 text-[#ff7e67]" />
+    <div className="min-h-screen bg-[#050a12] font-sans text-slate-100 antialiased selection:bg-[#e3a94b] selection:text-slate-900">
+      <header className="sticky top-0 z-30 border-b border-slate-800 bg-[#050a12]/95 backdrop-blur-md">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6">
+          <div className="flex h-16 items-center gap-4">
+            <div className="flex shrink-0 items-center gap-2.5">
+              <div className="flex h-8 w-8 items-center justify-center rounded-xl border border-[#e3a94b]/30 bg-[#e3a94b]/10">
+                <ShieldCheck className="h-4 w-4 text-[#e3a94b]" aria-hidden />
               </div>
               <div className="leading-tight">
-                <p className="text-sm font-extrabold font-serif tracking-tight">IP3 Admin</p>
-                <p className="text-[10px] text-slate-500 uppercase tracking-wider">Console</p>
+                <p className="font-serif text-sm font-bold tracking-tight">IP3 admin</p>
+                <p className="text-xs text-slate-500">Content and submissions</p>
               </div>
             </div>
 
             <div className="ml-auto flex items-center gap-2.5">
-              <SyncBadge />
-
+              <StateBadge />
               <a
                 href="/"
                 target="_blank"
                 rel="noopener noreferrer"
                 title="Open the public website"
-                className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#081220] hover:bg-slate-800 text-slate-400 hover:text-slate-100 border border-slate-800 text-xs font-bold transition-colors"
+                className="hidden items-center gap-1.5 rounded-full border border-slate-800 bg-[#081220] px-3 py-1.5 text-xs font-bold text-slate-400 transition-colors hover:bg-slate-800 hover:text-slate-100 sm:flex"
               >
-                <ExternalLink className="w-3.5 h-3.5" />
+                <ExternalLink className="h-3.5 w-3.5" aria-hidden />
                 <span className="hidden lg:inline">View site</span>
               </a>
-
               <button
+                type="button"
                 onClick={onSignOut}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#081220] hover:bg-slate-800 text-slate-400 hover:text-[#ff7e67] border border-slate-800 text-xs font-bold transition-colors cursor-pointer"
+                className="flex items-center gap-1.5 rounded-full border border-slate-800 bg-[#081220] px-3 py-1.5 text-xs font-bold text-slate-400 transition-colors hover:bg-slate-800 hover:text-[#e3a94b]"
               >
-                <LogOut className="w-3.5 h-3.5" />
+                <LogOut className="h-3.5 w-3.5" aria-hidden />
                 <span className="hidden sm:inline">Sign out</span>
               </button>
             </div>
           </div>
 
-          <nav className="flex items-center gap-1 -mb-px overflow-x-auto">
+          <nav aria-label="Admin sections" className="-mb-px flex items-center gap-1 overflow-x-auto">
             {TABS.map((t) => (
               <button
                 key={t.id}
+                type="button"
+                aria-current={tab === t.id ? 'page' : undefined}
                 onClick={() => setTab(t.id)}
-                className={`flex items-center gap-2 px-3.5 py-3 text-xs font-bold whitespace-nowrap border-b-2 transition-colors cursor-pointer ${
-                  tab === t.id
-                    ? 'border-[#ff7e67] text-[#ff7e67]'
-                    : 'border-transparent text-slate-400 hover:text-slate-100'
+                className={`flex items-center gap-2 whitespace-nowrap border-b-2 px-3.5 py-3 text-xs font-bold transition-colors ${
+                  tab === t.id ? 'border-[#e3a94b] text-[#e3a94b]' : 'border-transparent text-slate-400 hover:text-slate-100'
                 }`}
               >
                 {t.icon}
                 {t.label}
+                {t.id === 'publish' && dirty ? <span className="h-1.5 w-1.5 rounded-full bg-[#e3a94b]" aria-label="unpublished changes" /> : null}
               </button>
             ))}
           </nav>
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 py-7">
+      <main className="mx-auto max-w-7xl px-4 py-7 sm:px-6">
         {tab === 'overview' && <OverviewPanel onNavigate={(id) => setTab(id as TabId)} />}
         {tab === 'leads' && <LeadsPanel />}
         {tab === 'bookings' && <BookingsPanel />}
         {tab === 'publish' && <PublishPanel />}
         {tab === 'content' && (
-          <div className="space-y-4">
+          <div className="space-y-5">
             <div>
-              <h2 className="text-2xl font-bold font-serif text-slate-100 flex items-center gap-2.5">
-                <Sliders className="w-5 h-5 text-[#ff7e67]" />
-                Content Studio
-              </h2>
-              <p className="text-xs text-slate-400 mt-1">
-                Edits apply instantly in this browser. Use the Publish tab to make them live for everyone.
+              <h2 className="font-serif text-2xl font-bold text-slate-100">Edit content</h2>
+              <p className="mt-1 max-w-2xl text-sm text-slate-400">
+                Everything on the public site is edited here. Changes stay in this browser as a draft. Visitors see them only after you publish on the Publish tab.
               </p>
             </div>
-
-            {/* The existing CMS panel, now only reachable behind authentication. */}
-            <AdminPanelModal isOpen onClose={() => setTab('overview')} />
+            <ContentEditor />
           </div>
         )}
       </main>
@@ -149,28 +144,21 @@ export default function AdminApp() {
 
   if (state === 'checking') {
     return (
-      <div className="min-h-screen bg-[#050a12] flex flex-col items-center justify-center gap-3 text-slate-500">
-        <Loader2 className="w-6 h-6 animate-spin text-[#ff7e67]" />
-        <span className="text-xs font-sans">Verifying session…</span>
+      <div className="flex min-h-screen flex-col items-center justify-center gap-3 bg-[#050a12] text-slate-500">
+        <Loader2 className="h-6 w-6 animate-spin text-[#e3a94b]" aria-hidden />
+        <span className="font-sans text-sm">Checking your session</span>
       </div>
     );
   }
 
   if (state === 'unauthenticated') {
-    return (
-      <LoginScreen
-        onSubmit={signIn}
-        error={error}
-        submitting={submitting}
-        clearError={setError}
-      />
-    );
+    return <LoginScreen onSubmit={signIn} error={error} submitting={submitting} clearError={setError} />;
   }
 
-  // Writable CMS provider — only mounted for an authenticated administrator.
+  // The writable provider is only mounted for a signed-in administrator.
   return (
-    <CMSProvider>
+    <AdminContentProvider>
       <AdminShell onSignOut={signOut} />
-    </CMSProvider>
+    </AdminContentProvider>
   );
 }

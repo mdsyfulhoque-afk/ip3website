@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>IP3 social image</title>
+<style>
+  @font-face { font-family: 'Literata'; src: url('../node_modules/@fontsource-variable/literata/files/literata-latin-opsz-normal.woff2') format('woff2'); font-weight: 200 900; }
+  @font-face { font-family: 'Public Sans'; src: url('../node_modules/@fontsource-variable/public-sans/files/public-sans-latin-wght-normal.woff2') format('woff2'); font-weight: 100 900; }
+  * { box-sizing: border-box; margin: 0; }
+  html, body { width: 1200px; height: 630px; background: #0A1628; overflow: hidden; }
+  .bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.9; }
+  .scrim { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(6,14,27,0.94) 0%, rgba(6,14,27,0.8) 45%, rgba(6,14,27,0.1) 90%); }
+  .content { position: absolute; left: 72px; top: 64px; right: 72px; bottom: 64px; display: flex; flex-direction: column; justify-content: space-between; color: #F2EFE5; }
+  .brand { display: flex; align-items: center; gap: 18px; font-family: 'Public Sans', sans-serif; }
+  .brand svg { width: 56px; height: 56px; }
+  .brand b { display: block; font-family: 'Literata', serif; font-size: 34px; font-weight: 600; line-height: 1; }
+  .brand span { display: block; margin-top: 6px; font-size: 19px; color: #A9B8CC; }
+  h1 { font-family: 'Literata', serif; font-weight: 400; font-size: 100px; line-height: 1.02; letter-spacing: -0.02em; max-width: 760px; font-variation-settings: 'opsz' 72; }
+  .foot { font-family: 'Public Sans', sans-serif; font-size: 24px; color: #A9B8CC; max-width: 960px; line-height: 1.35; }
+</style>
+</head>
+<body>
+  <img class="bg" src="../public/contours.svg" alt="" />
+  <div class="scrim"></div>
+  <div class="content">
+    <div class="brand">
+      <svg viewBox="0 0 32 32" fill="none" stroke-width="1.9" stroke-linejoin="round" stroke-linecap="round">
+        <path d="M3 10 L16 3 L29 10 L16 17 Z" stroke="#35D6CF" fill="#35D6CF" fill-opacity="0.16" />
+        <path d="M3 16 L16 23 L29 16" stroke="#F2EFE5" />
+        <path d="M3 22 L16 29 L29 22" stroke="#E3A94B" />
+      </svg>
+      <div><b>IP3</b><span>Institute for Public Policy and Practice</span></div>
+    </div>
+    <h1>From polycrisis to polysolution.</h1>
+    <p class="foot">Independent policy analysis, action research and management consulting.</p>
+  </div>
+</body>
+</html>

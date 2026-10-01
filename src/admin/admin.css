@@ -1,0 +1,33 @@
+@import 'tailwindcss';
+@import '@fontsource-variable/literata/opsz.css';
+@import '@fontsource-variable/public-sans/wght.css';
+
+@theme {
+  --font-serif: 'Literata Variable', 'Iowan Old Style', 'Palatino Linotype', Georgia, serif;
+  --font-sans: 'Public Sans Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+
+:root {
+  color-scheme: dark;
+}
+
+html {
+  background: #050a12;
+}
+
+body {
+  margin: 0;
+  background: #050a12;
+  color: #f2efe5;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+button {
+  cursor: pointer;
+}
+
+:focus-visible {
+  outline: 2px solid #35d6cf;
+  outline-offset: 2px;
+}

@@ -33,11 +33,35 @@ if (isProd) {
     process.exit(1);
   }
 
-  app.use(express.static(distPath, { maxAge: '1y', index: false }));
+  // Hashed bundles never change, so they are cached for a year. Everything else (pages, sitemap,
+  // images without a hash in the name) is revalidated, so a new deploy shows up straight away.
+  app.use(
+    express.static(distPath, {
+      index: 'index.html',
+      redirect: false,
+      setHeaders(res, file) {
+        res.setHeader(
+          'Cache-Control',
+          file.includes(`${path.sep}assets${path.sep}`) ? 'public, max-age=31536000, immutable' : 'no-cache',
+        );
+      },
+    }),
+  );
 
+  // Every public page is prerendered to dist/<route>/index.html. A route that was added later in the
+  // CMS has no file yet, so it gets the empty app shell (200.html) and renders in the browser.
   app.use((req, res) => {
-    const isAdmin = req.path === '/admin' || req.path.startsWith('/admin/');
-    res.sendFile(path.join(distPath, isAdmin ? 'admin.html' : 'index.html'));
+    if (req.path === '/admin' || req.path.startsWith('/admin/')) {
+      return res.sendFile(path.join(distPath, 'admin.html'));
+    }
+    // A missing file (a stale script or image) must be a real 404, never the HTML shell.
+    if (/\.[a-zA-Z0-9]{1,8}$/.test(req.path)) return res.status(404).type('text/plain').send('Not found');
+    const route = req.path.replace(/\/+$/, '');
+    const prerendered = /^[a-zA-Z0-9/_-]*$/.test(route) ? path.join(distPath, route, 'index.html') : null;
+    if (prerendered && prerendered.startsWith(distPath) && fs.existsSync(prerendered)) {
+      return res.sendFile(prerendered);
+    }
+    res.sendFile(path.join(distPath, '200.html'));
   });
 } else {
   const { createServer: createViteServer } = await import('vite');

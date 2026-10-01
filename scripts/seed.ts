@@ -1,9 +1,10 @@
 /**
- * Seeds MongoDB with the bundled default content.
+ * Seeds MongoDB with the bundled default content (src/content/defaults).
  *
  * Run once after pointing MONGODB_URI at a fresh database:
  *   npm run db:seed          — only writes if the collection is empty
- *   npm run db:seed -- --force  — overwrites the live content
+ *   npm run db:seed:force    — replaces the live content with the bundled defaults (the current
+ *                              version is kept in the revision history first)
  */
 import 'dotenv/config';
 import mongoose from 'mongoose';
@@ -13,7 +14,11 @@ import { connectDB } from '../server/lib/db.js';
 // type to a union, so they are used untyped here.
 import ContentModel from '../server/models/Content.js';
 import RevisionModel from '../server/models/Revision.js';
-import { DEFAULT_WEBSITE_DATA } from '../src/data/defaultContent';
+import { DEFAULT_CONTENT } from '../src/content/defaults';
+
+// The API stores one tree. The site reads `content` and ignores any other key, so a database that
+// still holds an older version of the site can never put old copy back on the page.
+const DEFAULT_WEBSITE_DATA = { content: DEFAULT_CONTENT };
 
 const Content: any = ContentModel;
 const Revision: any = RevisionModel;

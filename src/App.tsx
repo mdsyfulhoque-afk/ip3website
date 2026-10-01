@@ -1,255 +1,28 @@
-import React, { useState } from 'react';
-import { PresentationSlider } from './components/PresentationSlider';
-import { Navbar } from './components/Navbar';
-import { AboutPage } from './components/AboutPage';
-import { ApproachPage } from './components/ApproachPage';
-import { FocusPage } from './components/FocusPage';
-import { ServicesPage } from './components/ServicesPage';
-import { PeoplePage } from './components/PeoplePage';
-import { Ip3TrailerSection } from './components/Ip3TrailerSection';
-import { SystemsArchitectureSection } from './components/SystemsArchitectureSection';
-import { ExecutiveCard } from './components/ExecutiveCard';
-import { ContactSection } from './components/ContactSection';
-import { Footer } from './components/Footer';
-import { LetsTalkModal } from './components/LetsTalkModal';
-import { LetsCollaborateModal } from './components/LetsCollaborateModal';
-import { AdminPanelModal } from './components/AdminPanelModal';
-import { CMSProvider, useCMS } from './context/CMSContext';
-import { ContentGate } from './components/ContentGate';
+import { ContentProvider } from './content';
+import type { SiteContent } from './content/types';
+import { MotionProvider } from './lib/motion';
+import { AppRoutes } from './site/routes';
+import { Footer } from './site/components/Footer';
+import { Header } from './site/components/Header';
+import { ScrollManager } from './site/components/ScrollManager';
 
-function AppContent() {
-  const { data, themeMode, setThemeMode, toggleTheme } = useCMS();
-
-  const [currentPage, setCurrentPage] = useState<'home' | 'about' | 'approach' | 'focus' | 'services' | 'people'>('home');
-  const [currentSlideId, setCurrentSlideId] = useState<number>(data.slides?.[0]?.id ?? 1);
-  const [autoplayInterval] = useState<number>(3000);
-
-  // Executive Modals & Theme State
-  const isDarkMode = themeMode === 'dark';
-  const handleSetDarkMode = (val: boolean | ((prev: boolean) => boolean)) => {
-    if (typeof val === 'function') {
-      const nextVal = val(isDarkMode);
-      setThemeMode(nextVal ? 'dark' : 'light');
-    } else {
-      setThemeMode(val ? 'dark' : 'light');
-    }
-  };
-
-  const [isTalkModalOpen, setIsTalkModalOpen] = useState<boolean>(false);
-  const [isCollaborateModalOpen, setIsCollaborateModalOpen] = useState<string | boolean>(false);
-  const [collaborateArea, setCollaborateArea] = useState<string>('Multi-Domain System Transformation');
-  const [isAdminOpen, setIsAdminOpen] = useState<boolean>(false);
-
-  // Hidden keyboard shortcut (Ctrl+Shift+A or Cmd+Shift+A) to open Admin/CMS Studio
-  React.useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'A' || e.key === 'a')) {
-        e.preventDefault();
-        setIsAdminOpen((prev) => !prev);
-      }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
-
-  const [targetSection, setTargetSection] = useState<string | undefined>(undefined);
-
-  /**
-   * Every visit — including a reload or a back-navigation — opens on the header
-   * slider. Browsers restore the previous scroll offset by default, which would
-   * drop a returning visitor midway down the page.
-   */
-  React.useEffect(() => {
-    if ('scrollRestoration' in window.history) {
-      window.history.scrollRestoration = 'manual';
-    }
-    window.scrollTo(0, 0);
-    setCurrentSlideId(data.slides?.[0]?.id ?? 1);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const handleSelectSlide = (id: number) => {
-    setCurrentSlideId(id);
-  };
-
-  const handleNavigate = (page: 'home' | 'about' | 'approach' | 'focus' | 'services' | 'people', sectionId?: string) => {
-    setCurrentPage(page);
-    setTargetSection(sectionId);
-
-    // Landing on home with no section requested means the header slider.
-    if (page === 'home' && (!sectionId || sectionId === '#hero')) {
-      setCurrentSlideId(data.slides?.[0]?.id ?? 1);
-      window.scrollTo({ top: 0, behavior: 'auto' });
-      return;
-    }
-
-    if (!sectionId) {
-      window.scrollTo({ top: 0, behavior: 'auto' });
-    }
-
-    if (sectionId) {
-      setTimeout(() => {
-        const target = document.querySelector(sectionId);
-        if (target) {
-          target.scrollIntoView({ behavior: 'smooth' });
-        }
-      }, 100);
-    }
-  };
-
+export default function App({ content }: { content?: SiteContent }) {
   return (
-    <div className="relative min-h-screen bg-[var(--bg)] text-[var(--white)] font-sans antialiased overflow-x-clip selection:bg-[#ff7e67]/30 selection:text-[#ff9d8c] transition-colors duration-250">
-      {/* Header Overlay Navigation - Common for all pages */}
-      <Navbar
-        currentPage={currentPage}
-        onNavigate={handleNavigate}
-      />
-
-      {currentPage === 'about' ? (
-        /* Dedicated Separate About Page */
-        <AboutPage
-          darkMode={isDarkMode}
-          setDarkMode={handleSetDarkMode}
-          initialSection={targetSection}
-          onOpenTalk={() => setIsTalkModalOpen(true)}
-          onOpenCollaborate={(area) => {
-            setCollaborateArea(area || 'Multi-Domain System Transformation');
-            setIsCollaborateModalOpen(true);
-          }}
-          onNavigateHome={() => handleNavigate('home', '#hero')}
-          onNavigateContact={() => handleNavigate('home', '#contact-advisory')}
-          onNavigateApproach={() => handleNavigate('approach')}
-          onNavigateFocus={(sectionId) => handleNavigate('focus', sectionId)}
-          onNavigatePeople={() => handleNavigate('people')}
-        />
-      ) : currentPage === 'people' ? (
-        /* Dedicated Separate IP3 People Page */
-        <PeoplePage
-          darkMode={isDarkMode}
-          onOpenTalk={() => setIsTalkModalOpen(true)}
-          onOpenCollaborate={(area) => {
-            setCollaborateArea(area || 'Faculty & Advisory Inquiry');
-            setIsCollaborateModalOpen(true);
-          }}
-          onNavigateHome={() => handleNavigate('home', '#hero')}
-          onNavigateAbout={() => handleNavigate('about')}
-          onNavigateApproach={() => handleNavigate('approach')}
-          onNavigateFocus={(sectionId) => handleNavigate('focus', sectionId)}
-          onNavigateServices={() => handleNavigate('services')}
-        />
-      ) : currentPage === 'approach' ? (
-        /* Dedicated Separate Approach Page */
-        <ApproachPage
-          initialSection={targetSection}
-          onNavigateHome={() => handleNavigate('home', '#hero')}
-          onNavigateContact={() => handleNavigate('home', '#contact-advisory')}
-          onNavigateAbout={() => handleNavigate('about')}
-          onNavigatePeople={() => handleNavigate('people')}
-          onNavigateFocus={(sectionId) => handleNavigate('focus', sectionId)}
-          onNavigateServices={(serviceId) => handleNavigate('services', serviceId)}
-          onOpenTalk={() => setIsTalkModalOpen(true)}
-        />
-      ) : currentPage === 'focus' ? (
-        /* Dedicated Separate Focus Page */
-        <FocusPage
-          darkMode={isDarkMode}
-          setDarkMode={handleSetDarkMode}
-          initialSection={targetSection}
-          onOpenTalk={() => setIsTalkModalOpen(true)}
-          onOpenCollaborate={(area) => {
-            setCollaborateArea(area || 'Multi-Domain System Transformation');
-            setIsCollaborateModalOpen(true);
-          }}
-          onNavigateHome={() => handleNavigate('home', '#hero')}
-          onNavigateContact={() => handleNavigate('home', '#contact-advisory')}
-          onNavigateApproach={() => handleNavigate('approach')}
-          onNavigateAbout={() => handleNavigate('about')}
-        />
-      ) : currentPage === 'services' ? (
-        /* Dedicated Separate Services Page with 5 Sub-Pages */
-        <ServicesPage
-          initialSubPageId={targetSection}
-          onOpenTalk={() => setIsTalkModalOpen(true)}
-          onOpenCollaborate={(area) => {
-            setCollaborateArea(area || 'Sovereign Advisory & Systems');
-            setIsCollaborateModalOpen(true);
-          }}
-          onNavigateHome={() => handleNavigate('home', '#hero')}
-          onNavigateContact={() => handleNavigate('home', '#contact-advisory')}
-          onNavigateAbout={() => handleNavigate('about')}
-          onNavigateApproach={() => handleNavigate('approach')}
-          onNavigateFocus={() => handleNavigate('focus')}
-        />
-      ) : (
-        /* Main Home Page Stream */
-        <>
-          {/* Main Presentation Slider Header Hero */}
-          <section id="hero" className="w-full min-h-screen lg:h-screen relative">
-            <PresentationSlider
-              slides={data.slides}
-              currentSlideId={currentSlideId}
-              onChangeSlide={handleSelectSlide}
-              autoplayInterval={autoplayInterval}
-            />
-          </section>
-
-          {/* Official Institutional Trailer Section */}
-          <Ip3TrailerSection />
-
-          {/* Complexity & Systems Architecture Section (Built for the complexity of now) */}
-          <SystemsArchitectureSection />
-
-          {/* Executive Briefing / Strategic Leadership Section */}
-          <ExecutiveCard
-            darkMode={isDarkMode}
-            setDarkMode={handleSetDarkMode}
-            onOpenTalk={() => setIsTalkModalOpen(true)}
-            onOpenCollaborate={() => {
-              setCollaborateArea('Multi-Domain System Transformation');
-              setIsCollaborateModalOpen(true);
-            }}
-          />
-
-          {/* IP3 Client Advisory, Contact & Consultation Section */}
-          <ContactSection />
-        </>
-      )}
-
-      {/* Footer */}
-      {currentPage !== 'about' && currentPage !== 'people' && <Footer />}
-
-
-      {/* Interactive Action Modals */}
-      <LetsTalkModal
-        isOpen={isTalkModalOpen}
-        onClose={() => setIsTalkModalOpen(false)}
-        darkMode={isDarkMode}
-      />
-
-      <LetsCollaborateModal
-        isOpen={Boolean(isCollaborateModalOpen)}
-        onClose={() => setIsCollaborateModalOpen(false)}
-        darkMode={isDarkMode}
-        preselectedArea={collaborateArea}
-      />
-
-      {/* Admin Panel Modal for Full Site Content & Typography Control */}
-      <AdminPanelModal
-        isOpen={isAdminOpen}
-        onClose={() => setIsAdminOpen(false)}
-      />
-
-    </div>
-  );
-}
-
-export default function App() {
-  return (
-    <CMSProvider>
-      {/* Nothing renders until MongoDB has answered — see ContentGate. */}
-      <ContentGate>
-        <AppContent />
-      </ContentGate>
-    </CMSProvider>
+    <ContentProvider initial={content}>
+      <MotionProvider>
+        <ScrollManager />
+        <a
+          href="#main"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-full focus:bg-ivory focus:px-5 focus:py-3 focus:text-midnight"
+        >
+          Skip to main content
+        </a>
+        <Header />
+        <main id="main" tabIndex={-1} className="outline-none">
+          <AppRoutes />
+        </main>
+        <Footer />
+      </MotionProvider>
+    </ContentProvider>
   );
 }

@@ -60,7 +60,7 @@ export const OverviewPanel: React.FC<{ onNavigate: (tab: string) => void }> = ({
     <div className="space-y-6">
       <div>
         <h2 className="text-2xl font-bold font-serif text-slate-100 flex items-center gap-2.5">
-          <LayoutDashboard className="w-5 h-5 text-[#ff7e67]" />
+          <LayoutDashboard className="w-5 h-5 text-[#e3a94b]" />
           Overview
         </h2>
         <p className="text-xs text-slate-400 mt-1">
@@ -70,19 +70,19 @@ export const OverviewPanel: React.FC<{ onNavigate: (tab: string) => void }> = ({
 
       <div className="grid gap-3.5 sm:grid-cols-2 xl:grid-cols-4">
         <StatCard
-          icon={<Inbox className="w-4 h-4 text-[#ff7e67]" />}
+          icon={<Inbox className="w-4 h-4 text-[#e3a94b]" />}
           label="Total enquiries"
           value={leadCount ?? '—'}
           hint={newLeads !== null ? `${newLeads} awaiting triage` : undefined}
         />
         <StatCard
-          icon={<CalendarCheck className="w-4 h-4 text-[#ff7e67]" />}
+          icon={<CalendarCheck className="w-4 h-4 text-[#e3a94b]" />}
           label="Consultations"
           value={bookingCount ?? '—'}
           hint={upcoming !== null ? `${upcoming} upcoming` : undefined}
         />
         <StatCard
-          icon={<Database className="w-4 h-4 text-[#ff7e67]" />}
+          icon={<Database className="w-4 h-4 text-[#e3a94b]" />}
           label="Content"
           value={health?.content ? `v${health.content.version}` : '—'}
           hint={
@@ -92,7 +92,7 @@ export const OverviewPanel: React.FC<{ onNavigate: (tab: string) => void }> = ({
           }
         />
         <StatCard
-          icon={<Video className="w-4 h-4 text-[#ff7e67]" />}
+          icon={<Video className="w-4 h-4 text-[#e3a94b]" />}
           label="CDN assets"
           value={mediaCount ?? '—'}
           hint={cdnOk ? 'Images and video on Cloudinary' : 'CDN not configured'}
@@ -102,11 +102,11 @@ export const OverviewPanel: React.FC<{ onNavigate: (tab: string) => void }> = ({
       <div className="grid gap-3.5 lg:grid-cols-2">
         <button
           onClick={() => onNavigate('leads')}
-          className="text-left bg-[#081220] border border-slate-800 hover:border-[#ff7e67]/50 rounded-2xl p-5 transition-colors cursor-pointer group"
+          className="text-left bg-[#081220] border border-slate-800 hover:border-[#e3a94b]/50 rounded-2xl p-5 transition-colors cursor-pointer group"
         >
           <div className="flex items-center justify-between">
             <h3 className="text-sm font-bold text-slate-100">Review the enquiry inbox</h3>
-            <ExternalLink className="w-4 h-4 text-slate-500 group-hover:text-[#ff7e67] transition-colors" />
+            <ExternalLink className="w-4 h-4 text-slate-500 group-hover:text-[#e3a94b] transition-colors" />
           </div>
           <p className="text-xs text-slate-400 mt-1.5 leading-relaxed">
             Every contact form, Let's Talk, Let's Collaborate and Get Started submission,
@@ -116,11 +116,11 @@ export const OverviewPanel: React.FC<{ onNavigate: (tab: string) => void }> = ({
 
         <button
           onClick={() => onNavigate('bookings')}
-          className="text-left bg-[#081220] border border-slate-800 hover:border-[#ff7e67]/50 rounded-2xl p-5 transition-colors cursor-pointer group"
+          className="text-left bg-[#081220] border border-slate-800 hover:border-[#e3a94b]/50 rounded-2xl p-5 transition-colors cursor-pointer group"
         >
           <div className="flex items-center justify-between">
             <h3 className="text-sm font-bold text-slate-100">Manage consultations</h3>
-            <ExternalLink className="w-4 h-4 text-slate-500 group-hover:text-[#ff7e67] transition-colors" />
+            <ExternalLink className="w-4 h-4 text-slate-500 group-hover:text-[#e3a94b] transition-colors" />
           </div>
           <p className="text-xs text-slate-400 mt-1.5 leading-relaxed">
             Join or cancel scheduled sessions. Cancelling also removes the Google Calendar event.
@@ -138,7 +138,7 @@ export const OverviewPanel: React.FC<{ onNavigate: (tab: string) => void }> = ({
           ].map(([label, ok, detail]) => (
             <li key={label as string} className="flex items-center gap-2.5">
               {ok ? (
-                <CircleCheck className="w-4 h-4 text-[#ff7e67] shrink-0" />
+                <CircleCheck className="w-4 h-4 text-[#e3a94b] shrink-0" />
               ) : (
                 <CircleAlert className="w-4 h-4 text-slate-400 shrink-0" />
               )}

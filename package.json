@@ -1,5 +1,5 @@
 {
-  "name": "ip3-platform",
+  "name": "ip3-website",
   "private": true,
   "version": "3.0.0",
   "type": "module",
@@ -8,15 +8,21 @@
   },
   "scripts": {
     "dev": "node server.js",
-    "build": "vite build",
-    "start": "node server.js",
+    "build": "tsc --noEmit && vite build && vite build --ssr src/entry-server.tsx --outDir dist-ssr && node scripts/prerender.mjs",
+    "start": "cross-env NODE_ENV=production node server.js",
     "preview": "npm run build && npm run start",
+    "test": "vitest run",
+    "lint": "tsc --noEmit",
+    "assets": "tsx scripts/make-contours.ts && node scripts/make-icons.mjs",
+    "check:placeholders": "tsx scripts/list-placeholders.ts",
     "db:seed": "tsx scripts/seed.ts",
     "db:seed:force": "tsx scripts/seed.ts --force",
-    "hash:password": "node scripts/hash-password.js",
-    "lint": "tsc --noEmit"
+    "hash:password": "node scripts/hash-password.js"
   },
   "dependencies": {
+    "@fontsource-variable/literata": "^5.3.0",
+    "@fontsource-variable/public-sans": "^5.3.0",
+    "@react-three/fiber": "^9.8.1",
     "bcryptjs": "^2.4.3",
     "cloudinary": "^2.5.1",
     "cookie-parser": "^1.4.7",
@@ -28,21 +34,32 @@
     "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.546.0",
     "mongoose": "^8.9.5",
-    "motion": "^12.23.24",
     "react": "^19.0.1",
-    "react-dom": "^19.0.1"
+    "react-dom": "^19.0.1",
+    "react-router": "^7.18.4",
+    "react-router-dom": "^7.18.4",
+    "three": "^0.186.1"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.1.14",
+    "@types/bcryptjs": "^2.4.6",
+    "@types/d3-contour": "^3.0.6",
+    "@types/d3-geo": "^3.1.1",
     "@types/node": "^22.14.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
+    "@types/three": "^0.186.0",
     "@vitejs/plugin-react": "^5.0.4",
-    "autoprefixer": "^10.4.21",
+    "axe-core": "^4.13.0",
     "cross-env": "^7.0.3",
+    "d3-contour": "^4.0.2",
+    "d3-geo": "^3.1.1",
+    "sharp": "^0.35.5",
     "tailwindcss": "^4.1.14",
     "tsx": "^4.23.12",
     "typescript": "~5.8.2",
-    "vite": "^6.2.3"
-  }
+    "vite": "^6.2.3",
+    "vitest": "^3.2.7"
+  },
+  "description": "IP3 Consulting Limited (Institute for Public Policy and Practice): public site, content studio, enquiry and booking API."
 }
