@@ -1,5 +1,42 @@
 import React, { useEffect, useRef } from 'react';
 import { ChevronRight } from 'lucide-react';
+import { ImageStreamHero, StreamImage } from './ui/image-stream-hero';
+import { useCMS, defaultCorridorHero } from '../context/CMSContext';
+
+const STREAM_HERO_IMAGES: StreamImage[] = [
+  {
+    src: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=900&q=80",
+    alt: "Institutional Systems & Modern Architecture",
+  },
+  {
+    src: "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&w=900&q=80",
+    alt: "Climate Action & Ecological Transition",
+  },
+  {
+    src: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=900&q=80",
+    alt: "Digital Public Infrastructure & Data Networks",
+  },
+  {
+    src: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=900&q=80",
+    alt: "Collaborative Policy Co-Design & Strategic Advisory",
+  },
+  {
+    src: "https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=900&q=80",
+    alt: "Education & Human Capacity Development",
+  },
+  {
+    src: "https://images.unsplash.com/photo-1497435334941-8c899ee9e8e9?auto=format&fit=crop&w=900&q=80",
+    alt: "Clean Energy & Resilient Urban Infrastructure",
+  },
+  {
+    src: "https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=900&q=80",
+    alt: "Governance, Regulation & Public Sector Delivery",
+  },
+  {
+    src: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=900&q=80",
+    alt: "Systems Engineering & Grounded Implementation",
+  },
+];
 
 export interface AboutPageProps {
   darkMode?: boolean;
@@ -22,6 +59,9 @@ export const AboutPage: React.FC<AboutPageProps> = ({
   onNavigateFocus,
   onNavigatePeople,
 }) => {
+  const { data } = useCMS();
+  const corridorConfig = data.corridorHero ?? defaultCorridorHero;
+
   const containerRef = useRef<HTMLDivElement>(null);
   const fieldCanvasRef = useRef<HTMLCanvasElement>(null);
   const storyCanvasRef = useRef<HTMLCanvasElement>(null);
@@ -301,8 +341,8 @@ export const AboutPage: React.FC<AboutPageProps> = ({
               const dy = nodes[a].y - nodes[b].y;
               const d = Math.sqrt(dx * dx + dy * dy);
               if (d < maxd) {
-                const al = (1 - d / maxd) * lerp(0.05, 0.12, p);
-                ctx.strokeStyle = `hsla(${hue},55%,60%,${al.toFixed(3)})`;
+                const al = (1 - d / maxd) * lerp(0.08, 0.22, p);
+                ctx.strokeStyle = `rgba(213, 200, 188, ${al.toFixed(3)})`;
                 ctx.beginPath();
                 ctx.moveTo(nodes[a].x, nodes[a].y);
                 ctx.lineTo(nodes[b].x, nodes[b].y);
@@ -314,7 +354,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({
           for (let c = 0; c < nodes.length; c++) {
             ctx.beginPath();
             ctx.arc(nodes[c].x, nodes[c].y, 1.4, 0, 6.2832);
-            ctx.fillStyle = `hsla(${hue},50%,65%,0.5)`;
+            ctx.fillStyle = `rgba(139, 58, 42, ${lerp(0.2, 0.45, p).toFixed(3)})`;
             ctx.fill();
           }
           fieldRaf = requestAnimationFrame(frameField);
@@ -411,8 +451,8 @@ export const AboutPage: React.FC<AboutPageProps> = ({
           prog += (target - prog) * 0.06;
           tphase += 0.012;
           ctx.clearRect(0, 0, W, H);
-          const col1 = [219, 120, 80];
-          const col2 = [116, 178, 193];
+          const col1 = [139, 58, 42];
+          const col2 = [213, 200, 188];
           const mix = (t: number) =>
             `rgba(${Math.round(lerp(col1[0], col2[0], t))},${Math.round(
               lerp(col1[1], col2[1], t)
@@ -434,7 +474,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({
             for (let g = 0; g < edges.length; g++) {
               const p1 = pts[edges[g][0]];
               const p2 = pts[edges[g][1]];
-              ctx.strokeStyle = mix(prog) + (0.18 * ea) + ')';
+              ctx.strokeStyle = mix(prog) + (0.28 * ea) + ')';
               ctx.beginPath();
               ctx.moveTo(p1.x, p1.y);
               ctx.lineTo(p2.x, p2.y);
@@ -444,7 +484,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({
 
           const sa = clamp(1 - prog / 0.5, 0, 1) * 0.5;
           if (sa > 0.02) {
-            ctx.strokeStyle = 'rgba(150,160,165,' + (0.1 * sa) + ')';
+            ctx.strokeStyle = 'rgba(213,200,188,' + (0.35 * sa) + ')';
             ctx.lineWidth = 1;
             for (let q = 0; q < N; q++) {
               const nb = (q * 7 + 3) % N;
@@ -459,18 +499,18 @@ export const AboutPage: React.FC<AboutPageProps> = ({
             const lit = clamp(prog, 0, 1);
             ctx.beginPath();
             ctx.arc(pts[n].x, pts[n].y, lerp(2.4, 4.2, lit), 0, 6.2832);
-            ctx.fillStyle = mix(prog) + (0.35 + 0.55 * lit) + ')';
+            ctx.fillStyle = mix(prog) + (0.45 + 0.55 * lit) + ')';
             ctx.fill();
             if (prog > 0.55) {
               ctx.font = "9px 'IBM Plex Mono', monospace";
-              ctx.fillStyle = 'rgba(162,177,180,' + (((prog - 0.55) / 0.45) * 0.9).toFixed(2) + ')';
+              ctx.fillStyle = 'rgba(28,25,23,' + (((prog - 0.55) / 0.45) * 0.95).toFixed(2) + ')';
               ctx.textAlign = 'center';
               ctx.fillText(labels[n], pts[n].x, pts[n].y - 8);
             }
           }
 
           if (prog > 0.7) {
-            ctx.strokeStyle = 'rgba(219,120,80,' + (((prog - 0.7) / 0.3) * 0.5).toFixed(2) + ')';
+            ctx.strokeStyle = 'rgba(139,58,42,' + (((prog - 0.7) / 0.3) * 0.6).toFixed(2) + ')';
             ctx.lineWidth = 1;
             ctx.setLineDash([2, 4]);
             ctx.beginPath();
@@ -546,10 +586,10 @@ export const AboutPage: React.FC<AboutPageProps> = ({
   }, []);
 
   return (
-    <div ref={containerRef} className="about-deck js selection:bg-[#db7850] selection:text-[#0a1218]">
+    <div ref={containerRef} className="about-deck js selection:bg-[#8B3A2A]/20 selection:text-[#8B3A2A]">
       {/* Accessibility Skip Link */}
       <a
-        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:bg-[#db7850] focus:text-[#0a1218] focus:px-4 focus:py-2 focus:font-mono focus:text-xs"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:bg-[#8B3A2A] focus:text-white focus:px-4 focus:py-2 focus:font-mono focus:text-xs"
         href="#who"
       >
         Skip to content
@@ -569,40 +609,40 @@ export const AboutPage: React.FC<AboutPageProps> = ({
       </div>
 
       {/* 1. Page Header & Institutional Breadcrumb with Sub-Page Switcher */}
-      <div className="border-b border-slate-800 bg-[#050a12]/90 backdrop-blur-md relative z-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-wrap items-center justify-between gap-3 text-xs">
-          <div className="flex items-center gap-2 text-slate-400">
+      <div className="border-b border-[#D5C8BC] bg-[#FFFFFF]/95 backdrop-blur-md relative z-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex flex-wrap items-center justify-between gap-3 text-xs">
+          <div className="flex items-center gap-2 text-[#7A6B63]">
             <button
               onClick={onNavigateHome}
-              className="hover:text-white transition-colors cursor-pointer"
+              className="hover:text-[#1C1917] transition-colors cursor-pointer font-medium"
             >
               Home
             </button>
-            <ChevronRight className="w-3.5 h-3.5 opacity-60" />
-            <span className="text-[#ff7e67] font-bold">
+            <ChevronRight className="w-3.5 h-3.5 opacity-60 text-[#D5C8BC]" />
+            <span className="text-[#8B3A2A] font-bold">
               About Us
             </span>
           </div>
 
           <div className="flex items-center gap-2 font-mono text-[11px]">
-            <span className="text-slate-500 uppercase tracking-wider hidden sm:inline text-[10px]">About Sections:</span>
+            <span className="text-[#7A6B63] uppercase tracking-wider hidden sm:inline text-[10px] font-medium">About Sections:</span>
             <a
               href="#who"
-              className="px-2.5 py-1 rounded-md text-slate-300 hover:text-white hover:bg-slate-800/60 transition-colors"
+              className="px-2.5 py-1 rounded-md text-[#1C1917] hover:text-[#8B3A2A] hover:bg-[#F0EBE4] transition-colors font-medium"
             >
               Overview
             </a>
             <button
               onClick={onNavigatePeople}
-              className="px-2.5 py-1 rounded-md text-[#ff7e67] bg-[#ff7e67]/10 hover:bg-[#ff7e67]/20 border border-[#ff7e67]/30 transition-all flex items-center gap-1.5 cursor-pointer font-bold"
+              className="px-2.5 py-1 rounded-md text-[#8B3A2A] bg-[#8B3A2A]/10 hover:bg-[#8B3A2A]/20 border border-[#8B3A2A]/30 transition-all flex items-center gap-1.5 cursor-pointer font-bold"
               title="Navigate to Dedicated IP3 People Page"
             >
               <span>IP3 People</span>
-              <span className="text-[9px] uppercase tracking-wider bg-[#ff7e67] text-slate-950 px-1 py-0.2 rounded font-extrabold">Page</span>
+              <span className="text-[9px] uppercase tracking-wider bg-[#8B3A2A] text-white px-1 py-0.2 rounded font-extrabold">Page</span>
             </button>
             <button
               onClick={onNavigateApproach}
-              className="px-2.5 py-1 rounded-md text-slate-300 hover:text-white hover:bg-slate-800/60 transition-colors cursor-pointer"
+              className="px-2.5 py-1 rounded-md text-[#1C1917] hover:text-[#8B3A2A] hover:bg-[#F0EBE4] transition-colors cursor-pointer font-medium"
               title="Navigate to Our Approach Page"
             >
               <span>Our Approach</span>
@@ -611,25 +651,51 @@ export const AboutPage: React.FC<AboutPageProps> = ({
         </div>
       </div>
 
-      <main style={{ margin: '20px' }}>
+      <main className="w-full">
+        {/* ===================== IMAGE STREAM CORRIDOR (CMS CONTROLLED) ===================== */}
+        {corridorConfig.enabled !== false && (
+          <section
+            className="w-full relative overflow-hidden bg-neutral-950 h-[70vh] min-h-[520px] max-h-[780px] mb-8 border-b border-neutral-800 select-none shadow-2xl"
+            aria-label="Visual corridor journey"
+          >
+            <ImageStreamHero
+              images={corridorConfig.images && corridorConfig.images.length > 0 ? corridorConfig.images : STREAM_HERO_IMAGES}
+              cards={corridorConfig.cards || corridorConfig.images?.length || 8}
+              speed={corridorConfig.speed || 20}
+              axis={corridorConfig.axis || 55}
+              className="h-full w-full bg-neutral-950"
+            >
+              {corridorConfig.title && (
+                <div className="absolute top-6 left-6 z-10 pointer-events-none">
+                  <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-mono tracking-wider uppercase bg-black/65 backdrop-blur-md text-white/90 border border-white/20 shadow-lg">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#8B3A2A]" />
+                    {corridorConfig.title}
+                  </span>
+                </div>
+              )}
+            </ImageStreamHero>
+          </section>
+        )}
+
         {/* ===================== HERO ===================== */}
-        <section className="hero wrap" aria-labelledby="pagetitle" style={{ margin: '20px' }}>
+        <section
+          className="hero wrap"
+          style={{ backgroundColor: 'inherit' }}
+          aria-labelledby="pagetitle"
+        >
           <div className="hero__inner">
             <p className="eyebrow reveal">About IP3 Consulting</p>
             <h1 id="pagetitle" className="reveal" data-d="1">
               About IP3 Consulting: <em>Translational</em> Policy &amp; Systems Advisory
             </h1>
             <p className="hero__sub reveal" data-d="2">
-              We understand interconnected complexity, translate intelligence into actionable architecture, and work alongside institutions to carry solutions from policy vision through implementation, learning and scale.
+              We understand interconnected complexity, translate intelligence into actionable architecture, and work alongside institutions to carry solutions from policy vision through <span className="accent-word text-[#8B3A2A] font-semibold">implementation</span>, learning and scale.
             </p>
-            <div className="hero__cue reveal" data-d="3">
-              <span /> Scroll the journey
-            </div>
           </div>
         </section>
 
         {/* Thesis Pathway */}
-        <div className="thesis wrap" style={{ margin: '20px' }}>
+        <div className="thesis wrap">
           <figure className="pathway reveal">
             <p className="eyebrow" style={{ marginBottom: '1.6rem' }}>The IP3 through-line</p>
             <svg viewBox="0 0 920 150" role="img" aria-label="IP3 operating thesis as a left-to-right pathway: Complexity leads to Intelligence, Intelligence to Architecture, Architecture to Implementation, and Implementation to Impact.">
@@ -647,7 +713,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({
                 <text x="60" y="98">Complexity</text>
                 <text x="260" y="98">Intelligence</text>
                 <text x="460" y="98">Architecture</text>
-                <text x="660" y="98">Implementation</text>
+                <text x="660" y="98" fill="#8B3A2A" fontWeight="bold">Implementation</text>
                 <text x="860" y="98">Impact</text>
               </g>
               <g className="pw-desc" textAnchor="middle">
@@ -662,28 +728,28 @@ export const AboutPage: React.FC<AboutPageProps> = ({
               <li><b>Complexity</b><span>interconnected systems</span></li>
               <li><b>Intelligence</b><span>research &amp; policy insight</span></li>
               <li><b>Architecture</b><span>systems &amp; digital design</span></li>
-              <li><b>Implementation</b><span>delivery with institutions</span></li>
+              <li className="on"><b className="text-[#8B3A2A]">Implementation</b><span>delivery with institutions</span></li>
               <li className="on"><b>Impact</b><span>lasting capability</span></li>
             </ol>
-            <figcaption>Every section below is a stage on this path — complexity to intelligence, intelligence to architecture, architecture to implementation and impact.</figcaption>
+            <figcaption>Every section below is a stage on this path — complexity to intelligence, intelligence to architecture, architecture to <span className="text-[#8B3A2A] font-semibold">implementation</span> and impact.</figcaption>
           </figure>
         </div>
 
         {/* ===================== WHO WE ARE ===================== */}
-        <section className="section" id="who" aria-labelledby="who-h">
-          <div className="wrap" style={{ margin: '20px' }}>
+        <section className="section section--alt" id="who" aria-labelledby="who-h">
+          <div className="wrap">
             <div className="section__head reveal">
               <p className="eyebrow">01 // Who We Are</p>
               <h2 id="who-h">Translating policy intelligence into systems that work</h2>
               <p className="kicker">
-                IP3 Consulting — the Institute for Public Policy and Practice — is a <span className="term">translational policy studio</span> and <span className="term">systems integrator</span> helping governments, development partners, businesses and institutions turn complex policy ambitions into implementable, scalable solutions.
+                IP3 Consulting — the Institute for Public Policy and Practice — is a <span className="term">translational policy studio</span> and <span className="term">systems integrator</span> helping governments, development partners, businesses and institutions turn complex policy ambitions into <span className="accent-word text-[#8B3A2A] font-semibold">implementable</span>, scalable solutions.
               </p>
             </div>
 
             <div className="who-grid">
               <div className="prose reveal">
-                <p>We work where policy, economics, climate, institutions, data, technology, education and implementation intersect. By combining rigorous research and policy intelligence with systems thinking, digital architecture, locally grounded expertise and hands-on implementation support, we help clients move from understanding a problem to designing, testing, delivering and improving the solution.</p>
-                <p>What distinguishes IP3 is the distance we are prepared to travel with a problem. We do not stop at diagnosis, recommendations or the delivery of a report. We work across the policy and management advisory value chain — from market and institutional diagnostics, empirical research and <span className="term">policy co-design</span> through experimentation, <span className="term">implementation</span> support, monitoring, learning, adaptation and scale.</p>
+                <p>We work where policy, economics, climate, institutions, data, technology, education and <span className="accent-word text-[#8B3A2A] font-semibold">implementation</span> intersect. By combining rigorous research and policy intelligence with systems thinking, digital architecture, locally grounded expertise and hands-on implementation support, we help clients move from understanding a problem to designing, testing, delivering and improving the solution.</p>
+                <p>What distinguishes IP3 is the distance we are prepared to travel with a problem. We do not stop at diagnosis, recommendations or the delivery of a report. We work across the policy and management advisory value chain — from market and institutional diagnostics, empirical research and <span className="term">policy co-design</span> through experimentation, <span className="accent-word text-[#8B3A2A] font-semibold">implementation</span> support, monitoring, learning, adaptation and scale.</p>
                 <p className="pull">We translate intelligence into architecture — and architecture into impact.</p>
               </div>
 
@@ -706,12 +772,14 @@ export const AboutPage: React.FC<AboutPageProps> = ({
               </div>
             </div>
 
-            <div className="who-grid" style={{ marginTop: 'var(--step)' }}>
+            <div className="my-14 border-t border-[#D5C8BC]/80" />
+
+            <div className="who-grid">
               <div className="reveal">
                 <h3 style={{ marginBottom: '1.1rem' }}>A strategic policy &amp; management solutions firm built for the complexity of now</h3>
                 <div className="prose">
                   <p>Today's institutional challenges rarely arrive independently. Climate exposure interacts with financing constraints. Digital transformation reshapes service delivery. Education outcomes depend on institutional capability. Regulation intersects with markets, technology, behaviour and political economy.</p>
-                  <p><strong>IP3 is built for these intersections.</strong> We combine global expertise with <span className="term">Global South</span> intelligence — economists, policy specialists, systems thinkers, sector experts, data professionals, digital strategists and practitioners — to create solutions that are globally informed, locally workable and designed for implementation.</p>
+                  <p><strong>IP3 is built for these intersections.</strong> We combine global expertise with <span className="term">Global South</span> intelligence — economists, policy specialists, systems thinkers, sector experts, data professionals, digital strategists and practitioners — to create solutions that are globally informed, locally workable and designed for <span className="accent-word text-[#8B3A2A] font-semibold">implementation</span>.</p>
                 </div>
                 <div className="cta-row">
                   <button
@@ -726,26 +794,26 @@ export const AboutPage: React.FC<AboutPageProps> = ({
                 </div>
               </div>
               <div className="reveal who-aside" data-d="1" aria-hidden="true">
-                <figure className="pathway" style={{ margin: 0 }}>
+                <figure className="pathway bg-white p-5 rounded-xl border border-[#D5C8BC] shadow-sm" style={{ margin: 0 }}>
                   <svg className="who-aside-svg" viewBox="0 0 320 220" role="img" aria-label="Diagram: three overlapping domain nodes feeding a single implementation core.">
                     <defs>
                       <radialGradient id="dg" cx="50%" cy="50%" r="50%">
-                        <stop offset="0%" stopColor="var(--accent)" stopOpacity=".22" />
-                        <stop offset="100%" stopColor="var(--accent)" stopOpacity="0" />
+                        <stop offset="0%" stopColor="#8B3A2A" stopOpacity=".18" />
+                        <stop offset="100%" stopColor="#8B3A2A" stopOpacity="0" />
                       </radialGradient>
                     </defs>
                     <circle cx="160" cy="120" r="92" fill="url(#dg)" />
-                    <line x1="95" y1="70" x2="160" y2="150" className="dna-edge" />
-                    <line x1="225" y1="70" x2="160" y2="150" className="dna-edge" />
-                    <line x1="160" y1="60" x2="160" y2="150" className="dna-edge" />
-                    <circle cx="95" cy="70" r="9" fill="var(--ground-3)" stroke="var(--cool)" />
-                    <circle cx="225" cy="70" r="9" fill="var(--ground-3)" stroke="var(--cool)" />
-                    <circle cx="160" cy="58" r="9" fill="var(--ground-3)" stroke="var(--cool)" />
-                    <circle cx="160" cy="150" r="13" fill="var(--accent)" stroke="var(--accent)" />
-                    <text x="160" y="185" textAnchor="middle" className="pw-label">Implementation core</text>
-                    <text x="95" y="46" textAnchor="middle" className="pw-desc">Climate</text>
-                    <text x="225" y="46" textAnchor="middle" className="pw-desc">Institutions</text>
-                    <text x="160" y="34" textAnchor="middle" className="pw-desc">Education</text>
+                    <line x1="95" y1="70" x2="160" y2="150" stroke="#D5C8BC" strokeWidth="1.5" />
+                    <line x1="225" y1="70" x2="160" y2="150" stroke="#D5C8BC" strokeWidth="1.5" />
+                    <line x1="160" y1="60" x2="160" y2="150" stroke="#D5C8BC" strokeWidth="1.5" />
+                    <circle cx="95" cy="70" r="9" fill="#F0EBE4" stroke="#D5C8BC" strokeWidth="1.5" />
+                    <circle cx="225" cy="70" r="9" fill="#F0EBE4" stroke="#D5C8BC" strokeWidth="1.5" />
+                    <circle cx="160" cy="58" r="9" fill="#F0EBE4" stroke="#D5C8BC" strokeWidth="1.5" />
+                    <circle cx="160" cy="150" r="13" fill="#8B3A2A" stroke="#8B3A2A" />
+                    <text x="160" y="185" textAnchor="middle" className="pw-label" fill="#8B3A2A" fontWeight="bold">Implementation core</text>
+                    <text x="95" y="46" textAnchor="middle" className="pw-desc" fill="#7A6B63">Climate</text>
+                    <text x="225" y="46" textAnchor="middle" className="pw-desc" fill="#7A6B63">Institutions</text>
+                    <text x="160" y="34" textAnchor="middle" className="pw-desc" fill="#7A6B63">Education</text>
                   </svg>
                 </figure>
               </div>
@@ -760,7 +828,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({
               <p className="eyebrow">02 // Our Organizational DNA</p>
               <h2 id="dna-h">Built differently for complex change</h2>
               <p className="kicker">
-                A simple proposition: complex systems cannot be transformed through isolated answers. IP3 brings research, policy, technology, institutions, markets, people and implementation into the same problem-solving architecture. Five principles — one system.
+                A simple proposition: complex systems cannot be transformed through isolated answers. IP3 brings research, policy, technology, institutions, markets, people and <span className="accent-word text-[#8B3A2A] font-semibold">implementation</span> into the same problem-solving architecture. Five principles — one system.
               </p>
             </div>
 
@@ -815,13 +883,13 @@ export const AboutPage: React.FC<AboutPageProps> = ({
                   <p className="dna-step__n">Principle 02</p>
                   <h3>Translation, Not Theory</h3>
                   <p className="sub">Evidence matters when it changes what institutions can do.</p>
-                  <p>IP3 treats research as the beginning of the engagement, not its final product. Evidence becomes policy intelligence; policy intelligence becomes systems and delivery architecture; architecture becomes implementation; and implementation experience feeds back into learning and adaptation.</p>
+                  <p>IP3 treats research as the beginning of the engagement, not its final product. Evidence becomes policy intelligence; policy intelligence becomes systems and delivery architecture; architecture becomes <span className="accent-word text-[#8B3A2A] font-semibold">implementation</span>; and <span className="accent-word text-[#8B3A2A] font-semibold">implementation</span> experience feeds back into learning and adaptation.</p>
                   <ul className="flow" aria-label="Translational pathway">
                     <li>Research</li>
                     <li>Policy Intelligence</li>
                     <li>Systems Design</li>
                     <li>Digital Architecture</li>
-                    <li>Implementation</li>
+                    <li><span className="accent-word text-[#8B3A2A] font-semibold">Implementation</span></li>
                     <li>Learning &amp; Scale</li>
                   </ul>
                 </article>
@@ -831,22 +899,22 @@ export const AboutPage: React.FC<AboutPageProps> = ({
                   <h3>Thinking That Ships</h3>
                   <p className="sub">We develop thinking designed to leave the page.</p>
                   <p>Policy architectures, institutional theses, data stories, research reports, case studies, implementation frameworks, diagnostics and digital solutions are built to help decision-makers act, not simply understand.</p>
-                  <p>Insight should produce a decision, a design, a tested intervention, an institutional capability or a clearer pathway to implementation.</p>
+                  <p>Insight should produce a decision, a design, a tested intervention, an institutional capability or a clearer pathway to <span className="accent-word text-[#8B3A2A] font-semibold">implementation</span>.</p>
                 </article>
 
                 <article className="dna-step reveal" data-n="3">
                   <p className="dna-step__n">Principle 04</p>
                   <h3>End-to-End Expertise</h3>
                   <p className="sub">Full-stack advisory across the entire value chain.</p>
-                  <p>Complex transformations become vulnerable when strategy, research, implementation, data and evaluation are separated across disconnected advisory teams. IP3 integrates those capabilities.</p>
-                  <p>Depending on the assignment, we work across diagnostics, market and institutional assessment, policy research, data modelling, stakeholder engagement, programme and policy co-design, pilot development, implementation support, digital systems, MERLA, capability building, learning and scale.</p>
+                  <p>Complex transformations become vulnerable when strategy, research, <span className="accent-word text-[#8B3A2A] font-semibold">implementation</span>, data and evaluation are separated across disconnected advisory teams. IP3 integrates those capabilities.</p>
+                  <p>Depending on the assignment, we work across diagnostics, market and institutional assessment, policy research, data modelling, stakeholder engagement, programme and policy co-design, pilot development, <span className="accent-word text-[#8B3A2A] font-semibold">implementation</span> support, digital systems, MERLA, capability building, learning and scale.</p>
                 </article>
 
                 <article className="dna-step reveal" data-n="4">
                   <p className="dna-step__n">Principle 05</p>
                   <h3>A Convenor Between Worlds</h3>
                   <p className="sub">Global knowledge. Global South intelligence.</p>
-                  <p>IP3 operates between communities that too often work separately: policy and practice; government and markets; research and implementation; technology and institutions; international standards and local realities; experts and communities.</p>
+                  <p>IP3 operates between communities that too often work separately: policy and practice; government and markets; research and <span className="accent-word text-[#8B3A2A] font-semibold">implementation</span>; technology and institutions; international standards and local realities; experts and communities.</p>
                   <p>Through IP3's <span className="term">Dynamic Network Model</span>, complementary expertise is assembled across geographies and disciplines while retaining the local knowledge required to understand how institutions, incentives, markets, communities and delivery systems actually operate. Global South focus does not mean importing a global framework and localising the language — it means starting with context, and connecting context intelligently to global knowledge.</p>
                 </article>
               </div>
@@ -869,13 +937,13 @@ export const AboutPage: React.FC<AboutPageProps> = ({
                 <h2 id="vision-h">Policy innovation for transformative, sustainable growth</h2>
                 <p className="sub">The future we work toward.</p>
                 <p>We envision a future in which governments, institutions, businesses and communities possess the policies, capabilities, data, partnerships and institutional resilience needed to navigate complexity and create sustainable, equitable prosperity.</p>
-                <p>Our vision is for public policy to become more adaptive, more connected to implementation, and more capable of translating economic opportunity, technological change, social inclusion and environmental responsibility into durable improvements in institutions and people's lives.</p>
+                <p>Our vision is for public policy to become more adaptive, more connected to <span className="accent-word text-[#8B3A2A] font-semibold">implementation</span>, and more capable of translating economic opportunity, technological change, social inclusion and environmental responsibility into durable improvements in institutions and people's lives.</p>
               </div>
               <div className="vm__half vm__m">
                 <p className="eyebrow eyebrow--cool">Our Mission</p>
-                <h2 id="mission-h">Turning evidence, innovation and implementation into lasting impact</h2>
+                <h2 id="mission-h">Turning evidence, innovation and <span className="accent-word text-[#8B3A2A] font-semibold">implementation</span> into lasting impact</h2>
                 <p className="sub">What we do to get there.</p>
-                <p>Our mission is to help governments, development partners, businesses, institutions and communities solve complex policy and management challenges by connecting rigorous evidence with practical implementation.</p>
+                <p>Our mission is to help governments, development partners, businesses, institutions and communities solve complex policy and management challenges by connecting rigorous evidence with practical <span className="accent-word text-[#8B3A2A] font-semibold">implementation</span>.</p>
                 <p>We develop solutions that are contextually grounded and capable of enduring beyond the life of an assignment, combining:</p>
                 <div className="mech">
                   <span>Policy intelligence</span>
@@ -901,7 +969,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({
             <div className="section__head reveal">
               <p className="eyebrow">04 // Our Story</p>
               <h2 id="story-h">Why IP3 exists</h2>
-              <p className="kicker">IP3 emerged from a recurring problem in development and policy practice: good analysis does not automatically produce good implementation.</p>
+              <p className="kicker">IP3 emerged from a recurring problem in development and policy practice: good analysis does not automatically produce good <span className="accent-word text-[#8B3A2A] font-semibold">implementation</span>.</p>
             </div>
 
             <div className="story__inner">
@@ -915,7 +983,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({
               <div className="story__steps" id="storySteps">
                 <article className="story__step" data-s="0">
                   <p className="story__badge">The gap</p>
-                  <h3>Analysis on one side, implementation on the other</h3>
+                  <h3>Analysis on one side, <span className="accent-word text-[#8B3A2A] font-semibold">implementation</span> on the other</h3>
                   <p>Institutions are increasingly asked to respond to challenges that cross conventional policy boundaries. Climate, finance, technology, education, governance, inequality, service delivery, markets and institutional capacity interact in ways that traditional siloed advisory models struggle to address.</p>
                 </article>
 
@@ -923,7 +991,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({
                   <p className="story__badge">We are different</p>
                   <h3>The advisory relationship should go further</h3>
                   <p>We built IP3 around the belief that advice should not stop at explaining what should happen. It should help determine what can work, how it can work, who must be involved, what institutional architecture is required, how it can be tested, and how learning strengthens it over time.</p>
-                  <p>That is why IP3 combines the rigour of a policy research institution, the agility of an implementation partner and the integrative capability of a systems studio — bringing <span className="term">rigor and imagination</span> together: analytical depth without losing creativity; global knowledge without losing context; technology without losing people.</p>
+                  <p>That is why IP3 combines the rigour of a policy research institution, the agility of an <span className="accent-word text-[#8B3A2A] font-semibold">implementation</span> partner and the integrative capability of a systems studio — bringing <span className="term">rigor and imagination</span> together: analytical depth without losing creativity; global knowledge without losing context; technology without losing people.</p>
                 </article>
 
                 <article className="story__step" data-s="2">
@@ -956,11 +1024,11 @@ export const AboutPage: React.FC<AboutPageProps> = ({
                   <div className="track__mod" data-m="0"><span className="k">01</span><span className="nm">Sense</span><span className="arrow">→</span></div>
                   <div className="track__mod" data-m="1"><span className="k">02</span><span className="nm">Design</span><span className="arrow">→</span></div>
                   <div className="track__mod" data-m="2"><span className="k">03</span><span className="nm">Test</span><span className="arrow">→</span></div>
-                  <div className="track__mod" data-m="3"><span className="k">04</span><span className="nm">Implement</span><span className="arrow">→</span></div>
+                  <div className="track__mod" data-m="3"><span className="k">04</span><span className="nm font-semibold text-[#8B3A2A]">Implement</span><span className="arrow">→</span></div>
                   <div className="track__mod" data-m="4"><span className="k">05</span><span className="nm">Learn &amp; Scale</span><span className="arrow">●</span></div>
                 </div>
                 <p className="track__logic">
-                  The IP3 impact logic — <b>Sense → Design → Test → Implement → Learn &amp; Scale</b>
+                  The IP3 impact logic — <b>Sense → Design → Test → <span className="text-[#8B3A2A]">Implement</span> → Learn &amp; Scale</b>
                 </p>
               </div>
 
@@ -969,7 +1037,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({
                   <p className="n">01 — Sense the System</p>
                   <h3>Holistic diagnostics &amp; systems mapping</h3>
                   <p className="role">Understand the system rather than treat its symptoms.</p>
-                  <p>We map institutions, incentives, stakeholders, markets, policies, behaviours, data, risks, capabilities and implementation constraints — to find the real problem, the relationships sustaining it, and the points where intervention can create meaningful change.</p>
+                  <p>We map institutions, incentives, stakeholders, markets, policies, behaviours, data, risks, capabilities and <span className="accent-word text-[#8B3A2A] font-semibold">implementation</span> constraints — to find the real problem, the relationships sustaining it, and the points where intervention can create meaningful change.</p>
                   <div className="caps">
                     <span>Holistic diagnostics</span>
                     <span>Systems mapping</span>
@@ -997,7 +1065,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({
                   <p className="n">03 — Test Before Scale</p>
                   <h3>Policy experimentation, prototyping &amp; pilot execution</h3>
                   <p className="role">Learn before committing institutions to scale.</p>
-                  <p>Where appropriate, assumptions are tested through pilots, policy experimentation, operational prototyping, sandbox approaches or staged implementation.</p>
+                  <p>Where appropriate, assumptions are tested through pilots, policy experimentation, operational prototyping, sandbox approaches or staged <span className="accent-word text-[#8B3A2A] font-semibold">implementation</span>.</p>
                   <div className="caps">
                     <span>Pilots</span>
                     <span>Experimentation</span>
@@ -1008,13 +1076,13 @@ export const AboutPage: React.FC<AboutPageProps> = ({
                 </article>
 
                 <article className="deliver__step" data-m="3">
-                  <p className="n">04 — Implement with Institutions</p>
-                  <h3>Delivery architecture &amp; implementation support</h3>
-                  <p className="role">Implementation is part of the advisory architecture — not what happens after consulting.</p>
+                  <p className="n">04 — <span className="text-[#8B3A2A]">Implement</span> with Institutions</p>
+                  <h3>Delivery architecture &amp; <span className="accent-word text-[#8B3A2A] font-semibold">implementation</span> support</h3>
+                  <p className="role"><span className="accent-word text-[#8B3A2A] font-semibold">Implementation</span> is part of the advisory architecture — not what happens after consulting.</p>
                   <p>IP3 works alongside clients and stakeholders to translate design into operating reality — connecting people, processes, data, governance arrangements, technology, financing and institutional capability.</p>
                   <div className="caps">
                     <span>Delivery architecture</span>
-                    <span>Implementation support</span>
+                    <span><span className="accent-word text-[#8B3A2A] font-semibold">Implementation</span> support</span>
                     <span>Digital systems</span>
                     <span>Institutional capability</span>
                     <span>Stakeholder coordination</span>
@@ -1025,7 +1093,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({
                   <p className="n">05 — Learn, Adapt &amp; Scale</p>
                   <h3>MERLA, capability development &amp; continuous learning</h3>
                   <p className="role">Not simply to leave behind a solution — to strengthen the capacity to sustain, adapt and scale it.</p>
-                  <p>Transformation rarely follows a perfectly linear plan. We integrate monitoring, evaluation, research, learning and adaptation into implementation so evidence can inform decisions while change is occurring — through to scaling and institutionalisation.</p>
+                  <p>Transformation rarely follows a perfectly linear plan. We integrate monitoring, evaluation, research, learning and adaptation into <span className="accent-word text-[#8B3A2A] font-semibold">implementation</span> so evidence can inform decisions while change is occurring — through to scaling and institutionalisation.</p>
                   <div className="caps">
                     <span>Monitoring &amp; evaluation</span>
                     <span>Research</span>
@@ -1050,13 +1118,13 @@ export const AboutPage: React.FC<AboutPageProps> = ({
           </div>
         </section>
 
-        {/* ===================== LEADERSHIP ===================== */}
+        {/* ===================== LEADERSHIP (Bottom section start) ===================== */}
         <section className="section section--alt" id="leadership" aria-labelledby="leadership-h">
           <div className="wrap">
             <div className="section__head reveal">
               <p className="eyebrow">06 // IP3 Leadership</p>
               <h2 id="leadership-h">Leadership for the space between ideas and execution</h2>
-              <p className="kicker">IP3's leadership model reflects the firm itself: interdisciplinary, implementation-oriented, globally connected and grounded in the realities of policy and institutional transformation.</p>
+              <p className="kicker">IP3's leadership model reflects the firm itself: interdisciplinary, <span className="accent-word text-[#8B3A2A] font-semibold">implementation</span>-oriented, globally connected and grounded in the realities of policy and institutional transformation.</p>
             </div>
 
             {/* Executive Chairman */}
@@ -1067,7 +1135,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({
                 <h3>Mohammad Syful Hoque</h3>
                 <p className="org">Institute for Public Policy and Practice — IP3 Consulting</p>
                 <p className="desc">Driving transformative impact beyond policy.</p>
-                <p>IP3's leadership philosophy is built around moving beyond policy recommendation toward policy capability — bringing analytical rigour, systems thinking, technology, institutional intelligence, implementation discipline and cross-sector collaboration into a single transformation agenda.</p>
+                <p>IP3's leadership philosophy is built around moving beyond policy recommendation toward policy capability — bringing analytical rigour, systems thinking, technology, institutional intelligence, <span className="accent-word text-[#8B3A2A] font-semibold">implementation</span> discipline and cross-sector collaboration into a single transformation agenda.</p>
                 <p>Under this model, IP3 functions as a convergence point between thinkers and practitioners, connecting strategic policy insight with the people, institutions, technologies and operating systems required to convert ideas into viable change. The ambition is not simply to advise institutions on the future — it is to help them build the capacity to deliver it.</p>
               </div>
             </div>
@@ -1139,11 +1207,11 @@ export const AboutPage: React.FC<AboutPageProps> = ({
           </div>
         </section>
 
-        {/* ===================== CLOSE ===================== */}
+        {/* ===================== CLOSE (Bottom section continued) ===================== */}
         <section className="close wrap" aria-label="In summary">
           <div className="close__pt reveal" aria-hidden="true" />
           <p className="close__line reveal" data-d="1">
-            IP3 understands interconnected complexity, translates intelligence into <b>actionable architecture</b>, and works alongside institutions to carry solutions from policy vision through implementation, learning and <b>scale</b>.
+            IP3 understands interconnected complexity, translates intelligence into <b>actionable architecture</b>, and works alongside institutions to carry solutions from policy vision through <span className="accent-word text-[#8B3A2A] font-semibold">implementation</span>, learning and <b>scale</b>.
           </p>
           <div className="cta-row reveal" data-d="2">
             <button

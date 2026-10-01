@@ -243,8 +243,7 @@ export const OrbitalSystem: React.FC<OrbitalSystemProps> = ({
             cx={connectors[0].startX}
             cy={connectors[0].startY}
             r={hoveredNode === 'core' ? 5 : 3.5}
-            fill="#38d9c0"
-            filter={hoveredNode === 'core' ? 'url(#cyanGlow)' : undefined}
+            fill="#8B3A2A"
             className="transition-all duration-300"
           />
         )}
@@ -265,10 +264,9 @@ export const OrbitalSystem: React.FC<OrbitalSystemProps> = ({
                 <path
                   d={conn.d}
                   fill="none"
-                  stroke={card.lineColor}
+                  stroke="#8B3A2A"
                   strokeWidth={4.5}
-                  strokeOpacity={0.35}
-                  filter="url(#cyanGlow)"
+                  strokeOpacity={0.25}
                   strokeLinecap="round"
                 />
               )}
@@ -276,9 +274,9 @@ export const OrbitalSystem: React.FC<OrbitalSystemProps> = ({
               <path
                 d={conn.d}
                 fill="none"
-                stroke={isHighlighted ? card.lineColor : `${card.lineColor}77`}
-                strokeWidth={isHighlighted ? 2.5 : 1.3}
-                strokeOpacity={isHighlighted ? 0.95 : 0.45}
+                stroke={isHighlighted ? "#8B3A2A" : "#D5C8BC"}
+                strokeWidth={isHighlighted ? 2.5 : 1.5}
+                strokeOpacity={isHighlighted ? 0.95 : 0.75}
                 strokeLinecap="round"
                 className="transition-all duration-300"
               />
@@ -287,9 +285,8 @@ export const OrbitalSystem: React.FC<OrbitalSystemProps> = ({
                 <circle
                   cx={conn.endX}
                   cy={conn.endY}
-                  r={3}
-                  fill={card.lineColor}
-                  filter="url(#cyanGlow)"
+                  r={3.5}
+                  fill="#8B3A2A"
                   className="transition-all duration-300"
                 />
               )}
@@ -300,9 +297,6 @@ export const OrbitalSystem: React.FC<OrbitalSystemProps> = ({
 
       {/* Center Top: IP3 Circle Node */}
       <div className="relative z-20 flex flex-col items-center">
-        {/* Ambient Teal Backlight */}
-        <div className="absolute -inset-6 bg-teal-500/20 rounded-full blur-2xl pointer-events-none opacity-70" />
-
         <motion.button
           ref={ip3Ref}
           id="node-core-btn"
@@ -311,15 +305,15 @@ export const OrbitalSystem: React.FC<OrbitalSystemProps> = ({
           onMouseEnter={() => setHoveredNode('core')}
           onMouseLeave={() => setHoveredNode(null)}
           onClick={() => handleNodeClick('core')}
-          className="relative w-32 h-32 sm:w-36 sm:h-36 rounded-full flex flex-col items-center justify-center p-3 text-center cursor-pointer transition-all duration-300 border border-teal-400/40 hover:border-teal-300/80 bg-gradient-to-b from-[#081525] via-[#050e1a] to-[#02060c] shadow-[0_0_40px_rgba(45,212,191,0.25)] hover:shadow-[0_0_55px_rgba(45,212,191,0.45)] group"
+          className="relative w-32 h-32 sm:w-36 sm:h-36 rounded-full flex flex-col items-center justify-center p-3 text-center cursor-pointer transition-all duration-300 border-2 border-[#D5C8BC] hover:border-[#8B3A2A] bg-[#FFFFFF] shadow-md hover:shadow-xl hover:shadow-[#8B3A2A]/15 group"
         >
-          {/* Subtle interior dashed ring */}
-          <div className="absolute inset-1.5 rounded-full border border-teal-400/20 border-dashed animate-spin [animation-duration:45s] pointer-events-none" />
+          {/* Interior subtle dotted ring */}
+          <div className="absolute inset-1.5 rounded-full border border-[#D5C8BC]/70 border-dashed animate-spin [animation-duration:50s] pointer-events-none" />
 
-          <span className="font-serif font-bold text-3xl sm:text-4xl text-white tracking-wide group-hover:text-teal-200 transition-colors">
+          <span className="font-serif font-bold text-3xl sm:text-4xl text-[#1C1917] tracking-wide group-hover:text-[#8B3A2A] transition-colors">
             IP3
           </span>
-          <div className="mt-1 px-2.5 py-0.5 rounded-full border border-teal-400/50 bg-[#041722]/90 text-[#38d9c0] font-mono text-[8.5px] sm:text-[9px] tracking-[0.2em] font-semibold uppercase">
+          <div className="mt-1 px-2.5 py-0.5 rounded-full border border-[#D5C8BC] bg-[#F0EBE4] text-[#8B3A2A] font-mono text-[8.5px] sm:text-[9px] tracking-[0.18em] font-bold uppercase">
             BUILT FOR COMPLEXITY
           </div>
         </motion.button>
@@ -342,10 +336,10 @@ export const OrbitalSystem: React.FC<OrbitalSystemProps> = ({
               onClick={() => handleNodeClick(card.id)}
               onMouseEnter={() => setHoveredNode(card.id)}
               onMouseLeave={() => setHoveredNode(null)}
-              className={`relative flex flex-col justify-between p-5 sm:p-5.5 rounded-2xl bg-[#0b1524]/95 border transition-all duration-300 cursor-pointer overflow-hidden min-h-[250px] sm:min-h-[270px] group ${
+              className={`relative flex flex-col justify-between p-5 sm:p-5.5 rounded-2xl bg-[#FFFFFF] border transition-all duration-300 cursor-pointer overflow-hidden min-h-[250px] sm:min-h-[270px] group shadow-sm ${
                 isSelected || isHovered || isConnectedToCore
-                  ? `${card.hoverBorder} ${card.hoverGlow} bg-[#0d1a2d]`
-                  : 'border-slate-800/80 hover:border-slate-700 hover:bg-[#0e1a2b]'
+                  ? 'border-[#8B3A2A] shadow-md shadow-[#8B3A2A]/10'
+                  : 'border-[#D5C8BC] hover:border-[#8B3A2A]'
               }`}
             >
               {/* Internal subtle arc for small viewports / visual continuity */}
@@ -354,7 +348,7 @@ export const OrbitalSystem: React.FC<OrbitalSystemProps> = ({
                   <path
                     d={index < 3 ? "M 80 0 C 80 30, 60 50, 40 70" : "M 20 0 C 20 30, 40 50, 60 70"}
                     fill="none"
-                    stroke={card.lineColor}
+                    stroke="#D5C8BC"
                     strokeWidth="1.5"
                     strokeLinecap="round"
                   />
@@ -363,25 +357,25 @@ export const OrbitalSystem: React.FC<OrbitalSystemProps> = ({
 
               {/* Top Accent Pill Bar */}
               <div className="flex items-center justify-start mb-4">
-                <div className={`w-10 h-1 rounded-full ${card.topAccentColor}`} />
+                <div className="w-10 h-1 rounded-full bg-[#8B3A2A]" />
               </div>
 
               {/* Header: Number */}
-              <div className="flex items-center justify-between w-full mb-4 relative z-10">
-                <span className="font-mono text-xs font-semibold text-slate-400 tracking-wider">
+              <div className="flex items-center justify-between w-full mb-3 relative z-10">
+                <span className="font-mono text-xs font-bold text-[#7A6B63] tracking-wider">
                   {card.number}
                 </span>
               </div>
 
               {/* Content: Title and Description */}
-              <div className="space-y-2.5 relative z-10">
-                <h3 className="text-lg sm:text-[19px] font-bold text-white tracking-tight leading-snug group-hover:text-slate-100 transition-colors">
+              <div className="space-y-2 relative z-10">
+                <h3 className="text-lg sm:text-[19px] font-bold text-[#1C1917] tracking-tight leading-snug group-hover:text-[#8B3A2A] transition-colors">
                   {card.title}
                   {card.titleBreak && (
                     <span className="block">{card.titleBreak}</span>
                   )}
                 </h3>
-                <p className="text-slate-400 text-xs sm:text-[13px] leading-relaxed font-normal">
+                <p className="text-[#7A6B63] text-xs sm:text-[13px] leading-relaxed font-normal">
                   {card.description}
                 </p>
               </div>
@@ -410,10 +404,10 @@ export const OrbitalSystem: React.FC<OrbitalSystemProps> = ({
               }
             }
           }}
-          className="inline-flex items-center justify-center gap-2.5 px-6 sm:px-7 py-3 sm:py-3.5 rounded-full bg-[#081220] hover:bg-slate-800 text-slate-200 hover:text-white border border-slate-700/80 hover:border-[#38d9c0]/60 font-semibold text-sm sm:text-base tracking-wide transition-all shadow-lg hover:shadow-xl hover:shadow-[#38d9c0]/15 hover:-translate-y-0.5 active:translate-y-0 cursor-pointer group"
+          className="inline-flex items-center justify-center gap-2.5 px-6 sm:px-7 py-3 sm:py-3.5 rounded-full bg-[#1C1917] hover:bg-[#8B3A2A] text-white font-semibold text-sm sm:text-base tracking-wide transition-all shadow-md hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 cursor-pointer group"
         >
-          <span>Explore Our Capabilities.</span>
-          <Layers className="w-4 h-4 text-[#38d9c0] group-hover:scale-110 transition-transform duration-200" />
+          <span>Explore Our Capabilities</span>
+          <Layers className="w-4 h-4 text-[#D5C8BC] group-hover:text-white group-hover:scale-110 transition-transform duration-200" />
         </button>
       </motion.div>
     </div>

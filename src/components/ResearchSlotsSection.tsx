@@ -134,50 +134,72 @@ export default function ResearchSlotsSection({ className = '' }: ResearchSlotsSe
         </span>
       </div>
 
-      {/* Styled container matching client deliverables section */}
+      {/* Styled card grid matching client deliverables section */}
       <div
         id="sector-systems-items-container-research"
-        className="w-full text-left mx-auto divide-y divide-slate-800/80"
+        className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full text-left mx-auto pt-6 pb-8"
       >
         {RESEARCH_SLOTS.map((slot, idx) => (
           <motion.div
             key={slot.id}
             id={slot.id}
-            initial={{ opacity: 0, y: 15 }}
+            initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.05 * idx }}
-            className="w-full grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 items-start py-8 sm:py-10 border-b border-slate-800/80"
+            transition={{ duration: 0.5, delay: 0.05 * idx }}
+            className="group relative flex flex-col justify-between rounded-2xl bg-[#081322]/90 border border-slate-800 p-6 sm:p-7 hover:border-[#38d9c0]/50 hover:bg-[#0a182b] transition-all duration-300 hover:shadow-xl hover:shadow-[#38d9c0]/5 hover:-translate-y-1"
           >
-            <div className="lg:col-span-5 flex flex-col space-y-2.5">
-              <h3 className="font-serif text-3xl sm:text-4xl lg:text-[42px] font-medium text-white tracking-tight leading-tight">
-                {slot.title}
-              </h3>
-              <p className="text-slate-400 text-base sm:text-lg font-normal leading-relaxed max-w-md">
-                {slot.description}
-              </p>
-              <div className="pt-2 flex flex-wrap items-center gap-2">
-                <span className="px-2.5 py-0.5 rounded-full text-xs font-mono font-medium tracking-wide bg-[#38d9c0]/15 text-[#38d9c0] border border-[#38d9c0]/30">
-                  {slot.sector}
+            <div>
+              <div className="flex items-center justify-between gap-3 mb-4">
+                <div className="flex items-center gap-2">
+                  <span className="font-mono text-xs font-bold px-2.5 py-1 rounded-md bg-[#38d9c0]/10 text-[#38d9c0] border border-[#38d9c0]/20 tracking-wider">
+                    0{idx + 1}
+                  </span>
+                  <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-medium tracking-wide bg-[#38d9c0]/15 text-[#38d9c0] border border-[#38d9c0]/30">
+                    {slot.type}
+                  </span>
+                </div>
+                <span className="font-mono text-[11px] text-slate-400 font-semibold">
+                  {slot.date}
                 </span>
               </div>
+
+              <h3 className="font-serif text-2xl font-bold text-white tracking-tight leading-snug mb-3 group-hover:text-white transition-colors">
+                {slot.title}
+              </h3>
+
+              <div className="mb-5 p-3.5 rounded-xl bg-transparent">
+                <div className="text-[10px] font-mono uppercase tracking-wider text-[#ff7e67] font-semibold mb-1 flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#ff7e67]" />
+                  Research Focus
+                </div>
+                <p className="text-[22px] text-slate-300 italic font-normal leading-relaxed" style={{ fontSize: '22px' }}>
+                  &ldquo;{slot.description}&rdquo;
+                </p>
+              </div>
             </div>
-            <div className="lg:col-span-7 flex flex-col justify-end self-end lg:self-end pt-1 lg:pt-0 pb-1">
-              <ul className="list-disc pl-5 marker:text-[#38d9c0] text-[#38d9c0] space-y-2.5 sm:space-y-3 text-base sm:text-[17px] leading-relaxed mt-auto">
+
+            <div className="mt-auto pt-4 border-t border-slate-800/80">
+              <div className="text-[10px] font-mono uppercase tracking-wider text-[#38d9c0] font-semibold mb-2.5 flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#38d9c0]" />
+                Key Policy Findings
+              </div>
+              <ul className="space-y-2 text-xs sm:text-sm text-slate-300 leading-relaxed mb-5">
                 {slot.keyFindings.map((finding, fIdx) => (
-                  <li key={fIdx} className="text-slate-200">
+                  <li key={fIdx} className="flex items-start gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#38d9c0] mt-1.5 shrink-0" />
                     <span>{finding}</span>
                   </li>
                 ))}
               </ul>
-              <div className="pt-4 flex flex-wrap items-center gap-3">
+              <div className="pt-3 border-t border-slate-800/60 flex flex-wrap items-center justify-between gap-3">
                 <button
                   type="button"
                   onClick={() => handleDownload(slot)}
-                  className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-medium tracking-wide bg-slate-800 hover:bg-[#38d9c0] text-slate-300 hover:text-[#050a12] border border-slate-700 hover:border-[#38d9c0] transition-colors cursor-pointer"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-mono font-medium tracking-wide bg-slate-800 hover:bg-[#38d9c0] text-slate-300 hover:text-[#050a12] border border-slate-700 hover:border-[#38d9c0] transition-colors cursor-pointer"
                   title="Download verified publication"
                 >
-                  <FileText className="w-3 h-3 text-[#38d9c0]" />
+                  <FileText className="w-3.5 h-3.5 text-[#38d9c0]" />
                   <span>{downloadingId === slot.id ? 'Downloading...' : slot.pdfLabel}</span>
                 </button>
                 <button

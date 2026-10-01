@@ -20,6 +20,7 @@ import {
   RotateCcw,
 } from 'lucide-react';
 import { FACULTY_MEMBERS, FacultyMember } from '../data/peopleData';
+import { useCMS } from '../context/CMSContext';
 
 export interface PeoplePageProps {
   darkMode?: boolean;
@@ -76,10 +77,16 @@ const FacultyFlipCard: React.FC<FacultyFlipCardProps> = ({
             {/* Photo & Header Badge */}
             <div className="relative h-64 overflow-hidden bg-[#152735]">
               <img
-                src={member.imageUrl}
+                src={member.imageUrl || (member as any).image}
                 alt={member.name}
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 loading="lazy"
+                onError={(e) => {
+                  const target = e.currentTarget;
+                  if (!target.src.includes('photo-1534528741775')) {
+                    target.src = 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=600&auto=format&fit=crop';
+                  }
+                }}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#12202B] via-[#12202B]/20 to-transparent opacity-95" />
 
@@ -208,9 +215,17 @@ export const PeoplePage: React.FC<PeoplePageProps> = ({
   onNavigateFocus,
   onNavigateServices,
 }) => {
+  const { data } = useCMS();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [selectedMember, setSelectedMember] = useState<FacultyMember | null>(null);
+
+  // Source list of faculty members dynamically from database/CMS with bundled fallback
+  const allMembers = useMemo(() => {
+    return (data.facultyMembers && data.facultyMembers.length > 0)
+      ? data.facultyMembers
+      : FACULTY_MEMBERS;
+  }, [data.facultyMembers]);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -227,7 +242,7 @@ export const PeoplePage: React.FC<PeoplePageProps> = ({
   ];
 
   const filteredMembers = useMemo(() => {
-    return FACULTY_MEMBERS.filter((member) => {
+    return allMembers.filter((member) => {
       const matchesCategory =
         selectedCategory === 'all' || member.category === selectedCategory;
 
@@ -246,7 +261,7 @@ export const PeoplePage: React.FC<PeoplePageProps> = ({
 
       return nameMatch || roleMatch || domainMatch || bioMatch || expertiseMatch;
     });
-  }, [selectedCategory, searchQuery]);
+  }, [allMembers, selectedCategory, searchQuery]);
 
   const handleInquireWithMember = (member: FacultyMember) => {
     setSelectedMember(null);
@@ -374,7 +389,7 @@ export const PeoplePage: React.FC<PeoplePageProps> = ({
             </div>
 
             <span className="text-xs font-mono text-[#AEB0AE] self-center md:self-auto">
-              Showing <span className="text-[#EF715A] font-bold">{filteredMembers.length}</span> of {FACULTY_MEMBERS.length} leaders &amp; specialists
+              Showing <span className="text-[#EF715A] font-bold">{filteredMembers.length}</span> of {allMembers.length} leaders &amp; specialists
             </span>
           </div>
 

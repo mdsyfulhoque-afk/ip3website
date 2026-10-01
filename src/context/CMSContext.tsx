@@ -6,12 +6,16 @@ import type {
   TeamMember, ResearchSectionData, OperationalFront, ParallaxCardItem, FocusAreaItem,
   ProjectItemData, ServiceSolutionItem, TreeFrameworkData, TrustMatrixData,
   TestimonialSectionData, SiteThemeConfig, StoryTheme, SystemsHeroSectionData,
+  WhyIp3Config,
   EightSystemsConfig,
+  CorridorHeroConfig,
+  PodcastCarouselConfig,
+  FacultyMember,
 } from '../types';
 
 // Defaults live in ../data/defaultContent so `npm run db:seed` can load them in
 // Node. Re-exported here because components already import them from this file.
-import { DEFAULT_WEBSITE_DATA, defaultThemeConfig, defaultEightSystemsConfig } from '../data/defaultContent';
+import { DEFAULT_WEBSITE_DATA, defaultThemeConfig, defaultEightSystemsConfig, defaultCorridorHero, defaultWhyIp3, defaultPodcastCarousel } from '../data/defaultContent';
 import type { WebsiteData } from '../data/defaultContent';
 import type { PrimaryNavItem, NavbarConfig } from '../data/navigationData';
 
@@ -27,6 +31,9 @@ export {
   defaultParallaxCards,
   defaultTeamMembers,
   defaultEightSystemsConfig,
+  defaultWhyIp3,
+  defaultCorridorHero,
+  defaultPodcastCarousel,
 } from '../data/defaultContent';
 export { primaryNav as defaultNavigation, defaultNavbarConfig } from '../data/navigationData';
 export type { PrimaryNavItem, NavLinkItem, NavColumnItem, NavPromoItem, NavbarConfig } from '../data/navigationData';
@@ -45,6 +52,8 @@ interface CMSContextType {
   updateExecutive: (executive: ExecutiveProfile) => void;
   updateImpactPillars: (pillars: ImpactPillar[]) => void;
   updateTeamMembers: (team: TeamMember[]) => void;
+  updateFacultyMembers: (facultyMembers: FacultyMember[]) => void;
+  updateFacultyMemberImage: (id: string, imageUrl: string) => void;
   updateResearchSection: (researchSection: ResearchSectionData) => void;
   updateOperationalFronts: (fronts: OperationalFront[]) => void;
   updateParallaxCards: (cards: ParallaxCardItem[]) => void;
@@ -57,7 +66,10 @@ interface CMSContextType {
   updateThemeConfig: (themeConfig: SiteThemeConfig) => void;
   updateStoryThemes: (storyThemes: StoryTheme[]) => void;
   updateSystemsHero: (systemsHero: SystemsHeroSectionData) => void;
+  updateWhyIp3: (whyIp3: WhyIp3Config) => void;
   updateEightSystems: (eightSystems: EightSystemsConfig) => void;
+  updateCorridorHero: (corridorHero: CorridorHeroConfig) => void;
+  updatePodcastCarousel: (podcastCarousel: PodcastCarouselConfig) => void;
   updateNavigation: (navigation: PrimaryNavItem[]) => void;
   updateNavbar: (navbar: NavbarConfig) => void;
   resetAllContent: () => void;
@@ -89,22 +101,72 @@ interface CMSProviderProps {
   readOnly?: boolean;
 }
 
+const getStoredContent = (): WebsiteData => {
+  if (typeof window !== 'undefined') {
+    try {
+      const raw = localStorage.getItem('ip3_site_content_permanent');
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (parsed && typeof parsed === 'object') {
+          return {
+            ...DEFAULT_WEBSITE_DATA,
+            ...parsed,
+            eightSystems: {
+              ...defaultEightSystemsConfig,
+              ...(parsed.eightSystems || {}),
+            },
+            podcastCarousel: {
+              ...defaultPodcastCarousel,
+              ...(parsed.podcastCarousel || {}),
+            },
+          };
+        }
+      }
+    } catch (e) {
+      console.warn('[CMSContext] Failed reading cached content:', e);
+    }
+  }
+  return DEFAULT_WEBSITE_DATA;
+};
+
 export const CMSProvider: React.FC<CMSProviderProps> = ({ children, readOnly = false }) => {
   /**
-   * Hardcoded default content is the definitive source of truth on load.
-   * No localStorage synchronization is used.
+   * Cached persistent content is loaded on mount, then reconciled with server.
    */
-  const [data, setData] = useState<WebsiteData>(DEFAULT_WEBSITE_DATA);
+  const [data, setData] = useState<WebsiteData>(getStoredContent);
 
   const [themeMode, setThemeModeState] = useState<'dark'>('dark');
 
-  // One-time cleanup of any legacy localStorage keys
+  // Immediately mirror any state change to localStorage
   useEffect(() => {
-    if (typeof window !== 'undefined') {
+    if (typeof window !== 'undefined' && data) {
       try {
-        localStorage.removeItem('ip3_site_content_permanent');
-      } catch {}
+        localStorage.setItem('ip3_site_content_permanent', JSON.stringify(data));
+      } catch (err) {
+        console.warn('[CMSContext] Failed saving to localStorage:', err);
+      }
     }
+  }, [data]);
+
+  // Flush data to localStorage and server before page unloads
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      if (typeof window !== 'undefined' && latestDataRef.current) {
+        try {
+          localStorage.setItem('ip3_site_content_permanent', JSON.stringify(latestDataRef.current));
+        } catch {}
+        try {
+          fetch('/api/content', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ data: latestDataRef.current }),
+            keepalive: true,
+          }).catch(() => {});
+        } catch {}
+      }
+    };
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
   }, []);
 
   // ------------------------------ backend sync ------------------------------
@@ -229,21 +291,90 @@ export const CMSProvider: React.FC<CMSProviderProps> = ({ children, readOnly = f
     const res = await loadContent();
 
     if (res.data) {
-      const merged = {
+      // Retain any user modifications saved locally so refreshing never discards recent edits
+      let localEightSystems = {};
+      if (typeof window !== 'undefined') {
+        try {
+          const raw = localStorage.getItem('ip3_site_content_permanent');
+          if (raw) {
+            const parsed = JSON.parse(raw);
+            if (parsed && typeof parsed === 'object' && parsed.eightSystems) {
+              localEightSystems = parsed.eightSystems;
+            }
+          }
+        } catch {}
+      }
+
+      const merged: WebsiteData = {
         ...DEFAULT_WEBSITE_DATA,
         ...(res.data as Partial<WebsiteData>),
+        eightSystems: {
+          ...defaultEightSystemsConfig,
+          ...((res.data as any).eightSystems || {}),
+          ...localEightSystems,
+        },
       };
       if (merged.navigation) {
         merged.navigation = sanitizeNav(merged.navigation);
       }
       setData(merged);
+      if (typeof window !== 'undefined') {
+        try {
+          localStorage.setItem('ip3_site_content_permanent', JSON.stringify(merged));
+        } catch {}
+      }
       setContentVersion(res.version ?? null);
       setLastSyncedAt(res.updatedAt || new Date().toISOString());
       setSyncStatus('saved');
     } else if (res.error) {
+      // Offline fallback: keep local stored data if present
+      if (typeof window !== 'undefined') {
+        const raw = localStorage.getItem('ip3_site_content_permanent');
+        if (raw) {
+          try {
+            const parsed = JSON.parse(raw);
+            if (parsed && typeof parsed === 'object') {
+              setData((prev) => ({
+                ...DEFAULT_WEBSITE_DATA,
+                ...prev,
+                ...parsed,
+                eightSystems: {
+                  ...defaultEightSystemsConfig,
+                  ...(parsed.eightSystems || {}),
+                },
+              }));
+            }
+          } catch {}
+        }
+      }
       setSyncStatus('offline');
       setSyncError(res.error);
     } else {
+      // Server returned empty/null (not initialized yet): check if we have local changes to seed/persist
+      if (typeof window !== 'undefined') {
+        const raw = localStorage.getItem('ip3_site_content_permanent');
+        if (raw) {
+          try {
+            const parsed = JSON.parse(raw);
+            if (parsed && typeof parsed === 'object') {
+              const localMerged: WebsiteData = {
+                ...DEFAULT_WEBSITE_DATA,
+                ...parsed,
+                eightSystems: {
+                  ...defaultEightSystemsConfig,
+                  ...(parsed.eightSystems || {}),
+                },
+                podcastCarousel: {
+                  ...defaultPodcastCarousel,
+                  ...(parsed.podcastCarousel || {}),
+                },
+              };
+              setData(localMerged);
+              void pushToServer(localMerged);
+            }
+          } catch {}
+        }
+      }
       setSyncStatus('idle');
       setContentVersion(0);
     }
@@ -472,6 +603,20 @@ export const CMSProvider: React.FC<CMSProviderProps> = ({ children, readOnly = f
     setData((prev) => ({ ...prev, teamMembers }));
   };
 
+  const updateFacultyMembers = (facultyMembers: FacultyMember[]) => {
+    setData((prev) => ({ ...prev, facultyMembers }));
+  };
+
+  const updateFacultyMemberImage = (id: string, imageUrl: string) => {
+    setData((prev) => {
+      const list = prev.facultyMembers || [];
+      return {
+        ...prev,
+        facultyMembers: list.map((m) => (m.id === id ? { ...m, imageUrl } : m)),
+      };
+    });
+  };
+
   const updateResearchSection = (researchSection: ResearchSectionData) => {
     setData((prev) => ({ ...prev, researchSection }));
   };
@@ -520,8 +665,29 @@ export const CMSProvider: React.FC<CMSProviderProps> = ({ children, readOnly = f
     setData((prev) => ({ ...prev, systemsHero }));
   };
 
+  const updateWhyIp3 = (whyIp3: WhyIp3Config) => {
+    setData((prev) => ({ ...prev, whyIp3 }));
+  };
+
   const updateEightSystems = (eightSystems: EightSystemsConfig) => {
-    setData((prev) => ({ ...prev, eightSystems }));
+    setData((prev) => {
+      const next = { ...prev, eightSystems };
+      if (typeof window !== 'undefined') {
+        try {
+          localStorage.setItem('ip3_site_content_permanent', JSON.stringify(next));
+        } catch {}
+      }
+      return next;
+    });
+    void pushToServer({ ...latestDataRef.current, eightSystems });
+  };
+
+  const updateCorridorHero = (corridorHero: CorridorHeroConfig) => {
+    setData((prev) => ({ ...prev, corridorHero }));
+  };
+
+  const updatePodcastCarousel = (podcastCarousel: PodcastCarouselConfig) => {
+    setData((prev) => ({ ...prev, podcastCarousel }));
   };
 
   const updateNavigation = (navigation: PrimaryNavItem[]) => {
@@ -574,6 +740,8 @@ export const CMSProvider: React.FC<CMSProviderProps> = ({ children, readOnly = f
         updateExecutive,
         updateImpactPillars,
         updateTeamMembers,
+        updateFacultyMembers,
+        updateFacultyMemberImage,
         updateResearchSection,
         updateOperationalFronts,
         updateParallaxCards,
@@ -586,7 +754,10 @@ export const CMSProvider: React.FC<CMSProviderProps> = ({ children, readOnly = f
         updateThemeConfig,
         updateStoryThemes,
         updateSystemsHero,
+        updateWhyIp3,
         updateEightSystems,
+        updateCorridorHero,
+        updatePodcastCarousel,
         updateNavigation,
         updateNavbar,
         resetAllContent,

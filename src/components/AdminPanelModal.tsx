@@ -28,15 +28,19 @@ import {
   MessageSquareQuote,
   Menu as MenuIcon,
   Layers,
+  Radio,
 } from 'lucide-react';
-import { useCMS, defaultThemeConfig, defaultTrustMatrix, defaultTreeFramework, defaultTestimonialsSection } from '../context/CMSContext';
+import { useCMS, defaultThemeConfig, defaultTrustMatrix, defaultTreeFramework, defaultTestimonialsSection, defaultWhyIp3 } from '../context/CMSContext';
 import { defaultStoryThemes, defaultSystemsHero } from '../data/defaultContent';
-import { SlideItem, TeamMember, ServiceOption, ImpactPillar, SiteThemeConfig, ServiceSolutionItem, PartnerBrandItem, TrustMatrixData, TreeFrameworkData, TestimonialSectionData, TestimonialItem, StoryTheme, SystemsHeroSectionData } from '../types';
+import { SlideItem, TeamMember, FacultyMember, ServiceOption, ImpactPillar, SiteThemeConfig, ServiceSolutionItem, PartnerBrandItem, TrustMatrixData, TreeFrameworkData, TestimonialSectionData, TestimonialItem, StoryTheme, SystemsHeroSectionData, WhyIp3Config } from '../types';
+import { FACULTY_MEMBERS } from '../data/peopleData';
 import { ImageField } from './ImageField';
 import { NavigationManager } from './NavigationManager';
 import { MediaField } from './MediaField';
 import { ThemeTypographyStudio } from './ThemeTypographyStudio';
 import { SystemsManager } from './SystemsManager';
+import { CorridorManager } from './CorridorManager';
+import { PodcastFlowManager } from './PodcastFlowManager';
 
 interface AdminPanelModalProps {
   isOpen: boolean;
@@ -55,6 +59,7 @@ export const AdminPanelModal: React.FC<AdminPanelModalProps> = ({ isOpen, onClos
     updateExecutive,
     updateImpactPillars,
     updateTeamMembers,
+    updateFacultyMembers,
     updateResearchSection,
     updateOperationalFronts,
     updateParallaxCards,
@@ -67,6 +72,7 @@ export const AdminPanelModal: React.FC<AdminPanelModalProps> = ({ isOpen, onClos
     updateThemeConfig,
     updateStoryThemes,
     updateSystemsHero,
+    updateWhyIp3,
     resetAllContent,
     importJsonData,
     exportJsonData,
@@ -79,8 +85,9 @@ export const AdminPanelModal: React.FC<AdminPanelModalProps> = ({ isOpen, onClos
 
   // Active Tab
   const [activeTab, setActiveTab] = useState<
-    'slides' | 'systems' | 'navigation' | 'colors' | 'movie' | 'trustMatrix' | 'tree' | 'testimonials' | 'executive' | 'team' | 'services' | 'research' | 'projects' | 'parallax' | 'backup'
+    'slides' | 'podcastFlow' | 'whyIp3' | 'systems' | 'corridor' | 'navigation' | 'colors' | 'movie' | 'trustMatrix' | 'tree' | 'testimonials' | 'executive' | 'team' | 'services' | 'research' | 'projects' | 'parallax' | 'backup'
   >('slides');
+  const [teamSubTab, setTeamSubTab] = useState<'faculty' | 'associates'>('faculty');
 
 
   // Status message
@@ -225,6 +232,18 @@ export const AdminPanelModal: React.FC<AdminPanelModalProps> = ({ isOpen, onClos
               </button>
 
               <button
+                onClick={() => setActiveTab('whyIp3')}
+                className={`w-full px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center gap-2.5 cursor-pointer ${
+                  activeTab === 'whyIp3'
+                    ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/30'
+                    : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
+                }`}
+              >
+                <Sparkles className="w-4 h-4 text-orange-400" />
+                <span>Why IP³ (Four Reasons)</span>
+              </button>
+
+              <button
                 onClick={() => setActiveTab('systems')}
                 className={`w-full px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center gap-2.5 cursor-pointer ${
                   activeTab === 'systems'
@@ -234,6 +253,30 @@ export const AdminPanelModal: React.FC<AdminPanelModalProps> = ({ isOpen, onClos
               >
                 <Layers className="w-4 h-4 text-amber-400" />
                 <span>Systems & Horizons</span>
+              </button>
+
+              <button
+                onClick={() => setActiveTab('corridor')}
+                className={`w-full px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center gap-2.5 cursor-pointer ${
+                  activeTab === 'corridor'
+                    ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/30'
+                    : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
+                }`}
+              >
+                <Layers className="w-4 h-4 text-orange-400" />
+                <span>3D Visual Corridor</span>
+              </button>
+
+              <button
+                onClick={() => setActiveTab('podcastFlow')}
+                className={`w-full px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center gap-2.5 cursor-pointer ${
+                  activeTab === 'podcastFlow'
+                    ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/30'
+                    : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
+                }`}
+              >
+                <Radio className="w-4 h-4 text-rose-400" />
+                <span>Podcast Flow Carousel</span>
               </button>
 
               <button
@@ -706,8 +749,211 @@ export const AdminPanelModal: React.FC<AdminPanelModalProps> = ({ isOpen, onClos
                 </div>
               )}
 
+              {/* TAB: WHY IP3 / FOUR REASONS */}
+              {activeTab === 'whyIp3' && (
+                <div className="space-y-6 max-w-4xl">
+                  <div className="flex items-center justify-between pb-4 border-b border-slate-800">
+                    <div>
+                      <h3 className="text-lg font-bold text-white flex items-center gap-2">
+                        <span>Why IP³ • Four Reasons Clients Choose Us</span>
+                        <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-orange-500/20 text-orange-300 border border-orange-500/30">
+                          #orbital-system-clone-section
+                        </span>
+                      </h3>
+                      <p className="text-xs text-slate-400">
+                        Manage the featured collaboration photography, alt text, headline copy, and value pillars.
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Feature Image & Alt Text */}
+                  <div className="p-5 bg-slate-950 border border-orange-500/30 rounded-2xl space-y-4">
+                    <h4 className="text-xs font-bold uppercase tracking-wider text-orange-400">
+                      Featured Left-Side Photography
+                    </h4>
+                    <ImageField
+                      label="Collaboration Feature Image"
+                      value={data.whyIp3?.imageUrl || defaultWhyIp3.imageUrl}
+                      onChange={(url) => {
+                        updateWhyIp3({
+                          ...(data.whyIp3 || defaultWhyIp3),
+                          imageUrl: url,
+                        });
+                        showToast('Why IP³ featured image updated');
+                      }}
+                      folder="why-ip3"
+                      placeholder="/images/why_ip3_collaboration.jpg or https://..."
+                    />
+
+                    <div>
+                      <label className="block text-xs font-medium text-slate-300 mb-1">
+                        Image Alt Text (SEO &amp; Accessibility)
+                      </label>
+                      <input
+                        type="text"
+                        value={data.whyIp3?.imageAlt || defaultWhyIp3.imageAlt || ''}
+                        onChange={(e) =>
+                          updateWhyIp3({
+                            ...(data.whyIp3 || defaultWhyIp3),
+                            imageAlt: e.target.value,
+                          })
+                        }
+                        className="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white focus:border-orange-400 outline-none"
+                        placeholder="Two women collaborating over digital policy insights and tablet interface"
+                      />
+                    </div>
+
+                    <div className="pt-2 flex flex-wrap items-center gap-2">
+                      <span className="text-[11px] font-mono text-slate-400">Presets:</span>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          updateWhyIp3({
+                            ...(data.whyIp3 || defaultWhyIp3),
+                            imageUrl: '/images/why_ip3_collaboration.jpg',
+                          });
+                          showToast('Reset to Collaboration photo');
+                        }}
+                        className="text-[11px] px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition-colors cursor-pointer"
+                      >
+                        Collaboration Photo
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          updateWhyIp3({
+                            ...(data.whyIp3 || defaultWhyIp3),
+                            imageUrl: '/images/boardroom_meeting.jpg',
+                          });
+                          showToast('Set to Boardroom meeting photo');
+                        }}
+                        className="text-[11px] px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition-colors cursor-pointer"
+                      >
+                        Boardroom Photo
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          updateWhyIp3({
+                            ...(data.whyIp3 || defaultWhyIp3),
+                            imageUrl: '/images/boardroom_delegation.jpg',
+                          });
+                          showToast('Set to Delegation photo');
+                        }}
+                        className="text-[11px] px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition-colors cursor-pointer"
+                      >
+                        Delegation Photo
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Header Typography */}
+                  <div className="p-5 bg-slate-950 border border-slate-800 rounded-2xl space-y-4">
+                    <h4 className="text-xs font-bold uppercase tracking-wider text-slate-300">
+                      Section Header &amp; Eyebrow
+                    </h4>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                      <div>
+                        <label className="block text-xs font-medium text-slate-300 mb-1">Eyebrow Badge</label>
+                        <input
+                          type="text"
+                          value={data.whyIp3?.badge || defaultWhyIp3.badge}
+                          onChange={(e) =>
+                            updateWhyIp3({
+                              ...(data.whyIp3 || defaultWhyIp3),
+                              badge: e.target.value,
+                            })
+                          }
+                          className="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white focus:border-orange-400 outline-none"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-medium text-slate-300 mb-1">Title Prefix (Uppercase)</label>
+                        <input
+                          type="text"
+                          value={data.whyIp3?.titlePrefix || defaultWhyIp3.titlePrefix}
+                          onChange={(e) =>
+                            updateWhyIp3({
+                              ...(data.whyIp3 || defaultWhyIp3),
+                              titlePrefix: e.target.value,
+                            })
+                          }
+                          className="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white focus:border-orange-400 outline-none"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-medium text-slate-300 mb-1">Title Highlight (Italic)</label>
+                        <input
+                          type="text"
+                          value={data.whyIp3?.titleHighlight || defaultWhyIp3.titleHighlight}
+                          onChange={(e) =>
+                            updateWhyIp3({
+                              ...(data.whyIp3 || defaultWhyIp3),
+                              titleHighlight: e.target.value,
+                            })
+                          }
+                          className="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white focus:border-orange-400 outline-none"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Four Reasons List */}
+                  <div className="p-5 bg-slate-950 border border-slate-800 rounded-2xl space-y-4">
+                    <h4 className="text-xs font-bold uppercase tracking-wider text-slate-300">
+                      The Four Pillars / Reasons
+                    </h4>
+                    <div className="space-y-4">
+                      {(data.whyIp3?.reasons || defaultWhyIp3.reasons).map((reason, idx) => (
+                        <div key={reason.id || idx} className="p-4 rounded-xl bg-slate-900 border border-slate-800 space-y-2">
+                          <div className="flex items-center gap-3">
+                            <span className="w-8 h-8 rounded-lg bg-orange-600 text-white font-mono font-bold text-xs flex items-center justify-center shrink-0">
+                              {reason.number}
+                            </span>
+                            <input
+                              type="text"
+                              value={reason.title}
+                              onChange={(e) => {
+                                const newReasons = [...(data.whyIp3?.reasons || defaultWhyIp3.reasons)];
+                                newReasons[idx] = { ...newReasons[idx], title: e.target.value };
+                                updateWhyIp3({
+                                  ...(data.whyIp3 || defaultWhyIp3),
+                                  reasons: newReasons,
+                                });
+                              }}
+                              className="flex-1 px-3 py-1.5 rounded-lg bg-slate-950 border border-slate-700 text-xs font-semibold text-white focus:border-orange-400 outline-none"
+                              placeholder="Reason Title"
+                            />
+                          </div>
+                          <textarea
+                            rows={2}
+                            value={reason.description}
+                            onChange={(e) => {
+                              const newReasons = [...(data.whyIp3?.reasons || defaultWhyIp3.reasons)];
+                              newReasons[idx] = { ...newReasons[idx], description: e.target.value };
+                              updateWhyIp3({
+                                ...(data.whyIp3 || defaultWhyIp3),
+                                reasons: newReasons,
+                              });
+                            }}
+                            className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-700 text-xs text-slate-300 focus:border-orange-400 outline-none leading-relaxed"
+                            placeholder="Reason Description"
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+
               {/* TAB: SYSTEMS & HORIZONS */}
               {activeTab === 'systems' && <SystemsManager />}
+
+              {/* TAB: 3D VISUAL CORRIDOR */}
+              {activeTab === 'corridor' && <CorridorManager onShowToast={showToast} />}
+
+              {/* TAB: PODCAST FLOW CAROUSEL */}
+              {activeTab === 'podcastFlow' && <PodcastFlowManager onShowToast={showToast} />}
 
               {/* TAB: THEME & COLOR STUDIO */}
               {activeTab === 'navigation' && <NavigationManager />}
@@ -1645,37 +1891,227 @@ export const AdminPanelModal: React.FC<AdminPanelModalProps> = ({ isOpen, onClos
               {/* TAB 4: TEAM & LEADERSHIP */}
               {activeTab === 'team' && (
                 <div className="space-y-6">
-                  <div className="flex items-center justify-between border-b border-slate-800 pb-4">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-4">
                     <div>
-                      <h3 className="text-lg font-bold text-white">Team & Expert Leadership</h3>
-                      <p className="text-xs text-slate-400">Manage expert directors, researchers, and specialists</p>
+                      <h3 className="text-lg font-bold text-white">Team & Faculty Leadership</h3>
+                      <p className="text-xs text-slate-400">Manage expert directors, faculty fellows, photos, and roster cards stored in the database</p>
                     </div>
-                    <button
-                      onClick={() => {
-                        const newMember: TeamMember = {
-                          id: `m-${Date.now()}`,
-                          name: 'New Senior Associate',
-                          role: 'Policy Consultant',
-                          division: 'Advisory & Strategy',
-                          expertise: ['Public Policy', 'Strategy'],
-                          education: ['M.A. Public Administration'],
-                          bio: 'Expert in strategic policy reform and advisory execution.',
-                          projects: ['Institutional Growth Framework'],
-                          image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=800',
-                          socials: { email: 'consultant@ip3-bd.org' },
-                          stats: { experienceYears: 10, projectsLed: 15, publications: 8 },
-                        };
-                        updateTeamMembers([...data.teamMembers, newMember]);
-                        showToast('New team member added!');
-                      }}
-                      className="px-3.5 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold flex items-center gap-1.5 cursor-pointer"
-                    >
-                      <Plus className="w-4 h-4" />
-                      <span>Add Team Member</span>
-                    </button>
+
+                    <div className="flex items-center gap-2 p-1 rounded-xl bg-slate-900 border border-slate-800">
+                      <button
+                        type="button"
+                        onClick={() => setTeamSubTab('faculty')}
+                        className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer ${
+                          teamSubTab === 'faculty'
+                            ? 'bg-[#ff7e67] text-slate-950 font-bold'
+                            : 'text-slate-400 hover:text-white'
+                        }`}
+                      >
+                        IP3 Faculty Roster
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setTeamSubTab('associates')}
+                        className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer ${
+                          teamSubTab === 'associates'
+                            ? 'bg-[#ff7e67] text-slate-950 font-bold'
+                            : 'text-slate-400 hover:text-white'
+                        }`}
+                      >
+                        Core Associates
+                      </button>
+                    </div>
                   </div>
 
-                  <div className="space-y-4">
+                  {teamSubTab === 'faculty' ? (
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-mono text-slate-400">
+                          Total Faculty in Database: <span className="text-[#ff7e67] font-bold">{(data.facultyMembers || FACULTY_MEMBERS).length}</span>
+                        </span>
+                        <button
+                          onClick={() => {
+                            const list = data.facultyMembers || FACULTY_MEMBERS;
+                            const newFac: FacultyMember = {
+                              id: `fac-${Date.now()}`,
+                              name: 'New Faculty Fellow',
+                              role: 'Senior Research Fellow',
+                              category: 'economics',
+                              categoryLabel: 'Economics & Public Finance',
+                              affiliation: 'IP3 Advisory Council',
+                              initials: 'NF',
+                              bio: 'Specialist in macroeconomic modeling and institutional governance.',
+                              extendedBio: 'Conducts translational policy research informing national fiscal and industrial transformation.',
+                              domain: 'Economics · Public Finance · Systems Advisory',
+                              strategicContribution: 'Translating fiscal frameworks into institutional delivery capacity.',
+                              expertise: ['Public Finance', 'Economic Policy'],
+                              imageUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=600&auto=format&fit=crop',
+                              education: ['Ph.D. in Economics'],
+                            };
+                            updateFacultyMembers([...list, newFac]);
+                            showToast('New faculty member added to database!');
+                          }}
+                          className="px-3.5 py-1.5 rounded-xl bg-[#ff7e67] hover:bg-[#ff6950] text-slate-950 text-xs font-bold flex items-center gap-1.5 cursor-pointer shadow-md shadow-[#ff7e67]/20"
+                        >
+                          <Plus className="w-4 h-4" />
+                          <span>Add Faculty Member</span>
+                        </button>
+                      </div>
+
+                      <div className="space-y-4">
+                        {(data.facultyMembers || FACULTY_MEMBERS).map((member, fIdx) => (
+                          <div key={member.id} className="p-4 bg-slate-950 border border-slate-800 rounded-xl space-y-4">
+                            <div className="flex items-center justify-between border-b border-slate-800/60 pb-2">
+                              <div className="flex items-center gap-3">
+                                <div className="w-9 h-9 rounded-lg overflow-hidden bg-slate-800 border border-slate-700 shrink-0">
+                                  <img
+                                    src={member.imageUrl}
+                                    alt={member.name}
+                                    className="w-full h-full object-cover"
+                                    onError={(e) => {
+                                      (e.currentTarget as HTMLImageElement).src = 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=600&auto=format&fit=crop';
+                                    }}
+                                  />
+                                </div>
+                                <div>
+                                  <span className="text-xs font-bold text-white block">
+                                    {member.name}
+                                  </span>
+                                  <span className="text-[10px] text-[#ff7e67] font-mono">
+                                    {member.role} ({member.categoryLabel})
+                                  </span>
+                                </div>
+                              </div>
+                              <button
+                                onClick={() => {
+                                  const list = data.facultyMembers || FACULTY_MEMBERS;
+                                  updateFacultyMembers(list.filter((m) => m.id !== member.id));
+                                  showToast('Faculty member deleted.');
+                                }}
+                                className="p-1.5 text-rose-400 hover:text-rose-300 hover:bg-rose-950/40 rounded-lg transition-colors cursor-pointer"
+                                title="Delete Faculty Member"
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </button>
+                            </div>
+
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                              <div>
+                                <label className="block text-xs font-medium text-slate-400 mb-1">Full Name</label>
+                                <input
+                                  type="text"
+                                  value={member.name}
+                                  onChange={(e) => {
+                                    const list = [...(data.facultyMembers || FACULTY_MEMBERS)];
+                                    list[fIdx] = { ...list[fIdx], name: e.target.value };
+                                    updateFacultyMembers(list);
+                                  }}
+                                  className="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-700 text-xs text-white"
+                                />
+                              </div>
+
+                              <div>
+                                <label className="block text-xs font-medium text-slate-400 mb-1">Role / Designation</label>
+                                <input
+                                  type="text"
+                                  value={member.role}
+                                  onChange={(e) => {
+                                    const list = [...(data.facultyMembers || FACULTY_MEMBERS)];
+                                    list[fIdx] = { ...list[fIdx], role: e.target.value };
+                                    updateFacultyMembers(list);
+                                  }}
+                                  className="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-700 text-xs text-white"
+                                />
+                              </div>
+
+                              <div className="sm:col-span-2">
+                                <ImageField
+                                  label="Photo Image (Database URL or Upload File)"
+                                  value={member.imageUrl}
+                                  onChange={(val) => {
+                                    const list = [...(data.facultyMembers || FACULTY_MEMBERS)];
+                                    list[fIdx] = { ...list[fIdx], imageUrl: val };
+                                    updateFacultyMembers(list);
+                                  }}
+                                />
+                              </div>
+
+                              <div>
+                                <label className="block text-xs font-medium text-slate-400 mb-1">Domain of Practice</label>
+                                <input
+                                  type="text"
+                                  value={member.domain}
+                                  onChange={(e) => {
+                                    const list = [...(data.facultyMembers || FACULTY_MEMBERS)];
+                                    list[fIdx] = { ...list[fIdx], domain: e.target.value };
+                                    updateFacultyMembers(list);
+                                  }}
+                                  className="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-700 text-xs text-white"
+                                />
+                              </div>
+
+                              <div>
+                                <label className="block text-xs font-medium text-slate-400 mb-1">Affiliation</label>
+                                <input
+                                  type="text"
+                                  value={member.affiliation}
+                                  onChange={(e) => {
+                                    const list = [...(data.facultyMembers || FACULTY_MEMBERS)];
+                                    list[fIdx] = { ...list[fIdx], affiliation: e.target.value };
+                                    updateFacultyMembers(list);
+                                  }}
+                                  className="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-700 text-xs text-white"
+                                />
+                              </div>
+
+                              <div className="sm:col-span-2">
+                                <label className="block text-xs font-medium text-slate-400 mb-1">Short Biography</label>
+                                <textarea
+                                  rows={2}
+                                  value={member.bio}
+                                  onChange={(e) => {
+                                    const list = [...(data.facultyMembers || FACULTY_MEMBERS)];
+                                    list[fIdx] = { ...list[fIdx], bio: e.target.value };
+                                    updateFacultyMembers(list);
+                                  }}
+                                  className="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-700 text-xs text-white"
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-mono text-slate-400">Core Advisory Team</span>
+                        <button
+                          onClick={() => {
+                            const newMember: TeamMember = {
+                              id: `m-${Date.now()}`,
+                              name: 'New Senior Associate',
+                              role: 'Policy Consultant',
+                              division: 'Advisory & Strategy',
+                              expertise: ['Public Policy', 'Strategy'],
+                              education: ['M.A. Public Administration'],
+                              bio: 'Expert in strategic policy reform and advisory execution.',
+                              projects: ['Institutional Growth Framework'],
+                              image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=800',
+                              socials: { email: 'consultant@ip3-bd.org' },
+                              stats: { experienceYears: 10, projectsLed: 15, publications: 8 },
+                            };
+                            updateTeamMembers([...data.teamMembers, newMember]);
+                            showToast('New team member added!');
+                          }}
+                          className="px-3.5 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold flex items-center gap-1.5 cursor-pointer"
+                        >
+                          <Plus className="w-4 h-4" />
+                          <span>Add Team Member</span>
+                        </button>
+                      </div>
+
+                      <div className="space-y-4">
                     {data.teamMembers.map((member, mIdx) => (
                       <div key={member.id} className="p-4 bg-slate-950 border border-slate-800 rounded-xl space-y-4">
                         <div className="flex items-center justify-between border-b border-slate-800/60 pb-2">
@@ -1769,7 +2205,9 @@ export const AdminPanelModal: React.FC<AdminPanelModalProps> = ({ isOpen, onClos
                         </div>
                       </div>
                     ))}
-                  </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
 

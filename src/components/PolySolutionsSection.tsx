@@ -236,42 +236,86 @@ export const PolySolutionsSection: React.FC<PolySolutionsSectionProps> = ({
   );
 
   return (
-    <section
-      id="polysolutions-section"
-      ref={sectionRef}
-      className="relative w-full bg-[#050a12] mt-0 pt-0 pb-20 sm:pb-32 px-4 sm:px-6 lg:px-10 border-t-0 select-text scroll-smooth"
-    >
-      {/* Background Ambient Glow Gradients */}
-      <div className="absolute top-1/6 left-1/2 -translate-x-1/2 w-[900px] h-[450px] bg-[#ff7e67]/5 rounded-full blur-[150px] pointer-events-none" />
-      <div className="absolute top-1/2 right-0 w-[500px] h-[500px] bg-[#2dd4bf]/5 rounded-full blur-[140px] pointer-events-none" />
-      <div className="absolute bottom-10 left-0 w-[500px] h-[500px] bg-[#ff7e67]/5 rounded-full blur-[140px] pointer-events-none" />
+    <>
+      {/* Horizon 1: Separate Dedicated Section */}
+      <section
+        id="theme-horizon-1"
+        data-theme-index={0}
+        className="theme-horizon-block relative w-full bg-slate-50 sm:bg-white text-slate-900 py-16 sm:py-24 px-4 sm:px-6 lg:px-10 border-b border-slate-200 select-text scroll-smooth"
+      >
+        <div className="w-full max-w-7xl mx-auto flex flex-col space-y-8 sm:space-y-10">
+          {/* Horizon Header */}
+          <div className="flex flex-col items-start text-left space-y-6 w-full max-w-4xl mb-4">
+            <div className="flex items-center gap-2">
+              <span className="font-mono text-[11px] sm:text-xs font-semibold tracking-[0.22em] text-[#1C1917] uppercase">
+                IP3 SECTOR <span className="text-[#8B3A2A] font-bold">EXPERTISE</span>
+              </span>
+            </div>
 
-      <div className="w-full relative z-10">
-        {/* Full-width Unified Poly-Solutions Section Container - Seamlessly Part of the Section */}
-        <div
-          id="polysolutions-master-card"
-          ref={masterCardRef}
-          className="container-fluid w-full max-w-full bg-transparent border-0 rounded-none p-0 flex flex-col relative shadow-none"
-        >
-          {/* Active Story Layout: Natural Page Content */}
-          <div
-            id="active-story-scene-card"
-            className="w-full flex flex-col items-start"
-          >
-            {/* Thematic Horizons rendered naturally in page stream */}
-            <div
-              id="active-theme-scroll-pane"
-              className="w-full min-w-0 flex flex-col space-y-20 sm:space-y-28"
+            <h2
+              className="font-serif font-normal text-[#1C1917] tracking-[-0.03em] overflow-visible w-full text-left leading-[1.08] sm:leading-[1.05]"
+              style={{ fontSize: 'clamp(2.5rem, 5vw, 4.75rem)' }}
             >
-              {themes.map((theme, idx) => (
-                <div
-                  key={theme.id}
-                  id={`theme-horizon-${idx + 1}`}
-                  data-theme-index={idx}
-                  className={`theme-horizon-block w-full flex flex-col space-y-6 sm:space-y-8 pt-2 pb-14 sm:pb-20 ${
-                    idx === 0 ? 'border-b-0' : 'border-b border-slate-800/60'
-                  } last:border-b-0`}
-                >
+              <span className="block text-[#1C1917]">
+                From Polycrisis to
+              </span>
+              <span className="block italic text-[#8B3A2A]">
+                Polysolutions.
+              </span>
+            </h2>
+
+            <p
+              className="font-sans text-[#7A6B63] text-lg sm:text-xl lg:text-[22px] leading-relaxed font-normal text-left max-w-4xl"
+              style={{ fontFamily: 'var(--font-body)' }}
+            >
+              IP3 works across eight interconnected sectors where economic, institutional, environmental and technological risks overlap. We combine specialist sector knowledge with cross-cutting capabilities in economics, finance, governance, data and implementation.
+            </p>
+          </div>
+
+          {/* Eight Systems Architecture */}
+          <div className="flex flex-col space-y-4 w-full">
+            <EightSystemsSection />
+          </div>
+        </div>
+      </section>
+
+      {/* Poly-Solutions Thematic Horizons Section (Horizons 2, 3, 4) */}
+      <section
+        id="polysolutions-section"
+        ref={sectionRef}
+        className="relative w-full bg-[#050a12] mt-0 pt-16 pb-20 sm:pb-32 px-4 sm:px-6 lg:px-10 border-t-0 select-text scroll-smooth"
+      >
+        {/* Background Ambient Glow Gradients */}
+        <div className="absolute top-1/6 left-1/2 -translate-x-1/2 w-[900px] h-[450px] bg-[#ff7e67]/5 rounded-full blur-[150px] pointer-events-none" />
+        <div className="absolute top-1/2 right-0 w-[500px] h-[500px] bg-[#2dd4bf]/5 rounded-full blur-[140px] pointer-events-none" />
+        <div className="absolute bottom-10 left-0 w-[500px] h-[500px] bg-[#ff7e67]/5 rounded-full blur-[140px] pointer-events-none" />
+
+        <div className="w-full relative z-10">
+          {/* Full-width Unified Poly-Solutions Section Container - Seamlessly Part of the Section */}
+          <div
+            id="polysolutions-master-card"
+            ref={masterCardRef}
+            className="container-fluid w-full max-w-full bg-transparent border-0 rounded-none p-0 flex flex-col relative shadow-none"
+          >
+            {/* Active Story Layout: Natural Page Content */}
+            <div
+              id="active-story-scene-card"
+              className="w-full flex flex-col items-start"
+            >
+              {/* Thematic Horizons rendered naturally in page stream */}
+              <div
+                id="active-theme-scroll-pane"
+                className="w-full min-w-0 flex flex-col space-y-20 sm:space-y-28"
+              >
+                {themes.slice(1).map((theme, sliceIdx) => {
+                  const idx = sliceIdx + 1;
+                  return (
+                    <div
+                      key={theme.id}
+                      id={`theme-horizon-${idx + 1}`}
+                      data-theme-index={idx}
+                      className="theme-horizon-block w-full flex flex-col space-y-6 sm:space-y-8 pt-2 pb-14 sm:pb-20 border-b border-slate-800/60 last:border-b-0"
+                    >
                   {/* Horizon Header */}
                   {idx === 1 ? (
                     <div
@@ -296,7 +340,11 @@ export const PolySolutionsSection: React.FC<PolySolutionsSectionProps> = ({
                   ) : (
                     <div className={`flex flex-col space-y-3 ${idx === 0 ? 'w-full max-w-none' : 'max-w-4xl'}`}>
                       <div className="flex items-center gap-2">
-                        <span className="font-mono text-[11px] sm:text-xs font-semibold tracking-[0.22em] text-[#38d9c0] uppercase">
+                        <span
+                          className={`font-mono text-[11px] sm:text-xs font-semibold tracking-[0.22em] uppercase ${
+                            idx === 0 ? 'text-teal-700' : 'text-[#38d9c0]'
+                          }`}
+                        >
                           {idx === 0
                             ? 'IP3 SECTOR EXPERTISE'
                             : idx === 2
@@ -308,8 +356,10 @@ export const PolySolutionsSection: React.FC<PolySolutionsSectionProps> = ({
                       </div>
 
                       <h3
-                        className={`font-serif font-bold text-slate-100 tracking-tight leading-[1.08] ${
-                          idx === 0 ? 'whitespace-nowrap overflow-visible' : ''
+                        className={`font-serif font-bold tracking-tight leading-[1.08] ${
+                          idx === 0
+                            ? 'text-slate-900 whitespace-nowrap overflow-visible'
+                            : 'text-slate-100'
                         }`}
                         style={{
                           ...(idx === 0
@@ -329,7 +379,9 @@ export const PolySolutionsSection: React.FC<PolySolutionsSectionProps> = ({
 
                       <p
                         className={`${
-                          idx <= 3
+                          idx === 0
+                            ? 'text-slate-600 text-base sm:text-lg lg:text-[19px]'
+                            : idx <= 3
                             ? 'text-slate-300 text-base sm:text-lg lg:text-[19px]'
                             : 'font-serif italic text-slate-300/90 text-lg sm:text-xl lg:text-[22px]'
                         } font-normal leading-relaxed max-w-4xl`}
@@ -344,16 +396,6 @@ export const PolySolutionsSection: React.FC<PolySolutionsSectionProps> = ({
                           ? 'Complex reforms fail when ministries, development institutions, researchers, investors and implementers are solving different versions of the same problem. IP3 designs evidence-led dialogue and decision processes that bring those perspectives together around practical pathways to action.'
                           : theme.quote}
                       </p>
-                    </div>
-                  )}
-
-                  {/* Theme 1 Specific: Eight Systems Architecture */}
-                  {theme.id === 'polysolutions' && (
-                    <div className="flex flex-col space-y-4 w-full">
-                      <span className="text-xs font-mono text-[#ff7e67] uppercase tracking-wider font-semibold">
-                        {data.eightSystems?.badge || 'Operationalized Across 8 Interconnected Realities'}
-                      </span>
-                      <EightSystemsSection />
                     </div>
                   )}
 
@@ -389,13 +431,15 @@ export const PolySolutionsSection: React.FC<PolySolutionsSectionProps> = ({
                       </div>
                     </div>
                   )}
-                </div>
-              ))}
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </>
   );
 };
 

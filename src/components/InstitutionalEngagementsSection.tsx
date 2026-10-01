@@ -138,49 +138,72 @@ export default function InstitutionalEngagementsSection({
         </span>
       </div>
 
-      {/* Styled container matching client deliverables section */}
+      {/* Styled card grid matching client deliverables section */}
       <div
         id="sector-systems-items-container-engagements"
-        className="w-full text-left mx-auto divide-y divide-slate-800/80"
+        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full text-left mx-auto pt-6 pb-8"
       >
         {ADDITIONAL_ENGAGEMENTS.map((item, itemIdx) => (
           <motion.div
             key={item.id}
             id={item.id}
-            initial={{ opacity: 0, y: 15 }}
+            initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.05 * itemIdx }}
-            className="w-full grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 items-start py-8 sm:py-10 border-b border-slate-800/80"
+            transition={{ duration: 0.5, delay: 0.05 * itemIdx }}
+            className="group relative flex flex-col justify-between rounded-2xl bg-[#081322]/90 border border-slate-800 p-6 sm:p-7 hover:border-[#38d9c0]/50 hover:bg-[#0a182b] transition-all duration-300 hover:shadow-xl hover:shadow-[#38d9c0]/5 hover:-translate-y-1"
           >
-            <div className="lg:col-span-5 flex flex-col space-y-2.5">
-              <h3 className="font-serif text-3xl sm:text-4xl lg:text-[42px] font-medium text-white tracking-tight leading-tight">
-                {item.title}
-              </h3>
-              <p className="text-slate-400 text-base sm:text-lg font-normal leading-relaxed max-w-md">
-                {item.fullEngagement?.summary || item.quote}
-              </p>
-              {item.tags && (
-                <div className="pt-2">
-                  <span className="inline-block px-2.5 py-0.5 rounded-full text-xs font-mono font-medium tracking-wide bg-[#38d9c0]/15 text-[#38d9c0] border border-[#38d9c0]/30">
+            <div>
+              <div className="flex items-center justify-between gap-3 mb-4">
+                <span className="font-mono text-xs font-bold px-2.5 py-1 rounded-md bg-[#38d9c0]/10 text-[#38d9c0] border border-[#38d9c0]/20 tracking-wider">
+                  0{itemIdx + 1}
+                </span>
+                {item.tags && (
+                  <span className="font-mono text-[11px] uppercase tracking-wider text-slate-400 font-semibold truncate max-w-[200px]" title={item.tags}>
                     {item.tags}
                   </span>
+                )}
+              </div>
+
+              <h3 className="font-serif text-2xl font-bold text-white tracking-tight leading-snug mb-3 group-hover:text-white transition-colors">
+                {item.title}
+              </h3>
+
+              <div className="mb-5 p-3.5 rounded-xl bg-transparent">
+                <div className="text-[10px] font-mono uppercase tracking-wider text-[#ff7e67] font-semibold mb-1 flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#ff7e67]" />
+                  Engagement Scope &amp; Context
                 </div>
-              )}
+                <p className="text-[22px] text-slate-300 italic font-normal leading-relaxed" style={{ fontSize: '22px' }}>
+                  &ldquo;{item.fullEngagement?.summary || item.quote}&rdquo;
+                </p>
+              </div>
             </div>
-            <div className="lg:col-span-7 flex flex-col justify-end self-end lg:self-end pt-1 lg:pt-0 pb-1">
-              <ul className="list-disc pl-5 marker:text-[#38d9c0] text-[#38d9c0] space-y-2.5 sm:space-y-3 text-base sm:text-[17px] leading-relaxed mt-auto">
+
+            <div className="mt-auto pt-4 border-t border-slate-800/80">
+              <div className="text-[10px] font-mono uppercase tracking-wider text-[#38d9c0] font-semibold mb-2.5 flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#38d9c0]" />
+                Key Deliverables &amp; Outcomes
+              </div>
+              <ul className="space-y-2 text-xs sm:text-sm text-slate-300 leading-relaxed">
                 {item.fullEngagement?.deliverables?.map((deliv, dIdx) => (
-                  <li key={dIdx} className="text-slate-200">
+                  <li key={dIdx} className="flex items-start gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#38d9c0] mt-1.5 shrink-0" />
                     <span className="text-[#38d9c0] font-medium">{deliv}</span>
                   </li>
                 )) || (
-                  <li className="text-slate-200">{item.deliverables}</li>
+                  <li className="flex items-start gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#38d9c0] mt-1.5 shrink-0" />
+                    <span className="text-slate-200">{item.deliverables}</span>
+                  </li>
                 )}
                 {item.fullEngagement?.result && (
-                  <li className="text-slate-300">
-                    <span className="text-slate-400 font-normal">Impact outcome: </span>
-                    <span className="italic">{item.fullEngagement.result}</span>
+                  <li className="flex items-start gap-2 pt-1.5 border-t border-slate-800/60">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#ff7e67] mt-1.5 shrink-0" />
+                    <span className="text-slate-400 text-xs">
+                      <strong className="text-slate-300">Impact: </strong>
+                      <span className="italic">{item.fullEngagement.result}</span>
+                    </span>
                   </li>
                 )}
               </ul>

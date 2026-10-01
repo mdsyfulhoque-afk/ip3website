@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { ChevronRight } from 'lucide-react';
+import { PodcastFlowCarousel } from './PodcastFlowCarousel';
+import { useCMS, defaultPodcastCarousel } from '../context/CMSContext';
 
 export interface ApproachPageProps {
   initialSection?: string;
@@ -1003,6 +1005,9 @@ export const ApproachPage: React.FC<ApproachPageProps> = ({
   onNavigatePeople,
   onOpenTalk,
 }) => {
+  const { data } = useCMS();
+  const podcastConfig = data.podcastCarousel ?? defaultPodcastCarousel;
+
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const progressBarRef = useRef<HTMLDivElement>(null);
@@ -1243,29 +1248,29 @@ export const ApproachPage: React.FC<ApproachPageProps> = ({
   };
 
   return (
-    <div className="approach-page min-h-screen selection:bg-[#ff7e67]/30 selection:text-[#ff9d8c]" ref={containerRef}>
+    <div className="approach-page min-h-screen selection:bg-[#8B3A2A]/20 selection:text-[#1C1917]" ref={containerRef}>
       {/* 1. Page Header & Institutional Breadcrumb */}
-      <div className="border-b border-slate-800 bg-[#050a12]/90 backdrop-blur-md relative z-20">
+      <div className="border-b border-[#D5C8BC] bg-[#FFFFFF]/95 backdrop-blur-md relative z-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between text-xs">
-          <div className="flex items-center gap-2 text-slate-400">
+          <div className="flex items-center gap-2 text-[#7A6B63]">
             <button
               onClick={onNavigateHome}
-              className="hover:text-white transition-colors cursor-pointer"
+              className="hover:text-[#1C1917] transition-colors cursor-pointer font-medium"
             >
               Home
             </button>
-            <ChevronRight className="w-3.5 h-3.5 opacity-60" />
+            <ChevronRight className="w-3.5 h-3.5 opacity-60 text-[#D5C8BC]" />
             <button
               onClick={onNavigateAbout}
-              className="hover:text-white transition-colors cursor-pointer"
+              className="hover:text-[#1C1917] transition-colors cursor-pointer font-medium"
             >
               About Us
             </button>
-            <ChevronRight className="w-3.5 h-3.5 opacity-60" />
-            <span className="text-[#ff7e67] font-bold">
+            <ChevronRight className="w-3.5 h-3.5 opacity-60 text-[#D5C8BC]" />
+            <span className="text-[#8B3A2A] font-bold">
               Our Approach
             </span>
-            <span className="text-[10px] font-mono text-slate-400 bg-slate-800/90 border border-slate-700/60 px-1.5 py-0.5 rounded ml-1">
+            <span className="text-[10px] font-mono text-[#7A6B63] bg-[#F0EBE4] border border-[#D5C8BC] px-1.5 py-0.5 rounded ml-1 font-medium">
               Sub-Page
             </span>
           </div>
@@ -1290,7 +1295,9 @@ export const ApproachPage: React.FC<ApproachPageProps> = ({
         {/* ===================== HERO SECTION ===================== */}
         <section className="hero wrap" aria-labelledby="approach-title">
           <div className="hero__inner">
-            <p className="eyebrow reveal">{HERO_DATA.eyebrow}</p>
+            <p className="eyebrow reveal">
+              About Us Sub-Page · Our Approach · Policy to <span className="accent-word text-[#8B3A2A] font-semibold">Implementation</span>
+            </p>
             <h1 id="approach-title" className="reveal">
               {HERO_DATA.titleBefore}
               <em>{HERO_DATA.titleEmphasis}</em>
@@ -1332,14 +1339,35 @@ export const ApproachPage: React.FC<ApproachPageProps> = ({
               <circle className="tl-node tl-node--end" cx="960" cy="10" r="6.5" />
             </svg>
             <ol className="throughline__labels">
-              {HERO_DATA.throughLine.map((label, idx) => (
-                <li key={label} style={{ color: idx === HERO_DATA.throughLine.length - 1 ? 'var(--accent)' : undefined }}>
-                  {label}
-                </li>
-              ))}
+              {HERO_DATA.throughLine.map((label, idx) => {
+                const isImpl = label.toLowerCase() === 'implementation';
+                return (
+                  <li
+                    key={label}
+                    className={isImpl ? 'accent-word' : undefined}
+                    style={{
+                      color: isImpl ? '#8B3A2A' : idx === HERO_DATA.throughLine.length - 1 ? 'var(--accent)' : undefined,
+                      fontWeight: isImpl ? 700 : undefined,
+                    }}
+                  >
+                    {label}
+                  </li>
+                );
+              })}
             </ol>
           </figure>
         </section>
+
+        {/* ===================== PODCAST FLOW CAROUSEL ===================== */}
+        {podcastConfig.enabled !== false && (
+          <PodcastFlowCarousel
+            items={podcastConfig.items}
+            speed={podcastConfig.speed}
+            onItemClick={(item) => {
+              console.log('Selected:', item.title);
+            }}
+          />
+        )}
 
         {/* ===================== JOURNEY SECTION ===================== */}
         <section className="section" id="journey" aria-labelledby="journey-title">
@@ -1413,7 +1441,7 @@ export const ApproachPage: React.FC<ApproachPageProps> = ({
               <h3 style={{ fontSize: '1.3rem', marginBottom: '.7rem' }}>Define the decision before designing the work.</h3>
               <p style={{ color: 'var(--text-dim)', fontSize: '.93rem' }}>
                 An engagement begins by defining the decision or transformation the client actually needs to make. This prevents a research
-                question from becoming disconnected from an implementation problem, and lets us select the right level of analytical rigour rather
+                question from becoming disconnected from an <span className="accent-word text-[#8B3A2A] font-semibold">implementation</span> problem, and lets us select the right level of analytical rigour rather
                 than applying the same toolkit to every engagement.
               </p>
               <Disclosure label="What we clarify first +" labelOpen="Close −">
@@ -1440,7 +1468,7 @@ export const ApproachPage: React.FC<ApproachPageProps> = ({
               <h2 id="pathway-title">Six Movements of Reform</h2>
               <p className="kicker">
                 From diagnosis to durable institutional capability. The movements are shown in order because a roadmap must be understandable — but
-                evidence can change the design, a pilot can invalidate an assumption, and implementation can expose an institutional constraint.
+                evidence can change the design, a pilot can invalidate an assumption, and <span className="accent-word text-[#8B3A2A] font-semibold">implementation</span> can expose an institutional constraint.
                 Feedback and adaptation are built in from the start.
               </p>
             </div>

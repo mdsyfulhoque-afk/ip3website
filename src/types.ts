@@ -135,6 +135,8 @@ export interface TeamMember {
   stats: MemberStats;
 }
 
+export type { FacultyMember } from './data/peopleData';
+
 export interface ContactFormData {
   name: string;
   email: string;
@@ -525,6 +527,24 @@ export interface SystemsHeroSectionData {
   description: string;
   exploreBtnText: string;
   consultBtnText: string;
+  imageUrl?: string;
+  imageAlt?: string;
+}
+
+export interface WhyIp3ReasonItem {
+  id: string;
+  number: string;
+  title: string;
+  description: string;
+}
+
+export interface WhyIp3Config {
+  badge: string;
+  titlePrefix: string;
+  titleHighlight: string;
+  imageUrl: string;
+  imageAlt?: string;
+  reasons: WhyIp3ReasonItem[];
 }
 
 export interface EightSystemsConfig {
@@ -562,6 +582,41 @@ export interface Engagement {
   verificationSource: string;
   capabilityTags: string[];
   metrics?: EngagementMetric[];
+}
+
+export interface CorridorImage {
+  src: string;
+  alt: string;
+  badge?: string;
+  tagline?: string;
+}
+
+export interface CorridorHeroConfig {
+  enabled: boolean;
+  title?: string;
+  badge?: string;
+  speed: number;
+  cards: number;
+  axis: number;
+  perspective: number;
+  images: CorridorImage[];
+}
+
+export interface PodcastCardItem {
+  id: string;
+  title: string;
+  imageSrc: string;
+  youtubeUrl?: string;
+  badgeText?: string;
+  headlinePrimary?: string;
+  headlineSecondary?: string;
+  questionMark?: boolean;
+}
+
+export interface PodcastCarouselConfig {
+  enabled: boolean;
+  speed: number;
+  items: PodcastCardItem[];
 }
 
 

@@ -30,12 +30,19 @@ import {
   SiteThemeConfig,
   StoryTheme,
   SystemsHeroSectionData,
+  WhyIp3Config,
   EightSystemsConfig,
+  CorridorHeroConfig,
+  CorridorImage,
+  PodcastCardItem,
+  PodcastCarouselConfig,
+  FacultyMember,
 } from '../types';
 
 import { defaultSlides } from './slides';
 import { defaultMovie } from './movieData';
 import { SYSTEMS_DATA } from './systems';
+import { FACULTY_MEMBERS } from './peopleData';
 import {
   ip3OfficeInfo,
   consultingServices as defaultServices,
@@ -63,6 +70,7 @@ export interface WebsiteData {
   executive: ExecutiveProfile;
   impactPillars: ImpactPillar[];
   teamMembers: TeamMember[];
+  facultyMembers?: FacultyMember[];
   researchSection: ResearchSectionData;
   operationalFronts: OperationalFront[];
   parallaxCards: ParallaxCardItem[];
@@ -75,7 +83,10 @@ export interface WebsiteData {
   themeConfig: SiteThemeConfig;
   storyThemes?: StoryTheme[];
   systemsHero?: SystemsHeroSectionData;
+  whyIp3?: WhyIp3Config;
   eightSystems?: EightSystemsConfig;
+  corridorHero?: CorridorHeroConfig;
+  podcastCarousel?: PodcastCarouselConfig;
   /** Site navigation: mega-menu columns, links and promos. */
   navigation: PrimaryNavItem[];
   /** Navbar chrome: brand, CTA, top bar, search. */
@@ -717,34 +728,6 @@ export const defaultTeamMembers: TeamMember[] = [
   }
 ];
 
-export interface WebsiteData {
-  slides: SlideItem[];
-  movie: Movie;
-  officeInfo: OfficeInfo;
-  services: ServiceOption[];
-  trustStats: StatItem[];
-  faqItems: FaqItem[];
-  executive: ExecutiveProfile;
-  impactPillars: ImpactPillar[];
-  teamMembers: TeamMember[];
-  researchSection: ResearchSectionData;
-  operationalFronts: OperationalFront[];
-  parallaxCards: ParallaxCardItem[];
-  focusAreas: FocusAreaItem[];
-  projects: ProjectItemData[];
-  serviceSolutions?: ServiceSolutionItem[];
-  treeFramework?: TreeFrameworkData;
-  testimonialsSection?: TestimonialSectionData;
-  trustMatrix?: TrustMatrixData;
-  themeConfig: SiteThemeConfig;
-  storyThemes?: StoryTheme[];
-  systemsHero?: SystemsHeroSectionData;
-  navigation: PrimaryNavItem[];
-  navbar: NavbarConfig;
-  timeSlots: string[];
-  clientTestimonials: typeof defaultClientTestimonials;
-}
-
 export const defaultStoryThemes: StoryTheme[] = [
   {
     id: 'polysolutions',
@@ -886,21 +869,166 @@ export const defaultStoryThemes: StoryTheme[] = [
 
 export const defaultEightSystemsConfig: EightSystemsConfig = {
   badge: 'Operationalized Across 8 Interconnected Realities',
-  titleMain: 'Eight sectors. One ',
-  titleHighlight: 'integrated delivery model.',
+  titleMain: 'Operationalized Across ',
+  titleHighlight: '8 Interconnected Realities.',
   fontFamily: 'newsreader',
   glowIntensity: 1,
   systems: SYSTEMS_DATA,
 };
 
 export const defaultSystemsHero: SystemsHeroSectionData = {
-  badge: 'POLICY • ECONOMICS • DEVELOPMENT FINANCE • IMPLEMENTATION',
+  badge: 'BUILT FOR COMPLEX MANDATES',
   titlePrefix: 'Turning complex policy challenges into',
   titleHighlight: 'implementable, investable solutions.',
   description:
     'IP3 Consulting Limited is a policy and development advisory firm helping multilateral institutions, development partners, governments, businesses and research organizations design better policies, mobilize investment, strengthen institutions and deliver measurable results.',
   exploreBtnText: 'Explore Whole Systems Architecture',
   consultBtnText: 'Request Advisory Briefing',
+  imageUrl: '/images/boardroom_meeting.jpg',
+  imageAlt: 'IP3 High-Level Advisory & Boardroom Deliberation Session',
+};
+
+export const defaultCorridorHero: CorridorHeroConfig = {
+  enabled: true,
+  title: "Corridor of Practice // 8 Key Intersections",
+  badge: "Visual Corridor",
+  speed: 20,
+  cards: 8,
+  axis: 55,
+  perspective: 30,
+  images: [
+    {
+      src: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=900&q=80",
+      alt: "Institutional Systems & Modern Architecture",
+      badge: "Architecture",
+      tagline: "Translational Systems",
+    },
+    {
+      src: "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&w=900&q=80",
+      alt: "Climate Action & Ecological Transition",
+      badge: "Climate",
+      tagline: "Green Transitions",
+    },
+    {
+      src: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=900&q=80",
+      alt: "Digital Public Infrastructure & Data Networks",
+      badge: "Digital",
+      tagline: "Data Ecosystems",
+    },
+    {
+      src: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=900&q=80",
+      alt: "Collaborative Policy Co-Design & Strategic Advisory",
+      badge: "Policy",
+      tagline: "Multi-Stakeholder",
+    },
+    {
+      src: "https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=900&q=80",
+      alt: "Education & Human Capacity Development",
+      badge: "Human Capital",
+      tagline: "Future-Ready Skills",
+    },
+    {
+      src: "https://images.unsplash.com/photo-1497435334941-8c899ee9e8e9?auto=format&fit=crop&w=900&q=80",
+      alt: "Clean Energy & Resilient Urban Infrastructure",
+      badge: "Infrastructure",
+      tagline: "Sustainable Energy",
+    },
+    {
+      src: "https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=900&q=80",
+      alt: "Governance, Regulation & Public Sector Delivery",
+      badge: "Governance",
+      tagline: "Public Sector Impact",
+    },
+    {
+      src: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=900&q=80",
+      alt: "Systems Engineering & Grounded Implementation",
+      badge: "Delivery",
+      tagline: "Grounded Solutions",
+    },
+  ],
+};
+
+export const defaultWhyIp3: WhyIp3Config = {
+  badge: "02 — WHY IP³",
+  titlePrefix: "FOUR REASONS CLIENTS",
+  titleHighlight: "choose us",
+  imageUrl: "/images/why_ip3_collaboration.jpg",
+  imageAlt: "Two women collaborating over digital policy insights and tablet interface",
+  reasons: [
+    {
+      id: "reason-1",
+      number: "01",
+      title: "From polycrisis to polysolutions",
+      description:
+        "Economic, institutional, environmental and technological risks overlap. We work across eight connected sectors with cross-cutting capability in economics, finance, governance, data and implementation.",
+    },
+    {
+      id: "reason-2",
+      number: "02",
+      title: "Translation, not theory",
+      description:
+        "Evidence converted into delivery architecture: strategies, project preparation, institutional reform and results systems.",
+    },
+    {
+      id: "reason-3",
+      number: "03",
+      title: "Research that changes decisions",
+      description:
+        "Decision-ready diagnostics, business cases and evaluations — not publications for their own sake.",
+    },
+    {
+      id: "reason-4",
+      number: "04",
+      title: "A convenor between worlds",
+      description:
+        "Structured policy dialogue, investment forums and technical working groups that align governments, capital and implementers.",
+    },
+  ],
+};
+
+export const defaultPodcastCarousel: PodcastCarouselConfig = {
+  enabled: true,
+  speed: 40,
+  items: [
+    {
+      id: 'ep-1',
+      title: 'Problem Solving কি বাস্তব জীবনে প্রভাব ফেলে?',
+      imageSrc: 'https://images.unsplash.com/photo-1590602847861-f357a9332bbc?auto=format&fit=crop&w=800&q=80',
+      youtubeUrl: 'https://www.youtube.com/watch?v=gT_uK0Y7oFw',
+      badgeText: 'Problem Solving কি',
+      headlinePrimary: 'বাস্তব জীবনে',
+      headlineSecondary: 'প্রভাব ফেলে?',
+      questionMark: true,
+    },
+    {
+      id: 'ep-2',
+      title: 'PHITRON এর STUDENT PODCAST স্ক্রিপ্টেড হয়?',
+      imageSrc: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=800&q=80',
+      youtubeUrl: 'https://www.youtube.com/watch?v=rWj_s5D_6hA',
+      badgeText: 'PHITRON এর',
+      headlinePrimary: 'STUDENT PODCAST',
+      headlineSecondary: 'স্ক্রিপ্টেড হয়?',
+      questionMark: true,
+    },
+    {
+      id: 'ep-3',
+      title: 'ডিপ্লোমা স্টুডেন্টদের ভবিষ্যৎ!',
+      imageSrc: 'https://images.unsplash.com/photo-1478737270239-2f02b77fc618?auto=format&fit=crop&w=800&q=80',
+      youtubeUrl: 'https://www.youtube.com/watch?v=3JZ_D3ELwOQ',
+      badgeText: 'ডিপ্লোমা স্টুডেন্টদের',
+      headlinePrimary: 'ভবিষ্যৎ!',
+      headlineSecondary: '',
+    },
+    {
+      id: 'ep-4',
+      title: 'প্রোগ্রামিং-এর জন্য স্বপ্নের পাবলিক ভার্সিটি ছেড়ে দিলাম!',
+      imageSrc: 'https://images.unsplash.com/photo-1516251193007-45ef944ab0c6?auto=format&fit=crop&w=800&q=80',
+      youtubeUrl: 'https://www.youtube.com/watch?v=kYv_37v4k2o',
+      badgeText: 'প্রোগ্রামিং-এর জন্য',
+      headlinePrimary: 'স্বপ্নের পাবলিক ভার্সিটি',
+      headlineSecondary: 'ছেড়ে দিলাম!',
+    },
+  ],
 };
 
 export const DEFAULT_WEBSITE_DATA: WebsiteData = {
@@ -913,6 +1041,7 @@ export const DEFAULT_WEBSITE_DATA: WebsiteData = {
   executive: defaultExecutive,
   impactPillars: defaultPillars,
   teamMembers: defaultTeamMembers,
+  facultyMembers: FACULTY_MEMBERS,
   researchSection: defaultResearchSection,
   operationalFronts: defaultOperationalFronts,
   parallaxCards: defaultParallaxCards,
@@ -925,7 +1054,10 @@ export const DEFAULT_WEBSITE_DATA: WebsiteData = {
   themeConfig: defaultThemeConfig,
   storyThemes: defaultStoryThemes,
   systemsHero: defaultSystemsHero,
+  whyIp3: defaultWhyIp3,
   eightSystems: defaultEightSystemsConfig,
+  corridorHero: defaultCorridorHero,
+  podcastCarousel: defaultPodcastCarousel,
   navigation: defaultNavigation,
   navbar: defaultNavbarConfig,
   timeSlots: defaultTimeSlots,

@@ -5,7 +5,6 @@ import { SystemItem, SystemOverlap } from '../types';
 import { EightSystemsHero } from './EightSystemsHero';
 import { OverlapModal } from './OverlapModal';
 import { SystemDetailPanel } from './SystemDetailPanel';
-import { DeliveryCyclePipelineSection } from './DeliveryCyclePipelineSection';
 
 export const EightSystemsSection: React.FC = () => {
   const { data } = useCMS();
@@ -50,7 +49,7 @@ export const EightSystemsSection: React.FC = () => {
   return (
     <div
       id="eight-systems-master-section"
-      className="w-full text-slate-100 flex flex-col relative overflow-hidden"
+      className="w-full text-slate-900 flex flex-col relative overflow-hidden"
     >
       {/* Main View Display */}
       <div className="w-full relative z-10">
@@ -75,9 +74,6 @@ export const EightSystemsSection: React.FC = () => {
             onSelectOverlap={handleSelectOverlap}
           />
         )}
-
-        {/* Delivery Cycle Pipeline Section */}
-        <DeliveryCyclePipelineSection />
       </div>
 
       {/* Cross-Domain Overlap Modal */}

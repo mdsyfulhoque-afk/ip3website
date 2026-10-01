@@ -17,15 +17,16 @@ import {
   Palette,
   Eye,
 } from 'lucide-react';
-import { useCMS, defaultEightSystemsConfig } from '../context/CMSContext';
+import { useCMS, defaultEightSystemsConfig, defaultWhyIp3 } from '../context/CMSContext';
 import { defaultSystemsHero } from '../data/defaultContent';
 import { SystemItem, SystemMetric, SystemOverlap } from '../types';
 import { ImageField } from './ImageField';
 
 export const SystemsManager: React.FC = () => {
-  const { data, updateEightSystems, updateSystemsHero } = useCMS();
+  const { data, updateEightSystems, updateSystemsHero, updateWhyIp3 } = useCMS();
   const config = data.eightSystems || defaultEightSystemsConfig;
   const hero = data.systemsHero || defaultSystemsHero;
+  const whyIp3 = data.whyIp3 || defaultWhyIp3;
   const systems = config.systems && config.systems.length > 0 ? config.systems : defaultEightSystemsConfig.systems;
 
   const [expandedSystemId, setExpandedSystemId] = useState<string | null>(null);
@@ -191,7 +192,7 @@ export const SystemsManager: React.FC = () => {
               value={hero.badge}
               onChange={(e) => handleUpdateHero('badge', e.target.value)}
               className="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-700 text-xs text-white focus:border-[#38d9c0] outline-none"
-              placeholder="POLICY • ECONOMICS • DEVELOPMENT FINANCE • IMPLEMENTATION"
+              placeholder="BUILT FOR COMPLEX MANDATES"
             />
           </div>
 
@@ -227,6 +228,122 @@ export const SystemsManager: React.FC = () => {
             className="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-700 text-xs text-white focus:border-[#38d9c0] outline-none resize-none"
             placeholder="IP3 Consulting Limited is a policy and development advisory firm..."
           />
+        </div>
+
+        {/* Hero Feature Imagery (CMS Controlled) */}
+        <div className="pt-3 border-t border-slate-800/80 space-y-3">
+          <ImageField
+            label="Hero Boardroom Feature Imagery (Right Side Visual)"
+            value={hero.imageUrl || '/images/boardroom_meeting.jpg'}
+            onChange={(url) => handleUpdateHero('imageUrl', url)}
+            folder="hero"
+            placeholder="/images/boardroom_meeting.jpg or https://..."
+          />
+          <div>
+            <label className="block text-xs font-medium text-slate-300 mb-1">Image Alt Text (Accessibility & SEO)</label>
+            <input
+              type="text"
+              value={hero.imageAlt || ''}
+              onChange={(e) => handleUpdateHero('imageAlt', e.target.value)}
+              className="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-700 text-xs text-white focus:border-[#38d9c0] outline-none"
+              placeholder="IP3 High-Level Advisory & Boardroom Deliberation Session"
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Why IP³ / Four Reasons Clients Choose Us Feature Image & Content (CMS Controlled) */}
+      <div className="p-4 bg-slate-950 border border-orange-500/30 rounded-2xl space-y-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <span className="w-2.5 h-2.5 rounded-full bg-orange-500 animate-pulse" />
+            <h4 className="text-xs font-bold text-orange-400 uppercase tracking-wider flex items-center gap-2">
+              <span>Why IP³ • Four Reasons Clients Choose Us Section</span>
+            </h4>
+          </div>
+          <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-orange-500/20 text-orange-300 border border-orange-500/30">
+            #orbital-system-clone-section
+          </span>
+        </div>
+
+        <p className="text-xs text-slate-400">
+          Control the featured portrait photograph, alt text, and headline messaging for the Why IP³ split section.
+        </p>
+
+        <div className="pt-2 border-t border-slate-800/80 space-y-4">
+          <ImageField
+            label="Why IP³ Collaboration Feature Image (Left Portrait Visual)"
+            value={whyIp3.imageUrl || '/images/why_ip3_collaboration.jpg'}
+            onChange={(url) => {
+              updateWhyIp3({
+                ...whyIp3,
+                imageUrl: url,
+              });
+              showNotice('Why IP³ feature image updated successfully');
+            }}
+            folder="why-ip3"
+            placeholder="/images/why_ip3_collaboration.jpg or https://..."
+          />
+
+          <div>
+            <label className="block text-xs font-medium text-slate-300 mb-1">Image Alt Text (Accessibility & SEO)</label>
+            <input
+              type="text"
+              value={whyIp3.imageAlt || ''}
+              onChange={(e) =>
+                updateWhyIp3({
+                  ...whyIp3,
+                  imageAlt: e.target.value,
+                })
+              }
+              className="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-700 text-xs text-white focus:border-orange-400 outline-none"
+              placeholder="Two women collaborating over digital policy insights and tablet interface"
+            />
+          </div>
+
+          {/* Quick preset selector */}
+          <div className="pt-1 flex flex-wrap items-center gap-2">
+            <span className="text-[11px] font-mono text-slate-400">Presets:</span>
+            <button
+              type="button"
+              onClick={() => {
+                updateWhyIp3({
+                  ...whyIp3,
+                  imageUrl: '/images/why_ip3_collaboration.jpg',
+                });
+                showNotice('Reset to Default Collaboration Image');
+              }}
+              className="text-[11px] px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition-colors cursor-pointer"
+            >
+              Default Collaboration
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                updateWhyIp3({
+                  ...whyIp3,
+                  imageUrl: '/images/boardroom_meeting.jpg',
+                });
+                showNotice('Set to Boardroom Meeting');
+              }}
+              className="text-[11px] px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition-colors cursor-pointer"
+            >
+              Boardroom Meeting
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                updateWhyIp3({
+                  ...whyIp3,
+                  imageUrl: '/images/boardroom_delegation.jpg',
+                });
+                showNotice('Set to High-Level Delegation');
+              }}
+              className="text-[11px] px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition-colors cursor-pointer"
+            >
+              Delegation Session
+            </button>
+          </div>
         </div>
       </div>
 

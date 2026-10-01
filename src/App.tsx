@@ -184,7 +184,7 @@ function AppContent() {
         /* Main Home Page Stream */
         <>
           {/* Main Presentation Slider Header Hero */}
-          <section id="hero" className="w-full h-screen relative">
+          <section id="hero" className="w-full min-h-screen lg:h-screen relative">
             <PresentationSlider
               slides={data.slides}
               currentSlideId={currentSlideId}

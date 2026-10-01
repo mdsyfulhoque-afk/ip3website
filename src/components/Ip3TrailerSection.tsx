@@ -388,7 +388,7 @@ export const Ip3TrailerSection: React.FC = () => {
   return (
     <>
       {/* Anchor for in-page linking or navigation */}
-      <div id="trailer" className="relative -top-24 opacity-0 pointer-events-none" />
+      <span id="trailer" className="relative -top-24 opacity-0 pointer-events-none block" />
 
       {/* ========================================================================= */}
       {/* FLOATING POP-UP LAUNCHER BUTTON (MINIMIZED BY DEFAULT) */}

@@ -475,5 +475,52 @@ export const SYSTEMS_DATA: SystemItem[] = [
         sharedMetrics: ['Regulatory Review Velocity', 'Administrative Error Rate Reduction']
       }
     ]
+  },
+  {
+    id: 'integrated-delivery',
+    name: 'Integrated Delivery Model',
+    shortName: 'Delivery',
+    row: 2,
+    color: '#ff7e67', // Brand coral
+    glowColor: 'rgba(255, 126, 103, 0.7)',
+    bgGlow: 'rgba(255, 126, 103, 0.12)',
+    dotClass: 'bg-[#ff7e67]',
+    borderClass: 'border-[#ff7e67]/40',
+    category: 'Translational Integration',
+    imageUrl: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=800&q=80',
+    summary: 'Translational policy integration, multi-domain system architecture, and end-to-end execution pipelines.',
+    coreMandate: 'Bridging the implementation gap between national policy mandates and ground-level operational execution.',
+    keyDrivers: [
+      'Cross-domain policy translation & regulatory prototyping',
+      'Evidence pipelines & real-time monitoring triggers',
+      'Public-private investment packaging and blended finance',
+      'Institutional capability transfer & operational scale'
+    ],
+    systemicRisks: [
+      'Policy intent lost in siloed departmental execution',
+      'Misaligned fiscal allocations and operational delays',
+      'Data fragmentation preventing adaptive course correction'
+    ],
+    interventions: [
+      'End-to-end delivery cycle pipeline management',
+      'Multi-stakeholder delivery labs & rapid pilot iteration',
+      'Cross-jurisdictional institutional integration playbooks'
+    ],
+    metrics: [
+      { label: 'Policy-to-Execution Velocity', value: '3.4x', trend: 'up' },
+      { label: 'Cross-Domain Synergies Mapped', value: '28', trend: 'up' },
+      { label: 'Implementation Integrity', value: '94%', trend: 'up' }
+    ],
+    overlaps: [
+      {
+        targetSystemId: 'climate-sustainability',
+        targetSystemName: 'Climate & Sustainability',
+        overlapTitle: 'Translational Climate Infrastructure Delivery',
+        synergyDescription: 'Operationalizing sovereign green commitments through cross-departmental delivery milestones.',
+        compoundRisk: 'Disjointed municipal implementation slowing decarbonization goals.',
+        jointIntervention: 'Unified climate delivery units embedded across key line ministries.',
+        sharedMetrics: ['Delivery Velocity Index', 'Infrastructure Commissioning Rate']
+      }
+    ]
   }
 ];
