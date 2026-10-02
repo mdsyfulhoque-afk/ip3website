@@ -19,6 +19,22 @@ export function isDBConnected() {
   return mongoose.connection.readyState === 1;
 }
 
+/**
+ * In production, enquiries and bookings are accepted only when they can be kept. Without a database they would
+ * live in one serverless instance's memory and vanish, while the visitor was told they had been sent. This answers
+ * the request itself (so the message is not masked as a generic server error) and returns true when it did.
+ * ALLOW_MEMORY_STORE=true keeps the old behaviour for demonstrations.
+ */
+export function refuseWithoutStorage(res, what) {
+  if (isDBConnected() || process.env.NODE_ENV !== 'production' || process.env.ALLOW_MEMORY_STORE === 'true') return false;
+  res.status(503).json({
+    ok: false,
+    code: 'NO_STORAGE',
+    error: `Online ${what} are not switched on yet, so nothing was saved. Please send the same message by email instead.`,
+  });
+  return true;
+}
+
 export async function connectDB() {
   if (!MONGODB_URI) {
     return null;

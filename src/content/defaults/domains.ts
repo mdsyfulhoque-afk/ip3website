@@ -114,7 +114,9 @@ export const domains: Domain[] = [
     ],
     sectors: ['education-skills', 'social-protection'],
     services: ['program-survey-design', 'merla'],
-    video: 'https://ip3-bd.org/wp-content/uploads/2025/02/Educational-Innovation.mp4',
+    // The old site's video cannot be carried over (the host is unreachable and the copy in the old repo is broken).
+    // Upload it in the editor to show the video band again.
+    video: '',
   },
   {
     slug: 'institutions-data-digital',
@@ -165,6 +167,7 @@ export const domains: Domain[] = [
     ],
     sectors: ['public-governance', 'monitoring-evaluation', 'macroeconomic-fiscal'],
     services: ['macro-sector-policy', 'merla'],
-    video: 'https://ip3-bd.org/wp-content/uploads/2025/02/Future-Ready-Governance.mp4',
+    // The IP3 brand reel: data and technology on screen, from evidence to practice.
+    video: '/video/ip3-reel.mp4',
   },
 ];

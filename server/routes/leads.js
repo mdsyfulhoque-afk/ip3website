@@ -3,7 +3,7 @@ import rateLimit from 'express-rate-limit';
 import Lead from '../models/Lead.js';
 import { requireAdmin } from '../lib/auth.js';
 import { asyncHandler, httpError, isValidId, randomTicket, sanitizePayload, isEmail } from '../lib/helpers.js';
-import { isDBConnected } from '../lib/db.js';
+import { isDBConnected, refuseWithoutStorage } from '../lib/db.js';
 import { expiryFor, purgeExpired } from '../lib/retention.js';
 import {
   addInMemoryLead,
@@ -37,6 +37,7 @@ router.post(
     if (!isEmail(payload.email)) {
       throw httpError(400, 'Please provide a valid email address.', 'INVALID_EMAIL');
     }
+    if (refuseWithoutStorage(res, 'enquiries')) return;
 
     if (!isDBConnected()) {
       const lead = addInMemoryLead({

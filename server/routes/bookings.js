@@ -4,7 +4,7 @@ import rateLimit from 'express-rate-limit';
 import Booking from '../models/Booking.js';
 import { requireAdmin } from '../lib/auth.js';
 import { asyncHandler, httpError, isValidId, sanitizePayload, isEmail } from '../lib/helpers.js';
-import { isDBConnected } from '../lib/db.js';
+import { isDBConnected, refuseWithoutStorage } from '../lib/db.js';
 import { expiryFor, purgeExpired } from '../lib/retention.js';
 import {
   addInMemoryBooking,
@@ -84,6 +84,7 @@ router.post(
 
     const today = new Date().toISOString().split('T')[0];
     if (payload.date < today) throw httpError(400, 'That date is in the past.', 'PAST_DATE');
+    if (refuseWithoutStorage(res, 'bookings')) return;
 
     const bookingId = newBookingId();
     // A visitor can never set these: they belong to the admin's confirmation step.

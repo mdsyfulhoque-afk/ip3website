@@ -90,6 +90,7 @@ Build output: `dist/<route>/index.html` for every page, `dist/200.html` (empty s
 | `CLOUDINARY_*` | for uploads | Signed direct image and video uploads from the editor |
 | `MEETING_LINK` | no | One standing meeting room for every confirmed booking. If empty, confirming creates a private Jitsi Meet room per booking. |
 | `MEETING_BASE_URL` | no | Your own Jitsi server instead of meet.jit.si |
+| `ALLOW_MEMORY_STORE` | no | `true` lets a production server accept enquiries and bookings without a database (demonstrations only: they are lost on restart). Otherwise the forms ask visitors to email until `MONGODB_URI` is set. |
 | `RETENTION_DAYS` | no | Days enquiries and bookings are kept (default 60; bookings count from the meeting date) |
 | `ANTHROPIC_API_KEY` | for Ask IP3 | Turns the assistant on. Without it the button never appears. |
 | `ASK_DAILY_LIMIT`, `ASK_PER_15_MIN` | no | Questions per day per server instance (default 500) and per visitor per 15 minutes (default 15) |
@@ -172,7 +173,7 @@ Run `npm run check:placeholders` for the live list. In short:
 - **Titles**: Siban Shahana appears as "Asst. Prof." in the matrix and Research Fellow (BIDS) in the CV.
 - **Hidden people**: four names from the old site are not in the team pack and are hidden.
 - **Earlier work** (before 2018, or through another firm) is kept but hidden: JICA/BEZA, Global LEAP, ESMAP/ASTAE.
-- **Videos**: the chairman's video slot appears once a video is uploaded in the editor. The Education and the
-  Institutions focus pages still point to videos on the old site (`ip3-bd.org/wp-content/...`); upload them in the
-  editor before the domain moves to this site, or those two links will stop working. Add captions to any film with speech.
+- **Videos**: the chairman's video slot appears once a video is uploaded in the editor. The old site's focus-page
+  videos could not be carried over: Climate now shows the climate-data film and Institutions the IP3 reel; Education's
+  video band is hidden until a video is uploaded in the editor. Add captions to any film with speech.
 - **Photos of fieldwork** that show survey respondents or factory workers are not used until consent is recorded.
