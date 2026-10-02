@@ -66,7 +66,18 @@ function pressable(label: string, pressed: boolean, onPress: () => void) {
  * and the countries beyond Bangladesh are highlighted on a regional map. Choosing any of them lists the work.
  * Only places listed on published entries appear: nothing is plotted that the portfolio does not state.
  */
-export function ImpactMap({ work, lang = 'en', linkBase = '/work' }: { work: Engagement[]; lang?: Lang; linkBase?: string }) {
+export function ImpactMap({
+  work,
+  lang = 'en',
+  linkBase = '/work',
+  titles = {},
+}: {
+  work: Engagement[];
+  lang?: Lang;
+  linkBase?: string;
+  /** Translated titles by engagement id; anything missing shows the English title. */
+  titles?: Record<string, string>;
+}) {
   const t = T[lang];
   const [data, setData] = useState<MapData | null>(null);
   const [selected, setSelected] = useState('BD');
@@ -201,8 +212,11 @@ export function ImpactMap({ work, lang = 'en', linkBase = '/work' }: { work: Eng
                 <li key={e.id} className="border-b border-midnight-rule">
                   <Link to={`${linkBase}/${e.id}`} className="group flex min-h-11 flex-col py-3 no-underline sm:flex-row sm:items-baseline sm:gap-4">
                     <span className="t-ui shrink-0 text-mist sm:w-28">{lang === 'bn' ? toBanglaDigits(yearSpan(e)) : yearSpan(e)}</span>
-                    <span className="t-ui font-semibold text-ivory underline decoration-midnight-rule decoration-1 underline-offset-4 group-hover:decoration-signal">
-                      {e.title}
+                    <span
+                      lang={titles[e.id] || lang === 'en' ? undefined : 'en'}
+                      className="t-ui font-semibold text-ivory underline decoration-midnight-rule decoration-1 underline-offset-4 group-hover:decoration-signal"
+                    >
+                      {titles[e.id] || e.title}
                     </span>
                   </Link>
                 </li>

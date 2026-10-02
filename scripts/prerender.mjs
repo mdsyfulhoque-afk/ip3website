@@ -23,7 +23,8 @@ if (!template.includes(HTML_MARK) || !template.includes(HEAD_MARK)) {
 
 const { render, paths, siteOrigin } = await import(pathToFileURL(resolve('dist-ssr/entry-server.js')).href);
 
-const fill = (head, html) => template.replace(HEAD_MARK, () => head).replace(HTML_MARK, () => html);
+const fill = (head, html, lang = 'en') =>
+  template.replace('<html lang="en">', `<html lang="${lang}">`).replace(HEAD_MARK, () => head).replace(HTML_MARK, () => html);
 const write = (rel, body) => {
   const file = join(dist, rel);
   mkdirSync(dirname(file), { recursive: true });
@@ -38,7 +39,7 @@ for (const url of paths) {
   const { html, head } = render(url);
   if (!html || html.length < 1500) throw new Error(`Prerender of ${url} produced no meaningful markup.`);
   if (!head.includes('<title')) throw new Error(`Prerender of ${url} did not set a title.`);
-  write(url === '/' ? 'index.html' : `${url.slice(1)}/index.html`, fill(head, html));
+  write(url === '/' ? 'index.html' : `${url.slice(1)}/index.html`, fill(head, html, url === '/bn' || url.startsWith('/bn/') ? 'bn' : 'en'));
   total += html.length;
 }
 

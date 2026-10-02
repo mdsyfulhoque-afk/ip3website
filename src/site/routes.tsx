@@ -1,6 +1,7 @@
 import { Route, Routes } from 'react-router-dom';
 import { About } from './pages/About';
 import { Approach } from './pages/Approach';
+import { Bangla } from './pages/Bangla';
 import { Contact } from './pages/Contact';
 import { Focus } from './pages/Focus';
 import { FocusDetail } from './pages/FocusDetail';
@@ -22,6 +23,7 @@ export function AppRoutes() {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
+      <Route path="/bn" element={<Bangla />} />
       <Route path="/about" element={<About />} />
       <Route path="/approach" element={<Approach />} />
       <Route path="/focus" element={<Focus />} />
@@ -46,6 +48,7 @@ export function AppRoutes() {
 export function prerenderPaths(content: SiteContent): string[] {
   return [
     '/',
+    '/bn',
     '/about',
     '/approach',
     '/focus',

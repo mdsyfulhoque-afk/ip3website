@@ -308,6 +308,38 @@ export interface LegalContent {
   privacy: { updated: string; sections: { title: string; text: string[] }[] };
 }
 
+/* --------------------------------- bangla --------------------------------- */
+
+/** The Bangla page (/bn): the core story in Bangla. Linked items open the English pages for the detail. */
+export interface BanglaContent {
+  /** Page title and description for search results. */
+  title: string;
+  description: string;
+  hero: { kicker: string; headline: string; lead: string; primary: Link; secondary: Link };
+  about: { heading: string; body: string[] };
+  focusHeading: string;
+  focus: { title: string; text: string; href: string }[];
+  servicesHeading: string;
+  services: { title: string; text: string; href: string }[];
+  impactHeading: string;
+  mapHeading: string;
+  mapLead: string;
+  workHeading: string;
+  workLead: string;
+  /** Bangla title and summary for selected portfolio entries, by id. The case story opens in English. */
+  work: { id: string; title: string; summary: string }[];
+  approachHeading: string;
+  approach: { title: string; text: string }[];
+  peopleHeading: string;
+  peopleLead: string;
+  contactHeading: string;
+  contactLead: string;
+  address: string[];
+  hours: string;
+  /** Says that the full detail is on the English pages. */
+  englishNote: string;
+}
+
 /* ---------------------------------- root ---------------------------------- */
 
 export interface SiteContent {
@@ -326,6 +358,7 @@ export interface SiteContent {
   pillars: Pillar[];
   about: AboutContent;
   legal: LegalContent;
+  bangla: BanglaContent;
 }
 
 export type SectorSlug = string;

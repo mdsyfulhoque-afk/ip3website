@@ -32,6 +32,7 @@ const SECTIONS: { key: keyof SiteContent; label: string; hint: string }[] = [
   { key: 'pillars', label: 'Pillars', hint: 'What IP3 stands for.' },
   { key: 'about', label: 'About', hint: 'Who IP3 is, vision, mission, chairman and the institutions named.' },
   { key: 'legal', label: 'Privacy page', hint: 'Plain-language description of what the site collects.' },
+  { key: 'bangla', label: 'বাংলা পাতা (Bangla page)', hint: 'The Bangla summary page at /bn. Work items are matched to portfolio entries by id.' },
 ];
 
 const LONG_KEYS = new Set(['text', 'summary', 'sub', 'lead', 'quote', 'note', 'description', 'need', 'audience', 'support', 'intro', 'body', 'vision', 'mission', 'change', 'shown', 'bio', 'challenge', 'approach']);

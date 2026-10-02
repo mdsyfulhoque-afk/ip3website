@@ -9,6 +9,10 @@ export interface HeadData {
   noindex?: boolean;
   image?: string;
   jsonLd?: Record<string, unknown>[];
+  /** Language versions of this page, e.g. English "/" and Bangla "/bn". */
+  alternates?: { hreflang: string; path: string }[];
+  /** Open Graph locale, e.g. "bn_BD". Default en_GB. */
+  locale?: string;
 }
 
 export type HeadTag =
@@ -54,7 +58,11 @@ export function headTags(content: SiteContent, data: HeadData): HeadTag[] {
     { tag: 'meta', attrs: { property: 'og:url', content: url } },
     { tag: 'meta', attrs: { property: 'og:image', content: image } },
     { tag: 'meta', attrs: { name: 'twitter:card', content: 'summary_large_image' } },
+    { tag: 'meta', attrs: { property: 'og:locale', content: data.locale || 'en_GB' } },
   ];
+  for (const alt of data.alternates ?? []) {
+    tags.push({ tag: 'link', attrs: { rel: 'alternate', hreflang: alt.hreflang, href: `${base}${alt.path}` } });
+  }
   if (data.noindex) tags.push({ tag: 'meta', attrs: { name: 'robots', content: 'noindex, follow' } });
   for (const ld of data.jsonLd ?? []) {
     tags.push({ tag: 'script', attrs: { type: 'application/ld+json' }, text: JSON.stringify(ld) });

@@ -65,6 +65,8 @@ export function validateContent(c: SiteContent): string[] {
     if (i.href && !/^https?:\/\//.test(i.href)) errors.push(`Insight "${i.title}" has a link that does not start with http:// or https://.`);
   }
 
+  if (c.bangla) ref('Bangla page', 'portfolio entry', engagements, c.bangla.work.map((w) => w.id));
+
   need('Organisation name', c.identity.name);
   need('Contact email', c.contact.email);
   for (const p of c.people) if (p.status === 'published') need(`Person "${p.slug}" name`, p.name);

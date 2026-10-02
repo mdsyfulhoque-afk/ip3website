@@ -1,5 +1,6 @@
 import type { SiteContent } from '../types';
 import { about } from './about';
+import { bangla } from './bangla';
 import { capabilities } from './capabilities';
 import { contact } from './contact';
 import { domains } from './domains';
@@ -31,4 +32,5 @@ export const DEFAULT_CONTENT: SiteContent = {
   pillars,
   about,
   legal,
+  bangla,
 };

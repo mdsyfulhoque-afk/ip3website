@@ -16,6 +16,11 @@ export function Home() {
         title={content.identity.name}
         description={`${content.home.hero.headline} ${content.home.hero.support} ${content.home.hero.audience}`}
         path="/"
+        alternates={[
+          { hreflang: 'en', path: '/' },
+          { hreflang: 'bn', path: '/bn' },
+          { hreflang: 'x-default', path: '/' },
+        ]}
         jsonLd={[organizationLd(content)]}
       />
       <Journey />

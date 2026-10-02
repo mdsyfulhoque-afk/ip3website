@@ -18,11 +18,14 @@ export function Seo(props: HeadData) {
   const collector = useContext(CollectorContext);
   if (collector) collector.data = props;
 
-  const { title, description, path, noindex, image } = props;
+  const { title, description, path, noindex, image, locale } = props;
   const ld = props.jsonLd ? JSON.stringify(props.jsonLd) : '';
+  const alt = props.alternates ? JSON.stringify(props.alternates) : '';
   useEffect(() => {
-    applyTags(headTags(content, { title, description, path, noindex, image, jsonLd: ld ? JSON.parse(ld) : undefined }));
-  }, [content, title, description, path, noindex, image, ld]);
+    applyTags(
+      headTags(content, { title, description, path, noindex, image, locale, jsonLd: ld ? JSON.parse(ld) : undefined, alternates: alt ? JSON.parse(alt) : undefined }),
+    );
+  }, [content, title, description, path, noindex, image, locale, ld, alt]);
 
   return null;
 }

@@ -10,6 +10,9 @@ export function Header() {
   const { use3D, toggle3D, hydrated, webgl } = useMotion();
   const { pathname } = useLocation();
   const home = pathname === '/';
+  const bangla = pathname === '/bn';
+  // The language switch: "বাংলা" everywhere, "English" on the Bangla page.
+  const lang = bangla ? { to: '/', label: 'English', lang: 'en' } : { to: '/bn', label: 'বাংলা', lang: 'bn' };
   const [solid, setSolid] = useState(false);
   const [open, setOpen] = useState(false);
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -55,14 +58,14 @@ export function Header() {
   ) : null;
 
   const linkClass = ({ isActive }: { isActive: boolean }) =>
-    `t-label inline-flex min-h-11 items-center px-2.5 no-underline transition-colors hover:text-signal xl:px-3 ${
+    `t-label inline-flex min-h-11 items-center whitespace-nowrap px-2 no-underline transition-colors hover:text-signal xl:px-3 ${
       isActive ? 'text-signal' : 'text-ivory/90'
     }`;
 
   return (
     <header
       className={`fixed inset-x-0 top-0 z-50 transition-colors duration-300 ${
-        solid || open || !home ? 'border-b border-midnight-rule bg-midnight/95' : 'border-b border-transparent bg-transparent'
+        solid || open || (!home && !bangla) ? 'border-b border-midnight-rule bg-midnight/95' : 'border-b border-transparent bg-transparent'
       }`}
       style={{ height: 'var(--header-h)' }}
     >
@@ -86,10 +89,20 @@ export function Header() {
         <div className="flex items-center gap-3">
           <div className="hidden lg:block">{toggle}</div>
           <Link
-            to={CTA.to}
-            className="t-label hidden min-h-11 items-center rounded-full bg-ivory px-5 text-midnight no-underline transition-colors hover:bg-white lg:inline-flex"
+            to={lang.to}
+            lang={lang.lang}
+            hrefLang={lang.lang}
+            className="t-label inline-flex min-h-11 items-center whitespace-nowrap px-2 text-ivory/90 no-underline transition-colors hover:text-signal"
           >
-            {CTA.label}
+            {lang.label}
+          </Link>
+          <Link
+            to={CTA.to}
+            className="t-label hidden min-h-11 items-center whitespace-nowrap rounded-full bg-ivory px-5 text-midnight no-underline transition-colors hover:bg-white lg:inline-flex"
+          >
+            {/* Between 1024 and 1279 px the full label would push the menu onto two lines. */}
+            <span className="xl:hidden">Contact</span>
+            <span className="hidden xl:inline">{CTA.label}</span>
           </Link>
           <button
             ref={buttonRef}
