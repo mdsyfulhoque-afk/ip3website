@@ -92,7 +92,7 @@ export const LeadsPanel: React.FC = () => {
             Enquiry Inbox
           </h2>
           <p className="text-xs text-slate-400 mt-1">
-            {total} submission{total === 1 ? '' : 's'} captured from every public form.
+            {total} submission{total === 1 ? '' : 's'} captured from every public form. Each is deleted automatically 60 days after it arrives.
           </p>
         </div>
 

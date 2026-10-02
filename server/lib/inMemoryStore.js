@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import { isExpired } from './retention.js';
 
 /**
  * In-memory fallback store when MongoDB is not configured or offline.
@@ -104,6 +105,7 @@ export function addInMemoryLead(leadData) {
 }
 
 export function getInMemoryLeads(filter = {}) {
+  inMemoryStore.leads = inMemoryStore.leads.filter((item) => !isExpired(item));
   return inMemoryStore.leads.filter((item) => {
     if (filter.status && item.status !== filter.status) return false;
     if (filter.source && item.source !== filter.source) return false;
@@ -127,7 +129,7 @@ export function deleteInMemoryLead(id) {
 
 export function addInMemoryBooking(bookingData) {
   const existing = inMemoryStore.bookings.find(
-    (b) => b.date === bookingData.date && b.timeSlot === bookingData.timeSlot && b.status !== 'cancelled'
+    (b) => b.date === bookingData.date && b.timeSlot === bookingData.timeSlot && b.holdsSlot !== false
   );
   if (existing) {
     const err = new Error('Slot already taken');
@@ -138,7 +140,8 @@ export function addInMemoryBooking(bookingData) {
   const booking = {
     _id: `bk_${nextBookingId++}`,
     createdAt: new Date().toISOString(),
-    status: 'confirmed',
+    status: 'pending',
+    holdsSlot: true,
     ...bookingData,
   };
   inMemoryStore.bookings.unshift(booking);
@@ -146,17 +149,23 @@ export function addInMemoryBooking(bookingData) {
 }
 
 export function getInMemoryBookings(filter = {}) {
+  inMemoryStore.bookings = inMemoryStore.bookings.filter((item) => !isExpired(item));
   return inMemoryStore.bookings.filter((item) => {
     if (filter.status && item.status !== filter.status) return false;
     return true;
   });
 }
 
-export function cancelInMemoryBooking(id) {
+/** Applies a change to one booking: `{ status, holdsSlot, meetLink, confirmedAt }`. */
+export function updateInMemoryBooking(id, changes) {
   const booking = inMemoryStore.bookings.find((item) => item._id === id);
   if (!booking) return null;
-  booking.status = 'cancelled';
+  Object.assign(booking, changes);
   return booking;
+}
+
+export function cancelInMemoryBooking(id) {
+  return updateInMemoryBooking(id, { status: 'cancelled', holdsSlot: false });
 }
 
 export function addInMemoryMedia(mediaData) {

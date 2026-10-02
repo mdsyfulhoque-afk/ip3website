@@ -2,11 +2,12 @@ import type { LegalContent } from '../types';
 
 /**
  * A plain description of what this website actually does with what visitors send it.
- * IP3 should confirm the retention and contact wording before launch.
+ * Retention (60 days) and access (site administrators only) confirmed by IP3 on 2 October 2026;
+ * both are enforced in code (server/lib/retention.js and the admin-only API routes).
  */
 export const legal: LegalContent = {
   privacy: {
-    updated: '1 October 2026',
+    updated: '2 October 2026',
     sections: [
       {
         title: 'What we collect',
@@ -27,13 +28,17 @@ export const legal: LegalContent = {
       },
       {
         title: 'How we use it',
-        text: ['We use what you send only to reply to you, to arrange the conversation you asked for, and to keep a record of the enquiry.'],
+        text: [
+          'We use what you send only to reply to you, to arrange the conversation you asked for, and to keep a record of the enquiry.',
+          'When we confirm a conversation, we send you a link to an online meeting room on Jitsi Meet, a free video service that needs no account. The room name is unique to your booking.',
+        ],
       },
       {
-        title: 'Where it is kept',
+        title: 'Who can see it, and for how long',
         text: [
-          'Enquiries and bookings are stored in a database that IP3 controls and are visible only to IP3 staff who handle enquiries.',
-          'If you would like your enquiry corrected or deleted, write to the email address on the contact page and we will do it.',
+          'Enquiries and bookings are stored in a database that IP3 controls. Only IP3\'s site administrators can see them, after signing in to a password-protected console.',
+          'We keep an enquiry for 60 days and then delete it automatically. A booking is deleted 60 days after the date of the conversation.',
+          'If you would like your enquiry corrected or deleted sooner, write to the email address on the contact page and we will do it.',
         ],
       },
     ],

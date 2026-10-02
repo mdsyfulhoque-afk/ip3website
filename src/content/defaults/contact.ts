@@ -18,7 +18,7 @@ export const contact: ContactInfo = {
   consultation: {
     enabled: true,
     heading: 'Book a 45-minute conversation',
-    sub: 'A first call to understand your question.',
+    sub: 'A first call to understand your question. Choose a time; we confirm it by email with a link to join.',
     durationMinutes: 45,
     slots: ['10:00 AM', '11:00 AM', '12:00 PM', '02:30 PM', '03:30 PM', '04:30 PM'],
     timezoneLabel: 'Dhaka time (GMT+6)',

@@ -4,6 +4,7 @@ import Lead from '../models/Lead.js';
 import { requireAdmin } from '../lib/auth.js';
 import { asyncHandler, httpError, isValidId, randomTicket, sanitizePayload, isEmail } from '../lib/helpers.js';
 import { isDBConnected } from '../lib/db.js';
+import { expiryFor, purgeExpired } from '../lib/retention.js';
 import {
   addInMemoryLead,
   getInMemoryLeads,
@@ -44,6 +45,7 @@ router.post(
         source: payload.source || 'General Contact',
         ip: req.ip,
         userAgent: String(req.get('user-agent') || '').slice(0, 300),
+        expiresAt: expiryFor().toISOString(),
       });
       return res.status(201).json({ ok: true, ticketId: lead.ticketId, timestamp: lead.createdAt });
     }
@@ -55,6 +57,7 @@ router.post(
       status: 'new',
       ip: req.ip,
       userAgent: String(req.get('user-agent') || '').slice(0, 300),
+      expiresAt: expiryFor(),
     });
 
     res.status(201).json({ ok: true, ticketId: lead.ticketId, timestamp: lead.createdAt });
@@ -75,6 +78,7 @@ router.get(
       return res.json({ items: getInMemoryLeads(filter).slice(0, Math.min(Number(limit) || 200, 500)) });
     }
 
+    await purgeExpired(Lead);
     const items = await Lead.find(filter)
       .sort({ createdAt: -1 })
       .limit(Math.min(Number(limit) || 200, 500))

@@ -149,7 +149,7 @@ export function BookingSection() {
       setBusy(false);
       if (clash) {
         setSlot('');
-        setFailure('That time has just been taken by someone else. The times shown are now up to date. Choose another time and confirm again.');
+        setFailure('That time has just been taken by someone else. The times shown are now up to date. Choose another time and send the request again.');
       } else {
         setFailure(friendlyError(res.error));
       }
@@ -218,7 +218,7 @@ export function BookingSection() {
           {done ? (
             <div className="max-w-[36rem]">
               <h3 id="booking-done" ref={doneRef} tabIndex={-1} className="t-h3" style={{ fontSize: 'clamp(1.75rem, 1.3rem + 1.6vw, 2.5rem)' }}>
-                Your time is booked.
+                Your request is in.
               </h3>
               <dl className="mt-8 border-b border-midnight/20">
                 <DetailRow label="Day">{formatLong(done.date)}</DetailRow>
@@ -237,7 +237,10 @@ export function BookingSection() {
                     <span className="sr-only"> (opens in a new tab)</span>
                   </>
                 ) : (
-                  <>Joining details will be sent by email to {done.email}.</>
+                  <>
+                    We are holding this time for you. Once a member of the team confirms it, usually within one working day, we will email {done.email} with
+                    the confirmation and the link to join.
+                  </>
                 )}
               </p>
               {contact.email && !isTbc(contact.email) ? (
@@ -370,7 +373,7 @@ export function BookingSection() {
                   </div>
 
                   <div className="mt-6">
-                    <SubmitButton busy={busy} idle="Confirm booking" working="Confirming" />
+                    <SubmitButton busy={busy} idle="Request this time" working="Sending" />
                     <PrivacyPointer className="mt-5" />
                   </div>
                 </>

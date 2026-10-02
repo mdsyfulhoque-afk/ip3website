@@ -19,11 +19,14 @@ const LeadSchema = new mongoose.Schema(
     message: String,
     ip: String,
     userAgent: String,
+    /** Deleted by MongoDB at this moment (see server/lib/retention.js). */
+    expiresAt: Date,
   },
   { timestamps: true, strict: false, minimize: false }
 );
 
 LeadSchema.index({ createdAt: -1 });
+LeadSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0, name: 'retention_ttl' });
 
 export const Lead = mongoose.models.Lead || mongoose.model('Lead', LeadSchema);
 export default Lead;

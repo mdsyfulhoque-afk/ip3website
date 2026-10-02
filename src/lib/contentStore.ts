@@ -209,6 +209,16 @@ export async function cancelBooking(id: string) {
   return api.patch(`/bookings/${id}/cancel`);
 }
 
+/** Confirms a pending booking; the response carries the booking with its new meeting link. */
+export async function confirmBooking(id: string): Promise<StoredBooking> {
+  const res = await api.patch(`/bookings/${id}/confirm`);
+  return res.item;
+}
+
+export async function declineBooking(id: string) {
+  return api.patch(`/bookings/${id}/decline`);
+}
+
 export async function exportSubmissions() {
   const [leads, bookings] = await Promise.all([listLeads(), listBookings()]);
   return { leads, bookings, exportedAt: new Date().toISOString() };

@@ -10,8 +10,11 @@ import {
   Phone,
   Trash2,
   ExternalLink,
+  Check,
+  X,
+  Send,
 } from 'lucide-react';
-import { listBookings, cancelBooking } from '../../lib/contentStore';
+import { listBookings, cancelBooking, confirmBooking, declineBooking } from '../../lib/contentStore';
 
 interface Booking {
   _id: string;
@@ -36,12 +39,33 @@ interface Booking {
   createdAt: string;
 }
 
+const STATUS_STYLE: Record<string, string> = {
+  pending: 'bg-sky-400/10 text-sky-300 border-sky-400/30',
+  confirmed: 'bg-[#e3a94b]/12 text-[#e3a94b] border-[#e3a94b]/30',
+};
+
+const STATUS_LABEL: Record<string, string> = { pending: 'awaiting confirmation' };
+
+/** A ready-to-send email to the client, opened in the admin's own mail program. */
+function mailto(b: Booking, kind: 'confirm' | 'decline'): string {
+  const name = b.name || b.clientName || '';
+  const to = b.email || b.clientEmail || '';
+  const subject =
+    kind === 'confirm' ? `Your IP3 consultation is confirmed (${b.bookingId})` : `Your IP3 consultation request (${b.bookingId})`;
+  const body =
+    kind === 'confirm'
+      ? `Dear ${name},\n\nThank you for booking a conversation with IP3 Consulting Limited. Your consultation is confirmed:\n\nDate: ${b.date}\nTime: ${b.timeSlot} (Dhaka time, GMT+6)\nJoin online: ${b.meetLink || ''}\nReference: ${b.bookingId}\n\nIf you need to change the time, reply to this email and quote the reference.\n\nKind regards,\nIP3 Consulting Limited`
+      : `Dear ${name},\n\nThank you for your request to meet IP3 Consulting Limited on ${b.date} at ${b.timeSlot} (Dhaka time). Unfortunately we cannot meet at that time. Please reply with two or three times that would suit you, or book another slot on our website.\n\nReference: ${b.bookingId}\n\nKind regards,\nIP3 Consulting Limited`;
+  return `mailto:${encodeURIComponent(to)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+}
+
 export const BookingsPanel: React.FC = () => {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [cancelling, setCancelling] = useState<string | null>(null);
+  const [working, setWorking] = useState<string | null>(null);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -78,6 +102,35 @@ export const BookingsPanel: React.FC = () => {
     }
   };
 
+  const confirm = async (booking: Booking) => {
+    setWorking(booking.bookingId);
+    setError(null);
+    try {
+      const item = (await confirmBooking(booking._id)) as unknown as Booking;
+      setBookings((prev) => prev.map((b) => (b._id === booking._id ? { ...b, ...item } : b)));
+    } catch (err: any) {
+      setError(err?.message || 'Could not confirm that booking.');
+    } finally {
+      setWorking(null);
+    }
+  };
+
+  const decline = async (booking: Booking) => {
+    if (!window.confirm(`Decline ${booking.bookingId}? The slot becomes free again.`)) return;
+    setWorking(booking.bookingId);
+    setError(null);
+    try {
+      await declineBooking(booking._id);
+      setBookings((prev) => prev.map((b) => (b._id === booking._id ? { ...b, status: 'declined' } : b)));
+    } catch (err: any) {
+      setError(err?.message || 'Could not decline that booking.');
+    } finally {
+      setWorking(null);
+    }
+  };
+
+  const pending = bookings.filter((b) => b.status === 'pending').length;
+
   return (
     <div className="space-y-5">
       <div className="flex flex-wrap items-center justify-between gap-3">
@@ -87,7 +140,9 @@ export const BookingsPanel: React.FC = () => {
             Consultations
           </h2>
           <p className="text-xs text-slate-400 mt-1">
-            {total} booking{total === 1 ? '' : 's'}. Times are Dhaka time.
+            {total} booking{total === 1 ? '' : 's'}
+            {pending ? `, ${pending} awaiting confirmation` : ''}. Times are Dhaka time. Confirming creates the meeting link;
+            bookings are deleted 60 days after the meeting.
           </p>
         </div>
 
@@ -125,7 +180,7 @@ export const BookingsPanel: React.FC = () => {
           <div
             key={b._id}
             className={`bg-[#081220] border rounded-2xl p-4 transition-colors ${
-              b.status === 'cancelled'
+              b.status === 'cancelled' || b.status === 'declined'
                 ? 'border-slate-800 opacity-55'
                 : 'border-slate-800 hover:border-slate-700'
             }`}
@@ -143,12 +198,10 @@ export const BookingsPanel: React.FC = () => {
 
               <span
                 className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider border shrink-0 ${
-                  b.status === 'confirmed'
-                    ? 'bg-[#e3a94b]/12 text-[#e3a94b] border-[#e3a94b]/30'
-                    : 'bg-slate-800/50 text-slate-400 border-slate-800'
+                  STATUS_STYLE[b.status] || 'bg-slate-800/50 text-slate-400 border-slate-800'
                 }`}
               >
-                {b.status}
+                {STATUS_LABEL[b.status] || b.status}
               </span>
             </div>
 
@@ -194,34 +247,70 @@ export const BookingsPanel: React.FC = () => {
               </p>
             )}
 
-            <div className="flex items-center gap-2 mt-3.5">
-              {b.meetLink && (
-                <a
-                  href={b.meetLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#e3a94b] hover:bg-[#c98a1e] text-slate-900 text-[11px] font-bold transition-colors"
-                >
-                  <ExternalLink className="w-3 h-3" />
-                  Open meeting link
-                </a>
+            <div className="flex flex-wrap items-center gap-2 mt-3.5">
+              {b.status === 'pending' && (
+                <>
+                  <button
+                    onClick={() => confirm(b)}
+                    disabled={working === b.bookingId}
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#e3a94b] hover:bg-[#c98a1e] text-slate-900 text-[11px] font-bold transition-colors cursor-pointer disabled:opacity-50"
+                  >
+                    {working === b.bookingId ? <Loader2 className="w-3 h-3 animate-spin" /> : <Check className="w-3 h-3" />}
+                    Confirm and create meeting link
+                  </button>
+                  <button
+                    onClick={() => decline(b)}
+                    disabled={working === b.bookingId}
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#050a12] hover:bg-slate-800 text-slate-300 text-[11px] font-bold border border-slate-800 transition-colors cursor-pointer disabled:opacity-50"
+                  >
+                    <X className="w-3 h-3" />
+                    Decline
+                  </button>
+                  <a
+                    href={mailto(b, 'decline')}
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-slate-400 hover:text-slate-100 text-[11px] font-bold transition-colors"
+                  >
+                    <Mail className="w-3 h-3" />
+                    Suggest another time
+                  </a>
+                </>
               )}
 
-              {b.status !== 'cancelled' && (
+              {b.status === 'confirmed' && b.meetLink && (
+                <>
+                  <a
+                    href={mailto(b, 'confirm')}
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#e3a94b] hover:bg-[#c98a1e] text-slate-900 text-[11px] font-bold transition-colors"
+                  >
+                    <Send className="w-3 h-3" />
+                    Email the client
+                  </a>
+                  <a
+                    href={b.meetLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#050a12] hover:bg-slate-800 text-slate-300 text-[11px] font-bold border border-slate-800 transition-colors"
+                  >
+                    <ExternalLink className="w-3 h-3" />
+                    Open meeting
+                  </a>
+                </>
+              )}
+
+              {b.status === 'confirmed' && (
                 <button
                   onClick={() => cancel(b)}
                   disabled={cancelling === b.bookingId}
                   className="ml-auto flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#050a12] hover:bg-slate-800 text-slate-400 hover:text-[#e3a94b] text-[11px] font-bold border border-slate-800 transition-colors cursor-pointer disabled:opacity-50"
                 >
-                  {cancelling === b.bookingId ? (
-                    <Loader2 className="w-3 h-3 animate-spin" />
-                  ) : (
-                    <Trash2 className="w-3 h-3" />
-                  )}
+                  {cancelling === b.bookingId ? <Loader2 className="w-3 h-3 animate-spin" /> : <Trash2 className="w-3 h-3" />}
                   Cancel
                 </button>
               )}
             </div>
+            {b.status === 'confirmed' && b.meetLink && (
+              <p className="mt-2 text-[11px] text-slate-500 break-all">Meeting link: {b.meetLink}</p>
+            )}
           </div>
         ))}
       </div>
