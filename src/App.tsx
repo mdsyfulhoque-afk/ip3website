@@ -2,6 +2,7 @@ import { ContentProvider } from './content';
 import type { SiteContent } from './content/types';
 import { MotionProvider } from './lib/motion';
 import { AppRoutes } from './site/routes';
+import { AskIP3 } from './site/components/AskIP3';
 import { Footer } from './site/components/Footer';
 import { Header } from './site/components/Header';
 import { ScrollManager } from './site/components/ScrollManager';
@@ -22,6 +23,7 @@ export default function App({ content }: { content?: SiteContent }) {
           <AppRoutes />
         </main>
         <Footer />
+        <AskIP3 />
       </MotionProvider>
     </ContentProvider>
   );

@@ -6,6 +6,17 @@ admin console, an Express API and MongoDB storage. It deploys to Vercel as stati
 The home page is a scroll-driven 3D journey (Complexity, Evidence, Insight, Policy, Practice, Impact) that ends in the
 promise "From polycrisis to polysolution." Every other page is a fast, prerendered page that reads without JavaScript.
 
+What visitors find:
+
+- **Our work** (`/work`): 24 assignments from 2018 to date, each a case story (`/work/<id>`: the challenge, what IP3
+  did, client, role, period), impact figures counted from those entries, and an interactive **Impact Map** of
+  Bangladesh (eight divisions, marked sites) and the wider region.
+- **People** (`/people`): 17 team members with portraits, profiles, affiliations and degrees from their CVs.
+- **Insights** (`/insights`): the team's reports, journal articles and commentary, linked to the publishers.
+- **বাংলা** (`/bn`): the core story in Bangla, with the map and figures; a header switch moves between languages.
+- **Ask IP3**: an optional AI assistant (Claude) that answers questions from the site's own content.
+- **Contact**: enquiries and consultation requests that the team confirms from the admin console.
+
 ## Quick start
 
 ```bash
@@ -27,7 +38,9 @@ are set (see below), and every content write requires an admin session.
 | `npm run check:placeholders` | Lists facts the owner still has to confirm (exits 1 while any remain) |
 | `npm run db:seed` / `db:seed:force` | Writes the bundled content to MongoDB (only if empty / always) |
 | `npm run hash:password "pass"` | Prints an `ADMIN_PASSWORD_HASH` |
-| `npm run assets` | Regenerates `public/contours.svg` and the favicon set |
+| `npm run assets` | Regenerates `public/contours.svg` and the favicon set (from `public/brand/ip3-logo-reversed.png`) |
+| `npm run map` | Rebuilds the Impact Map geometry (`src/site/impact/map-data.json`) after adding a place to `src/content/places.ts` |
+| `npm run knowledge` | Writes the bundled content for the Ask IP3 route (`server/generated/site-content.json`; also part of `build`) |
 
 ## How the content works
 
@@ -39,23 +52,26 @@ that still holds an older version of the site cannot bring old copy back, becaus
 - **Edit**: sign in at `/admin`, open "Edit content". Changes are a draft held in your browser.
 - **Publish**: the Publish tab checks the draft (repeated slugs, broken cross-references, empty required fields),
   writes it to the database and keeps a version. Any earlier version can be restored. Backups can be downloaded and loaded.
-- **Status**: portfolio entries and people carry `published`, `verify` or `placeholder`. Only `published` is shown.
+- **Status**: portfolio entries, people and insights carry `published`, `verify` or `placeholder`. Only `published` is shown.
   Any field that reads "to be confirmed" is left out of the page rather than shown.
 - **New pages**: adding a sector, service, focus area or person in the editor creates its page at once. Until the next
   deploy it renders in the browser; the next build also writes it as static HTML.
-- **Structure is code**: navigation, routes and the 3D scene's geometry (`src/content/journey.ts`) are not editable
-  in the admin. Their words are.
+- **Structure is code**: navigation, routes, the 3D scene's geometry (`src/content/journey.ts`), the map gazetteer
+  (`src/content/places.ts`) and the photo list (`src/content/photos.ts`) are not editable in the admin. Their words are.
+- **Photos**: `public/media` holds photographs from the team's archive, only those recorded as cleared for consent.
+  Portraits are in `public/people`. Upload others in the editor (Cloudinary) and paste the URL into a `portrait` field.
 
 ## Structure
 
 ```
 src/content/      types, bundled defaults, merge, validation, journey structure
-src/site/         layout, SEO, routes, pages (about, approach, focus, sectors, services, people, contact, privacy)
+src/site/         layout, SEO, routes, pages (about, approach, focus, sectors, services, work, people, insights, contact, bn)
+src/site/work/    impact figures, Impact Map, work list
 src/site/home/    the 3D journey and the home sections
 src/webgl/        the scene (react-three-fiber)
 src/admin/        sign-in, content editor, publish, enquiries, consultations
-server/           Express API (auth, content, leads, bookings, media, health)
-scripts/          prerender, seed, asset generation, placeholder report
+server/           Express API (auth, content, leads, bookings, media, health, ask)
+scripts/          prerender, seed, asset, map and knowledge generation, placeholder report
 ```
 
 Build output: `dist/<route>/index.html` for every page, `dist/200.html` (empty shell for routes created later),
@@ -70,7 +86,11 @@ Build output: `dist/<route>/index.html` for every page, `dist/200.html` (empty s
 | `ADMIN_EMAIL` | no | Shown as the author of published versions |
 | `MONGODB_URI`, `MONGODB_DB` | for persistence | Without them, enquiries and bookings live in memory and are lost on restart or cold start |
 | `CLOUDINARY_*` | for uploads | Signed direct image and video uploads from the editor |
-| `MEETING_LINK` | no | Returned with a booking confirmation only if set. If empty, the page says joining details will follow by email. |
+| `MEETING_LINK` | no | One standing meeting room for every confirmed booking. If empty, confirming creates a private Jitsi Meet room per booking. |
+| `MEETING_BASE_URL` | no | Your own Jitsi server instead of meet.jit.si |
+| `RETENTION_DAYS` | no | Days enquiries and bookings are kept (default 60; bookings count from the meeting date) |
+| `ANTHROPIC_API_KEY` | for Ask IP3 | Turns the assistant on. Without it the button never appears. |
+| `ASK_DAILY_LIMIT`, `ASK_PER_15_MIN` | no | Questions per day per server instance (default 500) and per visitor per 15 minutes (default 15) |
 | `VITE_SITE_URL` | build | Public origin for canonical URLs, sitemap and structured data |
 | `CORS_ORIGIN`, `COOKIE_SAMESITE`, `VITE_API_BASE_URL` | only if the API is on another site | The default is same-origin with a Lax cookie |
 
@@ -92,20 +112,48 @@ without a redeploy.
   axe-core violations. Keyboard focus is always visible; forms have labels and announced errors.
 - The pages carry their content in the HTML, so they read without JavaScript.
 
+## Bookings and privacy
+
+A consultation request holds its slot as *awaiting confirmation*. In the admin console, **Consultations** shows
+**Confirm and create meeting link** (and **Decline**, which frees the slot). Confirming generates the meeting link and
+offers **Email the client**, a ready-written message opened in your own mail program. Enquiries are deleted 60 days
+after they arrive and bookings 60 days after the meeting: MongoDB removes them through a TTL index, and older records are
+swept when an admin opens the inbox. Only signed-in administrators can read either.
+
+## Ask IP3
+
+`server/routes/ask.js` answers with Claude Opus 5.5 (`claude-opus-5-5`) at low effort, using only the published site
+content (`server/lib/knowledge.js`), which goes in a cached system prompt so follow-up questions are cheap. Server-side
+refusal fallback (`fallbacks: "default"`) is on: if the model declines a question, the API retries it on a suitable
+fallback model in the same call. Questions are not stored; the privacy page says they are sent to Anthropic. Rate limits
+and a daily cap are set by the variables above. Expect roughly 12,000 cached input tokens per question plus a short
+answer; check usage in the Anthropic Console after launch.
+
+## Launch checklist
+
+1. **Preview**: on vercel.com choose *Add New → Project*, import `mdsyfulhoque-afk/ip3website`, pick the `redesign`
+   branch, and deploy. Vercel builds every branch as its own preview URL; share it with the team for feedback.
+2. **Variables** (Vercel → Settings → Environment Variables): `JWT_SECRET`, `ADMIN_PASSWORD_HASH`, `MONGODB_URI`,
+   `MONGODB_DB`, `VITE_SITE_URL=https://ip3-bd.org`; optionally `CLOUDINARY_*`, `MEETING_LINK`, `ANTHROPIC_API_KEY`.
+3. **Database**: run `npm run db:seed` once against the new database. If it already holds content from the old site,
+   run `npm run db:seed:force` (or sign in and publish once): lists such as the portfolio and people are replaced
+   whole, so an old published copy would otherwise hide the new entries.
+4. **Domain**: add `ip3-bd.org` in Vercel → Domains and point the DNS records it shows at Vercel.
+5. **Check**: send a test enquiry, request a consultation, confirm it in the console, and ask the assistant a question.
+
 ## What the owner still needs to confirm
 
 Run `npm run check:placeholders` for the live list. In short:
 
-- One phone number (two different ones appeared on the old site; none is shown).
-- Which clients may be named. The four institutions listed on the About page (World Bank, Asian Development Bank,
-  European Commission, Sida) came from the old site's wording; confirm each, especially Sida.
-- Client, place and year for portfolio entries marked "to be confirmed", and the two entries held back as `verify`.
-- The Global LEAP year (the old site gave two different years) and the roles stated on entries that say "supported".
-- People: roles and practice areas as listed, and whether portraits may be published (monograms are used until then).
-- The privacy page wording: staff-only access, how long enquiries are kept, and that the server records the network
-  address and browser details sent with an enquiry.
-- Whether the videos hosted on ip3-bd.org should stay on the focus pages (they could not be played from the build
-  environment) and whether they need captions or transcripts.
-- The logo: the mark in the header is a placeholder drawn for this build, not IP3's registered logo.
-- Booking: bookings are stored as confirmed immediately. Decide whether that wording suits the team's process, and set
-  `MEETING_LINK` if a standing meeting room is used.
+- **Digital ID and STEM/TVET curriculum** assignments are published as instructed, but neither appears in the CVs
+  supplied, so client, place, period and role are blank (hidden). Fill them in, or merge STEM/TVET into the ADB
+  NextGen TVET entry if they are the same work.
+- **Four portraits**: Prof. Asadullah (the pack's "Niaz.jpg" does not appear to be him), Prof. Mannan and
+  Dr. Esraz-Ul-Zannat (no photo), and Dr. Abu Zafor Sadek (the file is named "ABU Bakar Sadek"). Monograms show until
+  confirmed photos are uploaded.
+- **Titles**: Siban Shahana appears as "Asst. Prof." in the matrix and Research Fellow (BIDS) in the CV.
+- **Hidden people**: four names from the old site are not in the team pack and are hidden.
+- **Earlier work** (before 2018, or through another firm) is kept but hidden: JICA/BEZA, Global LEAP, ESMAP/ASTAE.
+- **Videos**: the chairman's video slot and the focus-page videos appear once a video is uploaded in the editor.
+  Add captions when you do.
+- **Photos of fieldwork** that show survey respondents or factory workers are not used until consent is recorded.

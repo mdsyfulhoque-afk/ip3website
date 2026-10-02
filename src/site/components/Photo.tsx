@@ -35,7 +35,7 @@ export function Photo({ photoKey, className = '', sizes = '(min-width: 1024px) 5
           className={`block h-auto w-full rounded-sm object-cover ${imgClassName}`}
         />
       </picture>
-      {caption ? <figcaption className="t-ui mt-3 text-current opacity-75">{p.caption}</figcaption> : null}
+      {caption ? <figcaption className="t-ui mt-3">{p.caption}</figcaption> : null}
     </figure>
   );
 }

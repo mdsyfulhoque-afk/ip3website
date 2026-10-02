@@ -11,6 +11,7 @@ import leadRoutes from './routes/leads.js';
 import bookingRoutes from './routes/bookings.js';
 import mediaRoutes from './routes/media.js';
 import healthRoutes from './routes/health.js';
+import askRoutes from './routes/ask.js';
 
 const app = express();
 
@@ -69,6 +70,7 @@ app.use('/api/leads', withDB, leadRoutes);
 app.use('/api/bookings', withDB, bookingRoutes);
 app.use('/api/media', withDB, mediaRoutes);
 app.use('/api/health', withDB, healthRoutes);
+app.use('/api/ask', withDB, askRoutes);
 
 app.use('/api', (_req, res) => {
   res.status(404).json({ ok: false, error: 'Endpoint not found.', code: 'NOT_FOUND' });

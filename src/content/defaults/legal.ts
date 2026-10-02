@@ -34,6 +34,13 @@ export const legal: LegalContent = {
         ],
       },
       {
+        title: 'The Ask IP3 assistant',
+        text: [
+          'If you use the Ask IP3 assistant, your question and the conversation so far are sent to Anthropic, the company that provides the Claude AI model, to write the answer. The assistant answers only from the content of this website.',
+          'We do not store your questions or the answers, and the assistant cannot see anything else about you. Please do not type personal or confidential information into it.',
+        ],
+      },
+      {
         title: 'Who can see it, and for how long',
         text: [
           'Enquiries and bookings are stored in a database that IP3 controls. Only IP3\'s site administrators can see them, after signing in to a password-protected console.',

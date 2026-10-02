@@ -22,7 +22,7 @@ const ROLE_BN: Record<string, string> = {
 };
 
 /** Marks an English-only destination for Bangla readers. */
-const EN = <span className="t-ui font-normal opacity-70"> (ইংরেজি)</span>;
+const EN = <span className="t-ui font-normal"> (ইংরেজি)</span>;
 
 /**
  * The Bangla page: the core story in Bangla, with the impact figures and the map. Everything a visitor might
