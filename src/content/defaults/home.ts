@@ -58,7 +58,7 @@ export const home: HomeContent = {
   sectorsSub:
     'A policy choice in one sector lands in several. Select a sector to see what it is tied to and the questions we are asked about it.',
   workHeading: 'Selected work',
-  workSub: 'Engagements IP3 has described publicly. Client names appear only where IP3 has confirmed it may name them.',
+  workSub: 'Feasibility studies, policy analysis, surveys and evaluations for the World Bank, ADB, the European Commission, Sida and government. Each one opens as a short case story.',
   closing: {
     heading: 'Have a difficult policy or development challenge?',
     sub: 'Let’s define the question, build the evidence, and identify a practical path forward.',

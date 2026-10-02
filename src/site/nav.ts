@@ -5,6 +5,7 @@ export interface NavItem {
 
 /** Primary navigation. The structure of the site is code; the words on each page are content. */
 export const NAV: NavItem[] = [
+  { label: 'Our work', to: '/work' },
   { label: 'Focus areas', to: '/focus' },
   { label: 'Sectors', to: '/sectors' },
   { label: 'Services', to: '/services' },

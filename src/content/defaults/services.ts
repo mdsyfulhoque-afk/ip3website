@@ -66,14 +66,14 @@ export const services: ServiceLine[] = [
       'education-skills',
     ],
     portfolio: [
+      'climate-early-warning-adb',
       'education-feasibility-adb',
+      'nextgen-madrasah-adb',
+      'nextgen-tvet-adb',
       'payra-seaport-advisory',
       'jolshiri-aqua-green-city-feasibility',
-      'sez-equity-investment-policy',
-      'global-leap-results-based-financing',
-      'esmap-astae-evaluation',
       'bmdf-municipal-finance-transformation',
-      'climate-early-warning-adb',
+      'halow-plus-worker-health',
     ],
   },
   {
@@ -125,8 +125,8 @@ export const services: ServiceLine[] = [
     portfolio: [
       'green-industrial-transition-rmg',
       'climate-early-warning-adb',
-      'global-leap-results-based-financing',
-      'esmap-astae-evaluation',
+      'green-trade-policy-reform',
+      'bmdf-municipal-finance-transformation',
     ],
   },
   {
@@ -177,8 +177,9 @@ export const services: ServiceLine[] = [
     sectors: ['private-sector', 'climate-energy', 'monitoring-evaluation'],
     portfolio: [
       'fat-survey-bangladesh',
-      'digital-informality-survey-bangladesh',
       'green-industrial-transition-rmg',
+      'digital-informality-survey-bangladesh',
+      'covid-business-pulse-survey',
       'secondary-stem-tvet-curriculum-modernisation',
     ],
   },
@@ -236,8 +237,8 @@ export const services: ServiceLine[] = [
     portfolio: [
       'halow-plus-worker-health',
       'dsip-me-results-framework',
-      'global-leap-results-based-financing',
-      'esmap-astae-evaluation',
+      'rct-energy-efficient-motors',
+      'climate-early-warning-adb',
     ],
   },
   {
@@ -287,11 +288,11 @@ export const services: ServiceLine[] = [
     ],
     sectors: ['macroeconomic-fiscal', 'private-sector', 'public-governance'],
     portfolio: [
-      'sez-equity-investment-policy',
       'ldc-graduation-policy-reform',
-      'fat-survey-bangladesh',
-      'digital-informality-survey-bangladesh',
-      'bmdf-municipal-finance-transformation',
+      'unctad-productive-capacities',
+      'cem-bangladesh-india',
+      'services-trade-policy-index',
+      'green-trade-policy-reform',
       'digital-identity-civil-registry-interoperability',
       'secondary-stem-tvet-curriculum-modernisation',
     ],

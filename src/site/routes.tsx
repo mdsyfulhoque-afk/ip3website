@@ -13,6 +13,8 @@ import { SectorDetail } from './pages/SectorDetail';
 import { Sectors } from './pages/Sectors';
 import { ServiceDetail } from './pages/ServiceDetail';
 import { Services } from './pages/Services';
+import { Work } from './pages/Work';
+import { WorkDetail } from './pages/WorkDetail';
 import type { SiteContent } from '../content/types';
 
 export function AppRoutes() {
@@ -27,6 +29,8 @@ export function AppRoutes() {
       <Route path="/sectors/:slug" element={<SectorDetail />} />
       <Route path="/services" element={<Services />} />
       <Route path="/services/:slug" element={<ServiceDetail />} />
+      <Route path="/work" element={<Work />} />
+      <Route path="/work/:id" element={<WorkDetail />} />
       <Route path="/people" element={<People />} />
       <Route path="/people/:slug" element={<Person />} />
       <Route path="/contact" element={<Contact />} />
@@ -48,6 +52,8 @@ export function prerenderPaths(content: SiteContent): string[] {
     ...content.sectors.map((s) => `/sectors/${s.slug}`),
     '/services',
     ...content.services.map((s) => `/services/${s.slug}`),
+    '/work',
+    ...content.portfolio.filter((e) => e.status === 'published').map((e) => `/work/${e.id}`),
     '/people',
     ...content.people.filter((p) => p.status === 'published').map((p) => `/people/${p.slug}`),
     '/contact',

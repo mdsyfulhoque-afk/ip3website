@@ -40,6 +40,8 @@ if (isProd) {
       index: 'index.html',
       redirect: false,
       setHeaders(res, file) {
+        // Older mime tables do not know AVIF; browsers need the right type to pick the <picture> source.
+        if (file.endsWith('.avif')) res.setHeader('Content-Type', 'image/avif');
         res.setHeader(
           'Cache-Control',
           file.includes(`${path.sep}assets${path.sep}`) ? 'public, max-age=31536000, immutable' : 'no-cache',

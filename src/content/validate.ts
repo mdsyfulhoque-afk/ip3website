@@ -1,3 +1,5 @@
+import { PHOTOS } from './photos';
+import { PLACES } from './places';
 import type { SiteContent } from './types';
 
 /**
@@ -51,6 +53,8 @@ export function validateContent(c: SiteContent): string[] {
   for (const e of c.portfolio) {
     ref(`Engagement "${e.title}"`, 'service', services, e.services);
     ref(`Engagement "${e.title}"`, 'sector', sectors, e.sectors);
+    ref(`Engagement "${e.title}"`, 'map place', new Set(Object.keys(PLACES)), e.places ?? []);
+    if (e.photo && !PHOTOS[e.photo]) errors.push(`Engagement "${e.title}" points to a photo that does not exist: "${e.photo}".`);
   }
 
   need('Organisation name', c.identity.name);

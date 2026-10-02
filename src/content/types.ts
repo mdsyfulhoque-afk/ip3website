@@ -190,12 +190,34 @@ export interface ServiceLine {
 export interface Engagement {
   id: string;
   status: Status;
+  /** Featured entries lead the home page and the work index. */
+  featured: boolean;
   title: string;
   /** Named only where IP3 has confirmed it may be named. */
   client: string;
+  /** Every institution involved (client, funder, lead firm, academic partner), one name each. Counted on the impact band. */
+  institutions: string[];
+  /** IP3's role on the assignment, as stated in the team's CVs. */
+  role: string;
+  /** Contract, TA or programme reference, if any. */
+  reference: string;
   place: string;
   period: string;
+  /** First year of the assignment, used for ordering and the impact band. */
+  start: number;
+  /** Last year; 0 while the work continues. */
+  end: number;
+  /** Keys from the map gazetteer (src/content/places.ts): "BD" for nationwide work, a site key, or a country code. */
+  places: string[];
   summary: string;
+  /** Case story: the problem the client faced. */
+  challenge: string;
+  /** Case story: what IP3 did, one step per line. */
+  approach: string[];
+  /** Public reports the work contributed to. */
+  links: Link[];
+  /** Optional photo key from src/content/photos.ts. */
+  photo: string;
   services: string[];
   sectors: string[];
   /** Reviewer note shown only in the editor. */
