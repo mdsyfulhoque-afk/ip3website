@@ -28,6 +28,7 @@ const SECTIONS: { key: keyof SiteContent; label: string; hint: string }[] = [
   { key: 'portfolio', label: 'Selected work', hint: 'Only entries marked "published" appear on the site.' },
   { key: 'method', label: 'Approach', hint: 'The six movements and the principles.' },
   { key: 'people', label: 'People', hint: 'Names, roles and practice areas. Leave the portrait empty to show initials.' },
+  { key: 'insights', label: 'Insights', hint: 'Reports, articles and commentary by the team. Only entries marked "published" appear.' },
   { key: 'pillars', label: 'Pillars', hint: 'What IP3 stands for.' },
   { key: 'about', label: 'About', hint: 'Who IP3 is, vision, mission, chairman and the institutions named.' },
   { key: 'legal', label: 'Privacy page', hint: 'Plain-language description of what the site collects.' },

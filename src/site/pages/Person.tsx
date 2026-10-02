@@ -9,6 +9,7 @@ import { PersonPortrait, PortraitPlate } from '../team/PersonPortrait';
 import { groupLabel } from '../team/groups';
 import { relatedAreas, type RelatedLink } from '../team/related';
 import { H2, toneStyle, tonesFor, type BandTone } from '../team/tones';
+import { InsightRow } from './Insights';
 import { NotFound } from './NotFound';
 
 const ANCHORS = ['right top', 'left bottom', 'center top', 'right bottom', 'left top', 'center bottom'];
@@ -131,6 +132,29 @@ export function Person() {
               {related.domains.length > 0 ? <RelatedList title="Focus areas" links={related.domains} tone={tone} /> : null}
               {related.sectors.length > 0 ? <RelatedList title="Sectors" links={related.sectors} tone={tone} /> : null}
             </div>
+          </div>
+        </Band>
+      ),
+    });
+  }
+
+  const writing = (content.insights ?? []).filter((i) => i.status === 'published' && i.people.includes(person.slug)).sort((a, b) => b.year - a.year);
+  if (writing.length > 0) {
+    blocks.push({
+      key: 'writing',
+      render: (tone) => (
+        <Band tone={tone} labelledBy="writing-title">
+          <div className="grid gap-10 lg:grid-cols-12 lg:gap-x-16">
+            <div className="lg:col-span-4">
+              <h2 id="writing-title" className={`${H2} lg:sticky lg:top-28`}>
+                Selected publications
+              </h2>
+            </div>
+            <ul className={`border-t lg:col-span-8 ${tone === 'night' ? 'border-midnight-rule' : 'border-midnight/20'}`}>
+              {writing.map((i) => (
+                <InsightRow key={i.id} item={i} tone={tone === 'night' ? 'night' : 'paper'} />
+              ))}
+            </ul>
           </div>
         </Band>
       ),

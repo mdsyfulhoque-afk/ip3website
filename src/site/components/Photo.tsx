@@ -9,10 +9,12 @@ interface PhotoProps {
   caption?: boolean;
   /** Use for the largest image on a page. */
   priority?: boolean;
+  /** Extra classes for the image, e.g. a fixed aspect ratio so a grid lines up. */
+  imgClassName?: string;
 }
 
 /** A real photograph from the team's archive, served as AVIF with a WebP fallback. */
-export function Photo({ photoKey, className = '', sizes = '(min-width: 1024px) 50vw, 100vw', caption = true, priority = false }: PhotoProps) {
+export function Photo({ photoKey, className = '', sizes = '(min-width: 1024px) 50vw, 100vw', caption = true, priority = false, imgClassName = '' }: PhotoProps) {
   const p = PHOTOS[photoKey];
   if (!p) return null;
   const set = (ext: string) => p.widths.map((w) => `/media/${p.key}-${w}.${ext} ${w}w`).join(', ');
@@ -30,7 +32,7 @@ export function Photo({ photoKey, className = '', sizes = '(min-width: 1024px) 5
           alt={p.alt}
           loading={priority ? 'eager' : 'lazy'}
           decoding="async"
-          className="block h-auto w-full rounded-sm object-cover"
+          className={`block h-auto w-full rounded-sm object-cover ${imgClassName}`}
         />
       </picture>
       {caption ? <figcaption className="t-ui mt-3 text-current opacity-75">{p.caption}</figcaption> : null}

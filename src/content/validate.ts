@@ -57,6 +57,14 @@ export function validateContent(c: SiteContent): string[] {
     if (e.photo && !PHOTOS[e.photo]) errors.push(`Engagement "${e.title}" points to a photo that does not exist: "${e.photo}".`);
   }
 
+  const people = new Set(c.people.map((p) => p.slug));
+  dup('Insights', (c.insights ?? []).map((i) => i.id));
+  for (const i of c.insights ?? []) {
+    ref(`Insight "${i.title}"`, 'person', people, i.people);
+    if (i.engagement) ref(`Insight "${i.title}"`, 'portfolio entry', engagements, [i.engagement]);
+    if (i.href && !/^https?:\/\//.test(i.href)) errors.push(`Insight "${i.title}" has a link that does not start with http:// or https://.`);
+  }
+
   need('Organisation name', c.identity.name);
   need('Contact email', c.contact.email);
   for (const p of c.people) if (p.status === 'published') need(`Person "${p.slug}" name`, p.name);

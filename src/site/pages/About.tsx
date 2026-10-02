@@ -3,6 +3,7 @@ import { HomeClosing } from '../home/HomeClosing';
 import { Seo } from '../Seo';
 import { breadcrumbLd } from '../seo';
 import { Band, PageHero, TextLink } from '../components/ui';
+import { AtWork } from '../about/AtWork';
 import { AudienceList, WorksWith } from '../about/Audiences';
 import { Chairman } from '../about/Chairman';
 import { PrincipleList } from '../about/Principles';
@@ -105,6 +106,8 @@ export function About() {
           </div>
         </Band>
       ) : null}
+
+      <AtWork />
 
       {audiences.length || worksNames.length ? (
         <Band tone="stone" labelledBy="audiences-title">

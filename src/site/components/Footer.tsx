@@ -61,6 +61,8 @@ export function Footer() {
           <p className="t-label text-mist">Institute</p>
           <ul className={`mt-3 ${col}`}>
             {[
+              ['Our work', '/work'],
+              ['Insights', '/insights'],
               ['Approach', '/approach'],
               ['People', '/people'],
               ['About', '/about'],

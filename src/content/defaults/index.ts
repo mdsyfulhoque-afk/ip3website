@@ -5,6 +5,7 @@ import { contact } from './contact';
 import { domains } from './domains';
 import { home } from './home';
 import { identity } from './identity';
+import { insights } from './insights';
 import { legal } from './legal';
 import { method } from './method';
 import { people } from './people';
@@ -26,6 +27,7 @@ export const DEFAULT_CONTENT: SiteContent = {
   services,
   portfolio,
   people,
+  insights,
   pillars,
   about,
   legal,

@@ -10,6 +10,7 @@ export const NAV: NavItem[] = [
   { label: 'Sectors', to: '/sectors' },
   { label: 'Services', to: '/services' },
   { label: 'Approach', to: '/approach' },
+  { label: 'Insights', to: '/insights' },
   { label: 'People', to: '/people' },
   { label: 'About', to: '/about' },
 ];

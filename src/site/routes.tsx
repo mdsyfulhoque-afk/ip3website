@@ -5,6 +5,7 @@ import { Contact } from './pages/Contact';
 import { Focus } from './pages/Focus';
 import { FocusDetail } from './pages/FocusDetail';
 import { Home } from './pages/Home';
+import { Insights } from './pages/Insights';
 import { NotFound } from './pages/NotFound';
 import { People } from './pages/People';
 import { Person } from './pages/Person';
@@ -31,6 +32,7 @@ export function AppRoutes() {
       <Route path="/services/:slug" element={<ServiceDetail />} />
       <Route path="/work" element={<Work />} />
       <Route path="/work/:id" element={<WorkDetail />} />
+      <Route path="/insights" element={<Insights />} />
       <Route path="/people" element={<People />} />
       <Route path="/people/:slug" element={<Person />} />
       <Route path="/contact" element={<Contact />} />
@@ -54,6 +56,7 @@ export function prerenderPaths(content: SiteContent): string[] {
     ...content.services.map((s) => `/services/${s.slug}`),
     '/work',
     ...content.portfolio.filter((e) => e.status === 'published').map((e) => `/work/${e.id}`),
+    '/insights',
     '/people',
     ...content.people.filter((p) => p.status === 'published').map((p) => `/people/${p.slug}`),
     '/contact',

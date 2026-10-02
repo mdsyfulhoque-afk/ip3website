@@ -249,6 +249,28 @@ export interface Person {
   note: string;
 }
 
+/* -------------------------------- insights -------------------------------- */
+
+export interface Insight {
+  id: string;
+  status: Status;
+  /** Report, Journal article, Book chapter, Policy brief, Commentary. */
+  kind: string;
+  title: string;
+  /** As credited in the publication. */
+  authors: string;
+  publisher: string;
+  year: number;
+  /** Where to read it. Empty = listed without a link. */
+  href: string;
+  /** One plain sentence on what it covers. */
+  summary: string;
+  /** Slugs of IP3 people who wrote or contributed to it. */
+  people: string[];
+  /** Id of the related portfolio entry, if any. */
+  engagement: string;
+}
+
 /* -------------------------------- about etc. ------------------------------ */
 
 export interface AboutContent {
@@ -300,6 +322,7 @@ export interface SiteContent {
   services: ServiceLine[];
   portfolio: Engagement[];
   people: Person[];
+  insights: Insight[];
   pillars: Pillar[];
   about: AboutContent;
   legal: LegalContent;
