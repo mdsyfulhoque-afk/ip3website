@@ -14,7 +14,7 @@ export function ServiceList({ services }: { services: ServiceLine[] }) {
   return (
     <ul className="border-t border-midnight/25">
       {services.map((s) => (
-        <li key={s.slug} className="border-b border-midnight/25 py-10 md:py-14">
+        <li key={s.slug} className="gs-card border-b border-midnight/25 py-10 md:py-14">
           <div className="grid gap-x-12 gap-y-8 md:grid-cols-12">
             <div className="md:col-span-6 lg:col-span-5">
               <h2 className={TITLE}>

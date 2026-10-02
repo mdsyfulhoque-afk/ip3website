@@ -43,7 +43,7 @@ export function SectorMap({ sectors, selected, onSelect }: Props) {
   pos.set(CENTRE, { x: CX, y: CY });
 
   return (
-    <svg viewBox="0 0 580 470" className="mx-auto w-full max-w-[34rem]" aria-hidden="true" focusable="false">
+    <svg viewBox="0 0 580 470" className="gs-draw mx-auto w-full max-w-[34rem]" aria-hidden="true" focusable="false">
       {sectorEdges(sectors).map(([a, b]) => {
         const pa = pos.get(a);
         const pb = pos.get(b);

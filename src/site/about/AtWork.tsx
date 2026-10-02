@@ -18,7 +18,7 @@ export function AtWork() {
             <Photo
               key={k}
               photoKey={k}
-              className={i === 0 ? 'sm:col-span-2 lg:col-span-2' : ''}
+              className={`gs-card ${i === 0 ? 'sm:col-span-2 lg:col-span-2' : ''}`}
               // The wide photo spans two columns at 2:1; its neighbour is square so the first row lines up.
               imgClassName={i === 0 ? 'aspect-[16/9] lg:aspect-[2/1]' : i === 1 ? 'aspect-[4/3] lg:aspect-square' : 'aspect-[4/3]'}
               sizes={i === 0 ? '(min-width: 1024px) 66vw, 100vw' : '(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw'}

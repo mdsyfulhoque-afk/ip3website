@@ -8,7 +8,7 @@ export function AudienceList({ items }: { items: Audience[] }) {
   return (
     <ul role="list" className="grid md:grid-cols-2 md:gap-x-12">
       {items.map((a) => (
-        <li key={a.name} className="border-t border-midnight/25 py-7 md:py-8">
+        <li key={a.name} className="gs-card border-t border-midnight/25 py-7 md:py-8">
           <h3 className="t-h3">{a.name}</h3>
           <p className="t-ui mt-3 max-w-[34rem] text-ink-soft">{a.text}</p>
         </li>

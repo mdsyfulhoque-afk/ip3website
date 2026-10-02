@@ -18,7 +18,7 @@ export function PeopleDirectory({ groups }: { groups: PeopleGroup[] }) {
             </h2>
             <ul className="border-t border-midnight/25 lg:col-span-9">
               {g.people.map((p) => (
-                <li key={p.slug} className="group relative border-b border-midnight/20 transition-colors focus-within:bg-white/60 hover:bg-white/60">
+                <li key={p.slug} className="gs-card group relative border-b border-midnight/20 transition-colors focus-within:bg-white/60 hover:bg-white/60">
                   <div className="grid grid-cols-[auto_minmax(0,1fr)] items-start gap-x-5 gap-y-3 px-1 py-6 sm:px-3 md:py-7 lg:grid-cols-[auto_minmax(0,1.15fr)_minmax(0,1fr)] lg:gap-x-8">
                     <PersonPortrait person={p} size="md" />
                     <div>

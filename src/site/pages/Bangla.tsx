@@ -134,7 +134,7 @@ export function Bangla() {
         </h2>
         <ul className="mt-10 grid gap-6 md:grid-cols-3">
           {b.focus.map((f) => (
-            <li key={f.href} className="flex flex-col border-t-2 border-teal-deep pt-5">
+            <li key={f.href} className="gs-card flex flex-col border-t-2 border-teal-deep pt-5">
               <h3 className="t-h3">{f.title}</h3>
               <p className="t-body mt-3 text-ink-soft">{f.text}</p>
               <Link to={f.href} className="t-ui mt-4 font-semibold text-teal-deep underline underline-offset-4">
@@ -152,7 +152,7 @@ export function Bangla() {
           </h2>
           <ul className="border-t border-midnight/20 lg:col-span-8">
             {b.services.map((s) => (
-              <li key={s.href} className="border-b border-midnight/20 py-6">
+              <li key={s.href} className="gs-card border-b border-midnight/20 py-6">
                 <h3 className="t-h3">
                   <Link to={s.href} className="underline decoration-transparent decoration-1 underline-offset-4 hover:text-teal-deep hover:decoration-current">
                     {s.title}
@@ -176,7 +176,7 @@ export function Bangla() {
           {selected.map((w) => {
             const e = byId.get(w.id)!;
             return (
-              <li key={w.id} className="border-t border-midnight/20 py-7">
+              <li key={w.id} className="gs-card border-t border-midnight/20 py-7">
                 <p className="t-ui text-ink-soft">{toBanglaDigits(yearSpan(e))}</p>
                 <h3 className="t-h3 mt-1">{w.title}</h3>
                 <p className="t-body mt-3 text-ink-soft">{w.summary}</p>
@@ -200,7 +200,7 @@ export function Bangla() {
         </h2>
         <ol className="mt-10 grid gap-x-10 gap-y-8 md:grid-cols-2 lg:grid-cols-3">
           {b.approach.map((a, i) => (
-            <li key={a.title} className="border-t border-midnight-rule pt-5">
+            <li key={a.title} className="gs-card border-t border-midnight-rule pt-5">
               <span aria-hidden="true" className="font-serif text-2xl text-signal">
                 {toBanglaDigits(String(i + 1).padStart(2, '0'))}
               </span>
@@ -220,7 +220,7 @@ export function Bangla() {
         </div>
         <ul className="mt-10 grid gap-x-8 gap-y-6 sm:grid-cols-2 lg:grid-cols-3">
           {team.map((p) => (
-            <li key={p.slug} className="group relative flex items-center gap-4">
+            <li key={p.slug} className="gs-card group relative flex items-center gap-4">
               <PersonPortrait person={p} size="md" />
               <div>
                 <p className="font-serif text-lg leading-snug" lang="en">

@@ -17,7 +17,7 @@ export function InsightRow({ item, tone = 'paper' }: { item: Insight; tone?: 'pa
   const mute = tone === 'night' ? 'text-mist' : 'text-ink-soft';
   const link = tone === 'night' ? 'text-ivory' : 'text-teal-deep';
   return (
-    <li className={`grid gap-x-8 gap-y-2 border-b py-7 md:grid-cols-12 ${tone === 'night' ? 'border-midnight-rule' : 'border-midnight/20'}`}>
+    <li className={`gs-card grid gap-x-8 gap-y-2 border-b py-7 md:grid-cols-12 ${tone === 'night' ? 'border-midnight-rule' : 'border-midnight/20'}`}>
       <p className={`t-ui md:col-span-2 ${mute}`}>
         {item.year}
         <span className="block">{item.kind}</span>

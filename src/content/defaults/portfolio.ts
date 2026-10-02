@@ -210,6 +210,7 @@ export const portfolio: Engagement[] = [
     ],
     links: [],
     photo: 'rmg-floor',
+    video: '/video/garment-loop.mp4',
     services: ['climate-esg', 'program-survey-design', 'macro-sector-policy'],
     sectors: ['climate-energy', 'private-sector'],
     note: 'Source: EU CV (400 firms, 120 KIIs, 8 FGDs; the old site said 7 FGDs, corrected from the CV).',

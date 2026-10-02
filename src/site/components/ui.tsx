@@ -53,17 +53,21 @@ interface PageHeroProps {
 export function PageHero({ title, lead, trail, anchor = 'center', children, titleId = 'page-title' }: PageHeroProps) {
   const style: CSSProperties = { backgroundImage: 'url(/contours.svg)', backgroundSize: 'cover', backgroundPosition: anchor };
   return (
-    <header className="relative isolate overflow-hidden bg-midnight text-ivory" style={{ paddingTop: 'var(--header-h)' }}>
+    <header className="page-hero relative isolate overflow-hidden bg-midnight text-ivory" style={{ paddingTop: 'var(--header-h)' }}>
       <div aria-hidden="true" className="absolute inset-0 -z-10 opacity-60" style={style} />
       <div aria-hidden="true" className="absolute inset-0 -z-10 bg-gradient-to-r from-midnight via-midnight/80 to-midnight/20" />
       <div aria-hidden="true" className="absolute inset-x-0 bottom-0 -z-10 h-24 bg-gradient-to-t from-midnight to-transparent" />
       <div className="wrap py-[clamp(3rem,8vw,6.5rem)]">
-        {trail ? <Breadcrumbs trail={trail} /> : null}
-        <h1 id={titleId} className="t-display mt-6 max-w-[18ch]">
+        {trail ? (
+          <div className="page-hero__item">
+            <Breadcrumbs trail={trail} />
+          </div>
+        ) : null}
+        <h1 id={titleId} className="page-hero__item t-display mt-6 max-w-[18ch]">
           {title}
         </h1>
-        {lead ? <p className="t-lead mt-6 max-w-[40rem] text-ivory/90">{lead}</p> : null}
-        {children ? <div className="mt-8">{children}</div> : null}
+        {lead ? <p className="page-hero__item t-lead mt-6 max-w-[40rem] text-ivory/90">{lead}</p> : null}
+        {children ? <div className="page-hero__item mt-8">{children}</div> : null}
       </div>
     </header>
   );
@@ -94,7 +98,7 @@ export function Band({ tone = 'paper', id, labelledBy, className = '', children,
 
 export function SectionHead({ id, title, lead, className = '' }: { id?: string; title: string; lead?: string; className?: string }) {
   return (
-    <div className={`max-w-[44rem] ${className}`}>
+    <div className={`gs-reveal max-w-[44rem] ${className}`}>
       <h2 id={id} className="t-h2">
         {title}
       </h2>
@@ -152,7 +156,7 @@ export function LinkCard({
   return (
     <Link
       to={to}
-      className={`group relative flex h-full flex-col rounded-sm border border-midnight/15 bg-ivory p-6 no-underline transition-colors hover:border-teal-deep hover:bg-white sm:p-7 ${className}`}
+      className={`gs-card group relative flex h-full flex-col rounded-sm border border-midnight/15 bg-ivory p-6 no-underline transition-colors hover:border-teal-deep hover:bg-white sm:p-7 ${className}`}
     >
       {meta ? <span className="t-ui text-ink-soft">{meta}</span> : null}
       <span className="t-h3 mt-1 text-midnight group-hover:text-teal-deep">{title}</span>

@@ -58,7 +58,7 @@ export function WorkList({ work }: { work: Engagement[] }) {
         {shown.map((e) => {
           const meta = [isTbc(e.client) ? '' : e.client, isTbc(e.place) ? '' : e.place].filter(Boolean);
           return (
-            <li key={e.id} className="border-b border-midnight/20">
+            <li key={e.id} className="gs-card border-b border-midnight/20">
               <Link to={`/work/${e.id}`} className="group grid gap-x-8 gap-y-2 py-7 no-underline md:grid-cols-12">
                 <span className="t-ui text-ink-soft md:col-span-2">{yearSpan(e)}</span>
                 <span className="md:col-span-7">

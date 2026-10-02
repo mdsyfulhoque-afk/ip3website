@@ -94,6 +94,18 @@ export interface HomeContent {
   workHeading: string;
   workSub: string;
   closing: { heading: string; sub: string; cta: Link };
+  /** The brand film band under the 3D story. */
+  film: { kicker: string; heading: string; lead: string; video: string; poster: string };
+  /** The Policy Intelligence Terminal showcase: one beat per screen, in scroll order. */
+  terminal: {
+    kicker: string;
+    heading: string;
+    lead: string;
+    beats: { title: string; text: string; points: string[]; photo: string }[];
+    /** Steps on the pipeline rail under the screens. */
+    pipeline: string[];
+    cta: Link;
+  };
 }
 
 /* ------------------------------ domains (3) ------------------------------- */
@@ -218,6 +230,8 @@ export interface Engagement {
   links: Link[];
   /** Optional photo key from src/content/photos.ts. */
   photo: string;
+  /** Optional silent film for the case story (a file in public/video, with a -poster.webp beside it). */
+  video?: string;
   services: string[];
   sectors: string[];
   /** Reviewer note shown only in the editor. */

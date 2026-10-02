@@ -32,4 +32,4 @@ export function toneStyle(tone: BandTone): ToneStyle {
 }
 
 /** Section heading for inner pages: a step below the page title, a step above the lead text. */
-export const H2 = 'font-serif text-[clamp(1.875rem,1.3rem+2.2vw,2.875rem)] font-[380] leading-[1.08] tracking-[-0.02em] text-balance';
+export const H2 = 'gs-reveal font-serif text-[clamp(1.875rem,1.3rem+2.2vw,2.875rem)] font-[380] leading-[1.08] tracking-[-0.02em] text-balance';

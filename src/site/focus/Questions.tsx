@@ -13,7 +13,7 @@ export function QuestionsRuled({ questions, tone = 'paper', size = 'md' }: { que
   return (
     <ul className={`border-t ${rule(tone)}`}>
       {questions.map((q) => (
-        <li key={q} className={`border-b ${rule(tone)} py-6 md:py-8`}>
+        <li key={q} className={`gs-card border-b ${rule(tone)} py-6 md:py-8`}>
           <p className={size === 'lg' ? pullLg : pullMd}>{q}</p>
         </li>
       ))}
@@ -27,7 +27,7 @@ export function QuestionsColumns({ questions }: { questions: string[] }) {
   return (
     <ul className={`grid gap-x-12 gap-y-10 ${cols}`}>
       {questions.map((q) => (
-        <li key={q} className="border-t-2 border-teal-deep pt-5">
+        <li key={q} className="gs-card border-t-2 border-teal-deep pt-5">
           <p className={pullMd}>{q}</p>
         </li>
       ))}

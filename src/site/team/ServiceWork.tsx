@@ -13,7 +13,7 @@ export function ServiceWork({ engagements, tone }: { engagements: Engagement[]; 
       {engagements.map((e) => {
         const meta = engagementMeta(e);
         return (
-          <li key={e.id} className={`grid gap-x-8 gap-y-2 border-b py-8 md:grid-cols-12 ${t.rule}`}>
+          <li key={e.id} className={`gs-card grid gap-x-8 gap-y-2 border-b py-8 md:grid-cols-12 ${t.rule}`}>
             {meta.length ? (
               <div className={`t-ui md:col-span-3 ${t.mute}`}>
                 {meta.map((m) => (

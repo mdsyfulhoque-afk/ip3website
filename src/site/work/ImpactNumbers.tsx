@@ -70,7 +70,7 @@ export function ImpactNumbers({ figures, tone = 'night', lang = 'en' }: { figure
     <div>
       <dl ref={ref} className={`grid grid-cols-2 border-t lg:grid-cols-4 ${rule}`}>
         {items.map((it) => (
-          <div key={it.label} className={`flex flex-col-reverse justify-end gap-2 border-b py-6 pr-4 lg:border-b-0 lg:py-8 ${rule}`}>
+          <div key={it.label} className={`gs-card flex flex-col-reverse justify-end gap-2 border-b py-6 pr-4 lg:border-b-0 lg:py-8 ${rule}`}>
             <dt className={`t-ui ${mute}`}>{it.label}</dt>
             <dd className={`font-serif text-[clamp(3rem,2rem+4vw,5.5rem)] font-[340] leading-none tracking-[-0.03em] ${accent}`}>
               <Count value={it.value} run={run} lang={lang} />

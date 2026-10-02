@@ -101,7 +101,7 @@ export function ImpactMap({
   const counts = new Map(places.map((p) => [p.key, p.count]));
 
   return (
-    <div className="grid gap-10 lg:grid-cols-12 lg:gap-x-12">
+    <div data-own-motion className="grid gap-10 lg:grid-cols-12 lg:gap-x-12">
       <div className="lg:col-span-5">
         <h3 className="t-label text-signal">{t.bangladesh}</h3>
         <div className="relative mt-3" style={{ aspectRatio: '520 / 640' }}>

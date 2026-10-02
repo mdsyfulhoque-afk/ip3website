@@ -2,6 +2,7 @@ import { Link, useParams } from 'react-router-dom';
 import { isTbc, useContent, useContentStatus } from '../../content';
 import { PLACES } from '../../content/places';
 import { Seo } from '../Seo';
+import { AmbientVideo } from '../components/AmbientVideo';
 import { Photo } from '../components/Photo';
 import { Band, PageHero } from '../components/ui';
 import { HomeClosing } from '../home/HomeClosing';
@@ -71,6 +72,14 @@ export function WorkDetail() {
                 About this assignment
               </h2>
             )}
+            {e.video ? (
+              <AmbientVideo
+                src={e.video}
+                poster={e.video.replace(/\.mp4$/, '-poster.webp')}
+                label={`A short silent film for ${e.title}`}
+                className="mt-10 aspect-video overflow-hidden rounded-sm bg-midnight"
+              />
+            ) : null}
             {e.photo ? <Photo photoKey={e.photo} className="mt-10 text-ink-soft" sizes="(min-width: 1024px) 55vw, 100vw" /> : null}
           </div>
           {facts.length ? (
@@ -111,7 +120,7 @@ export function WorkDetail() {
             </div>
             <ol className="border-t border-midnight/20 lg:col-span-8">
               {e.approach.map((step, i) => (
-                <li key={step} className="grid grid-cols-[3rem_1fr] gap-x-4 border-b border-midnight/20 py-5">
+                <li key={step} className="gs-card grid grid-cols-[3rem_1fr] gap-x-4 border-b border-midnight/20 py-5">
                   <span aria-hidden="true" className="font-serif text-2xl leading-none text-teal-deep">
                     {String(i + 1).padStart(2, '0')}
                   </span>

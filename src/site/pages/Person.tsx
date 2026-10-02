@@ -176,7 +176,7 @@ export function Person() {
               </div>
               <ul className={`border-t lg:col-span-8 ${t.rule}`}>
                 {colleagues.map((c) => (
-                  <li key={c.slug} className={`group relative border-b ${t.rule}`}>
+                  <li key={c.slug} className={`gs-card group relative border-b ${t.rule}`}>
                     <div className="flex items-center gap-5 py-5">
                       <PersonPortrait person={c} size="sm" />
                       <div>

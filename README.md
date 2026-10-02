@@ -15,6 +15,8 @@ What visitors find:
 - **Insights** (`/insights`): the team's reports, journal articles and commentary, linked to the publishers.
 - **বাংলা** (`/bn`): the core story in Bangla, with the map and figures; a header switch moves between languages.
 - **Ask IP3**: an optional AI assistant (Claude) that answers questions from the site's own content.
+- **On the home page**, after the 3D story: an IP3 brand film that grows to full width as it scrolls in, and a pinned
+  GSAP walkthrough of the **Policy Intelligence Terminal** (signals, merged discussions, IP3 modules, the brief factory).
 - **Contact**: enquiries and consultation requests that the team confirms from the admin console.
 
 ## Quick start
@@ -112,6 +114,22 @@ without a redeploy.
   axe-core violations. Keyboard focus is always visible; forms have labels and announced errors.
 - The pages carry their content in the HTML, so they read without JavaScript.
 
+## Motion and films
+
+GSAP 3.15 with ScrollTrigger is loaded on demand in the browser (`src/lib/gsap.ts`), never during prerendering.
+`src/site/motion/useSiteMotion.ts` applies the shared motion language from the IP3 storytelling homepage (`ippp`) on
+every route: elements marked `gs-card` rise in batches with a slight tilt, `gs-reveal` headings rise, `gs-draw` diagrams
+draw in, and inner-page heroes settle. The home film (`HomeFilm`) and the terminal (`HomeTerminal`, a pinned stage
+driven by one scrubbed timeline, the same pattern as the portfolio site's film) run their own timelines. Content is
+always visible without JavaScript; anything already on screen is never hidden; reduced-motion visitors get static
+pages; a fail-safe clears any style a trigger fails to finish.
+
+`public/video` holds the IP3 brand reel (cut from the supplied footage, with the site's own type for the captions)
+and two loops, each as MP4 (H.264) and WebM (VP9) with a poster frame. Films play muted only while on screen, and always
+have a pause button. The ESG and Circular Economy Principles clips supplied were not used: the first is a Canva
+template with "Canva Stories" marks and purple cards outside the palette; the second is a mosaic of small clips that
+includes a green-screen tile.
+
 ## Bookings and privacy
 
 A consultation request holds its slot as *awaiting confirmation*. In the admin console, **Consultations** shows
@@ -154,6 +172,7 @@ Run `npm run check:placeholders` for the live list. In short:
 - **Titles**: Siban Shahana appears as "Asst. Prof." in the matrix and Research Fellow (BIDS) in the CV.
 - **Hidden people**: four names from the old site are not in the team pack and are hidden.
 - **Earlier work** (before 2018, or through another firm) is kept but hidden: JICA/BEZA, Global LEAP, ESMAP/ASTAE.
-- **Videos**: the chairman's video slot and the focus-page videos appear once a video is uploaded in the editor.
-  Add captions when you do.
+- **Videos**: the chairman's video slot appears once a video is uploaded in the editor. The Education and the
+  Institutions focus pages still point to videos on the old site (`ip3-bd.org/wp-content/...`); upload them in the
+  editor before the domain moves to this site, or those two links will stop working. Add captions to any film with speech.
 - **Photos of fieldwork** that show survey respondents or factory workers are not used until consent is recorded.

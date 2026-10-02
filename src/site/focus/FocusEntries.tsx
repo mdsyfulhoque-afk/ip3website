@@ -66,7 +66,7 @@ function Columns({ domain, tone }: { domain: Domain; tone: EntryTone }) {
           <h3 className={`t-label mt-12 lg:mt-16 ${night ? 'text-signal' : 'text-teal-deep'}`}>{QUESTIONS}</h3>
           <ul className="mt-5 grid gap-x-14 gap-y-9 md:grid-cols-2">
             {domain.questions.map((q) => (
-              <li key={q} className={`border-t-2 pt-5 ${night ? 'border-signal' : 'border-teal-deep'}`}>
+              <li key={q} className={`gs-card border-t-2 pt-5 ${night ? 'border-signal' : 'border-teal-deep'}`}>
                 <p className={pullMd}>{q}</p>
               </li>
             ))}
@@ -103,7 +103,7 @@ function Lead({ domain, tone }: { domain: Domain; tone: EntryTone }) {
               <p className="t-scene">{first}</p>
             </li>
             {rest.map((q) => (
-              <li key={q} className={`border-t py-5 lg:col-span-5 lg:col-start-8 ${rule}`}>
+              <li key={q} className={`gs-card border-t py-5 lg:col-span-5 lg:col-start-8 ${rule}`}>
                 <p className={pullSm}>{q}</p>
               </li>
             ))}

@@ -23,7 +23,7 @@ export function HomeCapabilities() {
         <SectionHead id="what-we-do-title" title={home.capabilitiesHeading} lead={home.capabilitiesSub} />
         <ul className="mt-12 border-t border-midnight/20 lg:mt-16">
           {capabilities.map((c, i) => (
-            <li key={c.slug} id={`capability-${c.slug}`} className="border-b border-midnight/20">
+            <li key={c.slug} id={`capability-${c.slug}`} className="gs-card border-b border-midnight/20">
               <details className="group" open={i === 0}>
                 <summary className="grid cursor-pointer gap-2 py-7 pr-1 md:grid-cols-12 md:gap-6 md:py-9">
                   <span className="t-label text-teal-deep md:col-span-2 md:pt-2">{c.label}</span>

@@ -6,12 +6,20 @@ import { AskIP3 } from './site/components/AskIP3';
 import { Footer } from './site/components/Footer';
 import { Header } from './site/components/Header';
 import { ScrollManager } from './site/components/ScrollManager';
+import { useSiteMotion } from './site/motion/useSiteMotion';
+
+/** Runs the shared GSAP language on every route (client only, skipped for reduced motion). */
+function SiteMotion() {
+  useSiteMotion();
+  return null;
+}
 
 export default function App({ content }: { content?: SiteContent }) {
   return (
     <ContentProvider initial={content}>
       <MotionProvider>
         <ScrollManager />
+        <SiteMotion />
         <a
           href="#main"
           className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-full focus:bg-ivory focus:px-5 focus:py-3 focus:text-midnight"

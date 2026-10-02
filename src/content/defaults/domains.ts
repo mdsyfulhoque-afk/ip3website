@@ -63,7 +63,8 @@ export const domains: Domain[] = [
     ],
     sectors: ['climate-energy', 'private-sector', 'cities-municipal-finance'],
     services: ['climate-esg', 'economic-assessment'],
-    video: 'https://ip3-bd.org/wp-content/uploads/2025/02/Green-Economies.mp4',
+    // Climate, research, data and technology: wind, solar and climate data explored on a touchscreen.
+    video: '/video/climate-data.mp4',
   },
   {
     slug: 'education-capacity',

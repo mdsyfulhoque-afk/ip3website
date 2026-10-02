@@ -22,7 +22,7 @@ export function HomeWork() {
           {shown.map((e) => {
             const meta = [isTbc(e.client) ? '' : e.client, yearSpan(e)].filter(Boolean);
             return (
-              <li key={e.id} className="border-t border-midnight/20">
+              <li key={e.id} className="gs-card border-t border-midnight/20">
                 <Link to={`/work/${e.id}`} className="group block py-7 no-underline">
                   {meta.length ? <span className="t-ui block text-ink-soft">{meta.join(' · ')}</span> : null}
                   <span className="t-h3 mt-1 block text-midnight group-hover:text-teal-deep">{e.title}</span>
