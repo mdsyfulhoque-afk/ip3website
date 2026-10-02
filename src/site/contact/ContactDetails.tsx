@@ -1,4 +1,4 @@
-import { isTbc, useContent } from '../../content';
+import { isTbc, phoneNumbers, useContent } from '../../content';
 import { DetailRow as Row } from './shared';
 
 const linkClass = 'text-teal-deep underline underline-offset-4';
@@ -13,7 +13,7 @@ export function ContactDetails() {
   const mapHref = has(contact.mapQuery)
     ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(contact.mapQuery)}`
     : null;
-  const tel = has(contact.phone) ? contact.phone.replace(/[^\d+]/g, '') : '';
+  const phones = phoneNumbers(contact.phone);
 
   return (
     <aside aria-labelledby="contact-details-title" className="lg:sticky lg:top-28">
@@ -28,11 +28,17 @@ export function ContactDetails() {
             </a>
           </Row>
         ) : null}
-        {tel ? (
+        {phones.length > 0 ? (
           <Row label="Phone">
-            <a href={`tel:${tel}`} className={`${linkClass} inline-flex min-h-11 items-center`}>
-              {contact.phone}
-            </a>
+            <ul className="grid">
+              {phones.map((p) => (
+                <li key={p.tel}>
+                  <a href={`tel:${p.tel}`} className={`${linkClass} inline-flex min-h-11 items-center`}>
+                    {p.display}
+                  </a>
+                </li>
+              ))}
+            </ul>
           </Row>
         ) : null}
         {address.length > 0 ? (

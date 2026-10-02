@@ -34,3 +34,13 @@ export function isTbc(value: string | undefined | null): boolean {
   if (!value) return true;
   return /to be confirmed|^tbc$|^n\/a$/i.test(value.trim());
 }
+
+/** The phone field may hold several numbers separated by commas or semicolons. Empty and "to be confirmed" entries are dropped. */
+export function phoneNumbers(value: string | undefined | null): { display: string; tel: string }[] {
+  return (value ?? '')
+    .split(/[,;]/)
+    .map((v) => v.trim())
+    .filter((v) => !isTbc(v))
+    .map((display) => ({ display, tel: display.replace(/[^\d+]/g, '') }))
+    .filter((p) => p.tel.length >= 6);
+}

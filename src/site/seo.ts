@@ -1,3 +1,4 @@
+import { phoneNumbers } from '../content/merge';
 import type { SiteContent } from '../content/types';
 
 export interface HeadData {
@@ -93,14 +94,18 @@ export function applyTags(tags: HeadTag[]) {
 
 export function organizationLd(content: SiteContent): Record<string, unknown> {
   const { identity, contact } = content;
+  const phones = phoneNumbers(contact.phone);
   return {
     '@context': 'https://schema.org',
     '@type': 'Organization',
     name: identity.name,
     alternateName: identity.descriptor,
     url: origin(content),
+    logo: `${origin(content)}/brand/ip3-logo.png`,
     description: identity.description,
     email: contact.email,
+    ...(phones.length ? { telephone: phones[0]!.tel } : {}),
+    ...(contact.social.length ? { sameAs: contact.social.map((s) => s.href) } : {}),
     address: {
       '@type': 'PostalAddress',
       streetAddress: contact.address[0],

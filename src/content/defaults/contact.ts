@@ -1,19 +1,20 @@
 import type { ContactInfo } from '../types';
 
 /**
- * Dhaka only. The old site mixed this with a US farm address, a US phone number and two
- * conflicting Bangladeshi numbers. The phone is left empty until the owner confirms one; the
- * page hides it while it is empty.
+ * Dhaka only. Both phone numbers and the social pages were confirmed by IP3 on 2 October 2026.
  */
 export const contact: ContactInfo = {
   heading: 'Have a difficult policy or development challenge?',
   sub: 'Tell us the question you are trying to answer. We will reply to say whether and how we can help.',
   email: 'info@ip3-bd.org',
-  phone: '',
+  phone: '+880 1974 011329, +880 1914 011329',
   address: ['Zenith Prime, House-39, Road-35/A', 'Gulshan-2', 'Dhaka 1212', 'Bangladesh'],
   hours: 'Sunday to Thursday, 09:00 to 18:00 (GMT+6)',
   mapQuery: 'IP3 Consulting Limited, Zenith Prime, House-39, Road-35/A, Gulshan-2, Dhaka 1212',
-  social: [],
+  social: [
+    { label: 'LinkedIn', href: 'https://www.linkedin.com/company/ip3-consulting-limited-institute-for-public-policy-practice' },
+    { label: 'Facebook', href: 'https://www.facebook.com/profile.php?id=61587162801268' },
+  ],
   consultation: {
     enabled: true,
     heading: 'Book a 45-minute conversation',

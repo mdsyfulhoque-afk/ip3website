@@ -1,29 +1,39 @@
 /**
- * Generates the favicon set from the logo mark: public/favicon.svg, favicon-32.png, apple-touch-icon.png,
- * icon-192.png, icon-512.png. The social image (og-image.png) is rendered from scripts/og-template.html;
- * see README.md for the one-line command.
+ * Generates the favicon set from IP3's logo: the large "P" is cut from public/brand/ip3-logo-reversed.png
+ * (ivory on transparent) and set on the midnight brand square. Writes public/favicon.svg, favicon-32.png,
+ * apple-touch-icon.png, icon-192.png and icon-512.png. The social image (og-image.png) is rendered from
+ * scripts/og-template.html; see README.md for the one-line command.
+ *
+ * public/brand/ip3-logo.png and ip3-logo-reversed.png were made from the supplied logo by turning its white
+ * background transparent (colour-to-alpha), keeping the green "CONSULTING" band and its white letters intact.
  */
 import { writeFileSync } from 'node:fs';
 import sharp from 'sharp';
 
-const mark = (size, pad, radius) => `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 32 32">
-  <rect width="32" height="32" rx="${radius}" fill="#0A1628"/>
-  <g transform="translate(${pad} ${pad}) scale(${(32 - pad * 2) / 32})" fill="none" stroke-width="1.9" stroke-linejoin="round" stroke-linecap="round">
-    <path d="M3 10 L16 3 L29 10 L16 17 Z" stroke="#35D6CF" fill="#35D6CF" fill-opacity="0.16"/>
-    <path d="M3 16 L16 23 L29 16" stroke="#F2EFE5"/>
-    <path d="M3 22 L16 29 L29 22" stroke="#E3A94B"/>
-  </g>
-</svg>`;
+// The "P" (with its swirl) occupies columns 0–97 of the cropped logo; column 97–101 is clear.
+const P_WIDTH = 97;
+const { height } = await sharp('public/brand/ip3-logo-reversed.png').metadata();
+const cut = await sharp('public/brand/ip3-logo-reversed.png').extract({ left: 0, top: 0, width: P_WIDTH, height }).png().toBuffer();
+const glyph = await sharp(cut).trim().png().toBuffer();
 
-writeFileSync('public/favicon.svg', mark(32, 0, 6));
-
-const png = async (file, size, pad, radius) => {
-  await sharp(Buffer.from(mark(size, pad, radius)), { density: 384 }).resize(size, size).png().toFile(file);
+const icon = async (size, pad, radius) => {
+  const inner = Math.round(size * (1 - pad * 2));
+  const p = await sharp(glyph).resize(inner, inner, { fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 0 } }).toBuffer();
+  const bg = Buffer.from(`<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}"><rect width="${size}" height="${size}" rx="${radius}" fill="#0A1628"/></svg>`);
+  return sharp(bg).composite([{ input: p, gravity: 'center' }]).png().toBuffer();
 };
 
-await png('public/favicon-32.png', 32, 0, 6);
+const write = async (file, size, pad, radius) => writeFileSync(file, await icon(size, pad, radius));
+
+await write('public/favicon-32.png', 32, 0.06, 6);
 // Apple and manifest icons are full-bleed squares: the OS applies its own mask.
-await png('public/apple-touch-icon.png', 180, 3, 0);
-await png('public/icon-192.png', 192, 3, 0);
-await png('public/icon-512.png', 512, 3, 0);
+await write('public/apple-touch-icon.png', 180, 0.14, 0);
+await write('public/icon-192.png', 192, 0.14, 0);
+await write('public/icon-512.png', 512, 0.14, 0);
+
+const svgPng = await icon(64, 0.06, 12);
+writeFileSync(
+  'public/favicon.svg',
+  `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 64 64"><image width="64" height="64" href="data:image/png;base64,${svgPng.toString('base64')}"/></svg>\n`,
+);
 console.log('icons written');

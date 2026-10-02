@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
-import { useContent } from '../../content';
-import { LogoMark } from './LogoMark';
+import { phoneNumbers, useContent } from '../../content';
+import { Logo } from './LogoMark';
 
 export function Footer() {
   const { identity, contact, domains, services } = useContent();
@@ -14,13 +14,9 @@ export function Footer() {
       <div className="wrap grid gap-10 py-14 md:grid-cols-12">
         <div className="md:col-span-4">
           <Link to="/" className="inline-flex items-center gap-3 no-underline" aria-label={`${identity.name}, home`}>
-            <LogoMark className="h-9 w-9" />
-            <span className="flex flex-col leading-none">
-              <span className="font-serif text-2xl font-semibold tracking-tight">{identity.shortName}</span>
-              <span className="t-label mt-1 font-medium text-mist">{identity.descriptor}</span>
-            </span>
+            <Logo className="h-20 w-auto" />
           </Link>
-          <p className="t-ui mt-5 max-w-[26rem] text-mist">Independent policy analysis, action research and management consulting.</p>
+          <p className="t-ui mt-5 max-w-[26rem] text-mist">{identity.name}, {identity.descriptor}. Independent policy analysis, action research and management consulting.</p>
           <address className="t-ui mt-6 not-italic text-ivory/90">
             {contact.address.map((line) => (
               <span key={line} className="block">
@@ -82,12 +78,20 @@ export function Footer() {
               {contact.email}
             </a>
           </p>
+          {phoneNumbers(contact.phone).map((p) => (
+            <p key={p.tel} className="t-ui mt-1">
+              <a href={`tel:${p.tel}`} className="text-ivory underline underline-offset-4">
+                {p.display}
+              </a>
+            </p>
+          ))}
           {contact.social.length > 0 ? (
             <ul className="mt-2 flex flex-wrap gap-x-5">
               {contact.social.map((s) => (
                 <li key={s.href}>
-                  <a href={s.href} rel="noopener noreferrer" className="t-ui text-ivory underline underline-offset-4">
+                  <a href={s.href} target="_blank" rel="noopener noreferrer" className="t-ui inline-flex min-h-11 items-center text-ivory underline underline-offset-4">
                     {s.label}
+                    <span className="sr-only"> (opens in a new tab)</span>
                   </a>
                 </li>
               ))}

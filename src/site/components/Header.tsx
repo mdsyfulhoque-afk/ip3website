@@ -3,7 +3,7 @@ import { Link, NavLink, useLocation } from 'react-router-dom';
 import { useContent } from '../../content';
 import { useMotion } from '../../lib/motion';
 import { CTA, NAV } from '../nav';
-import { LogoMark } from './LogoMark';
+import { Logo } from './LogoMark';
 
 export function Header() {
   const { identity } = useContent();
@@ -68,11 +68,7 @@ export function Header() {
     >
       <div className="wrap flex h-full items-center justify-between gap-4">
         <Link to="/" className="flex min-h-11 items-center gap-3 no-underline" aria-label={`${identity.name}, home`}>
-          <LogoMark className="h-8 w-8 shrink-0" />
-          <span className="flex flex-col leading-none">
-            <span className="font-serif text-[1.375rem] font-semibold tracking-tight text-ivory">{identity.shortName}</span>
-            <span className="t-label mt-1 hidden text-[0.75rem] font-medium text-mist xl:block">{identity.descriptor}</span>
-          </span>
+          <Logo className="h-12 w-auto shrink-0" />
         </Link>
 
         <nav aria-label="Primary" className="hidden lg:block">

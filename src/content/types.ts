@@ -41,7 +41,7 @@ export interface ContactInfo {
   heading: string;
   sub: string;
   email: string;
-  /** Leave empty to hide. Two different numbers existed in the old site; the owner must confirm one. */
+  /** One or more numbers separated by commas, e.g. "+880 1974 011329, +880 1914 011329". Leave empty to hide. */
   phone: string;
   address: string[];
   hours: string;
