@@ -75,15 +75,17 @@ export const about: AboutContent = {
     'Our mission is to help governments, development partners, businesses, institutions and communities solve complex policy and management challenges by connecting rigorous evidence with practical implementation. We develop solutions that are grounded in context and built to last beyond the life of an assignment.',
   chairman: {
     name: 'Mohammad Syful Hoque',
-    role: 'Executive Chairman & Lead Policy Architect',
+    role: 'Founding Director & Executive Chairman',
     quote: 'Do not simplify the problem until you understand the system.',
     summary:
       'Economic policy and sustainability transformation expert, with a focus on climate solutions, ESG and the circular economy.',
     partners: [],
+    video: '',
+    poster: '',
   },
   worksWith: {
     heading: 'Institutions we have worked with',
     names: ['World Bank', 'Asian Development Bank', 'European Commission', 'Sida'],
-    note: 'Other clients are not listed.',
+    note: 'IP3 confirmed in October 2026 that these four may be named. Other clients appear on the work pages where the assignment names them.',
   },
 };

@@ -23,13 +23,13 @@ export function People() {
       <Seo title="People" description={description} path="/people" />
       <PageHero
         title="People"
-        lead="The institute's leadership and specialists, grouped by the field they practise in."
+        lead="The institute's founding directors, advisors, practice leads and affiliated research scholars."
         trail={[{ label: 'Home', to: '/' }, { label: 'People' }]}
         anchor="center"
       />
       {showNote ? (
         <Band tone="stone" labelledBy="chairman-title">
-          <ChairmanNote chairman={chair} profileTo={chairProfile ? `/people/${chairProfile.slug}` : undefined} />
+          <ChairmanNote chairman={chair} profileTo={chairProfile ? `/people/${chairProfile.slug}` : undefined} portrait={chairProfile?.portrait ?? ''} />
         </Band>
       ) : null}
       {groups.length > 0 ? (

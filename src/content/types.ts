@@ -230,15 +230,23 @@ export interface Person {
   slug: string;
   name: string;
   role: string;
-  /** leadership, economics, education, law, climate, data */
+  /** leadership, advisors, practice, scholars (older entries may use economics, education, law, climate, data) */
   group: string;
   /** Domains of practice as short labels. */
   practice: string[];
   /** Short factual line. No credentials unless confirmed. */
   summary: string;
-  /** Optional portrait URL (Cloudinary). Empty = monogram. */
+  /** Current post outside IP3, if any. */
+  affiliation: string;
+  /** Profile paragraphs, taken from the person's CV. */
+  bio: string[];
+  /** Degrees, most recent first. */
+  education: string[];
+  /** Portrait URL: a file in public/people or an uploaded image. Empty = monogram. */
   portrait: string;
   status: Status;
+  /** Reviewer note shown only in the editor. */
+  note: string;
 }
 
 /* -------------------------------- about etc. ------------------------------ */
@@ -254,7 +262,17 @@ export interface AboutContent {
   vision: string;
   mission: string;
   /** Short note for the chairman, shown on the About and People pages. */
-  chairman: { name: string; role: string; quote: string; summary: string; partners: string[] };
+  chairman: {
+    name: string;
+    role: string;
+    quote: string;
+    summary: string;
+    partners: string[];
+    /** A short video message (upload in the editor). Empty = the note shows without video. */
+    video: string;
+    /** Optional poster frame for the video. */
+    poster: string;
+  };
   /** Organisations IP3 has confirmed it may name as having worked with. */
   worksWith: { heading: string; names: string[]; note: string };
 }

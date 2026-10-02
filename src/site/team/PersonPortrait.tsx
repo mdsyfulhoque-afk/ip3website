@@ -11,8 +11,13 @@ const PX = { sm: 40, md: 64, lg: 112 } as const;
 const DIMS = { sm: 'h-10 w-10', md: 'h-16 w-16', lg: 'h-28 w-28' } as const;
 
 /** List-sized portrait: the supplied photograph if there is one, otherwise the shared monogram. Decorative, because the name sits beside it. */
+/** Portraits in public/people come in 160 and 480 px; lists use the small file. Uploaded URLs are used as given. */
+export function smallPortrait(url: string): string {
+  return /^\/people\/.+-480\.webp$/.test(url) ? url.replace(/-480\.webp$/, '-160.webp') : url;
+}
+
 export function PersonPortrait({ person, size = 'md' }: { person: Subject; size?: 'sm' | 'md' | 'lg' }) {
-  const url = person.portrait.trim();
+  const url = size === 'lg' ? person.portrait.trim() : smallPortrait(person.portrait.trim());
   if (url) {
     return (
       <img

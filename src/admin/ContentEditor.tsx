@@ -33,7 +33,7 @@ const SECTIONS: { key: keyof SiteContent; label: string; hint: string }[] = [
   { key: 'legal', label: 'Privacy page', hint: 'Plain-language description of what the site collects.' },
 ];
 
-const LONG_KEYS = new Set(['text', 'summary', 'sub', 'lead', 'quote', 'note', 'description', 'need', 'audience', 'support', 'intro', 'body', 'vision', 'mission', 'change', 'shown']);
+const LONG_KEYS = new Set(['text', 'summary', 'sub', 'lead', 'quote', 'note', 'description', 'need', 'audience', 'support', 'intro', 'body', 'vision', 'mission', 'change', 'shown', 'bio', 'challenge', 'approach']);
 const IMAGE_KEYS = /^(portrait|image|photo|video|poster)$/i;
 const STATUS = ['published', 'verify', 'placeholder'];
 

@@ -64,6 +64,12 @@ export function Person() {
             </div>
             <div className="lg:col-span-8 xl:col-span-7">
               {person.summary ? <p className="font-serif text-[clamp(1.5rem,1.1rem+1.7vw,2.375rem)] font-[350] leading-[1.25] tracking-[-0.012em] text-pretty">{person.summary}</p> : null}
+              {person.affiliation ? <p className={`t-ui mt-5 font-semibold ${t.accent}`}>{person.affiliation}</p> : null}
+              {person.bio?.map((para) => (
+                <p key={para} className="t-body mt-6">
+                  {para}
+                </p>
+              ))}
               {chairSummary ? <p className="t-body mt-6">{chairSummary}</p> : null}
               {chair?.quote ? (
                 <figure className="mt-12 border-l-2 border-teal-deep pl-6">
@@ -80,6 +86,19 @@ export function Person() {
                     {person.practice.map((p) => (
                       <li key={p}>
                         <Tag>{p}</Tag>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ) : null}
+              {person.education?.length ? (
+                <div className={`mt-12 border-t pt-8 ${t.rule}`}>
+                  <h2 className="t-h3">Education</h2>
+                  <ul className="mt-4 grid gap-2">
+                    {person.education.map((d) => (
+                      <li key={d} className="t-ui flex gap-3">
+                        <span aria-hidden="true" className="mt-[0.6em] h-1.5 w-1.5 shrink-0 rounded-full bg-teal-deep" />
+                        <span>{d}</span>
                       </li>
                     ))}
                   </ul>
@@ -176,7 +195,8 @@ export function Person() {
             name: person.name,
             jobTitle: person.role,
             url: `${origin(content)}${path}`,
-            ...(person.portrait.trim() ? { image: person.portrait.trim() } : {}),
+            ...(person.portrait.trim() ? { image: person.portrait.trim().startsWith('/') ? `${origin(content)}${person.portrait.trim()}` : person.portrait.trim() } : {}),
+            ...(person.affiliation ? { affiliation: person.affiliation } : {}),
             ...(person.practice.length ? { knowsAbout: person.practice } : {}),
             worksFor: { '@type': 'Organization', name: identity.name, url: origin(content) },
           },

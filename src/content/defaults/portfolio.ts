@@ -180,7 +180,7 @@ export const portfolio: Engagement[] = [
     services: ['economic-assessment'],
     sectors: ['education-skills'],
     note:
-      'Source: CV, FORM TECH-6 and EU CV. The EU CV names Prof. Dr. M A Mannan (IP3 Senior Consulting Advisor) as team leader of the NSEP feasibility study.',
+      'Source: CV, FORM TECH-6 and EU CV. The EU CV names Professor Dr. M A Mannan (former Vice Chancellor, Bangladesh Open University) as team leader of the NSEP feasibility study.',
   },
   {
     id: 'green-industrial-transition-rmg',

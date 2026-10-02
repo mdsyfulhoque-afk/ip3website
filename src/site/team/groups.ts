@@ -1,7 +1,10 @@
 import type { Person } from '../../content';
 
 const LABELS: Record<string, string> = {
-  leadership: 'Leadership',
+  leadership: 'Founding directors',
+  advisors: 'Advisors',
+  practice: 'Practice area leads',
+  scholars: 'Affiliated research scholars',
   economics: 'Economics',
   education: 'Education',
   law: 'Law',

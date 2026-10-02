@@ -1,5 +1,6 @@
 import type { CSSProperties, ElementType, ReactNode } from 'react';
 import { Link } from 'react-router-dom';
+import { initialsOf } from '../team/initials';
 
 /** Shared building blocks for every inner page, so they read as one site. */
 
@@ -181,14 +182,7 @@ export function Dots({ items, tone = 'paper' }: { items: string[]; tone?: 'paper
 
 /** A circular monogram used instead of stock portraits. */
 export function Monogram({ name, size = 'md' }: { name: string; size?: 'sm' | 'md' | 'lg' }) {
-  const initials = name
-    .replace(/^(Prof\.|Dr\.|Adj\.|Barr\.|Barrister|Md\.)\s*/gi, '')
-    .replace(/^(Prof\.|Dr\.|Adj\.|Barr\.|Barrister|Md\.)\s*/gi, '')
-    .split(/\s+/)
-    .filter(Boolean)
-    .map((w) => w[0]!.toUpperCase())
-    .slice(0, 2)
-    .join('');
+  const initials = initialsOf(name);
   const dims = size === 'lg' ? 'h-28 w-28 text-4xl' : size === 'sm' ? 'h-10 w-10 text-base' : 'h-16 w-16 text-2xl';
   return (
     <span

@@ -1,9 +1,12 @@
 import { isTbc, type AboutContent, type Person } from '../../content';
-import { Monogram, TextLink } from '../components/ui';
+import { TextLink } from '../components/ui';
+import { ChairmanVideo } from '../team/ChairmanVideo';
+import { PersonPortrait } from '../team/PersonPortrait';
 
 /**
- * The chairman as a calm reading section: monogram (no photo), name and role, then the quote (only when
- * there is a real one) and the summary. Anything empty or "to be confirmed" is left out.
+ * The chairman as a calm reading section: portrait (or monogram), name and role, then the quote (only when
+ * there is a real one), the summary and the video message once one is uploaded. Anything empty or
+ * "to be confirmed" is left out.
  */
 export function Chairman({ chairman, people }: { chairman: AboutContent['chairman']; people: Person[] }) {
   if (isTbc(chairman.name)) return null;
@@ -21,7 +24,7 @@ export function Chairman({ chairman, people }: { chairman: AboutContent['chairma
         </h2>
         <div className="mt-12 grid gap-10 border-t border-midnight/20 pt-10 lg:mt-16 lg:grid-cols-12 lg:gap-14 lg:pt-14">
           <div className="flex items-center gap-5 lg:col-span-4 lg:flex-col lg:items-start">
-            <Monogram name={chairman.name} size="lg" />
+            <PersonPortrait person={{ name: chairman.name, portrait: profile?.portrait ?? '' }} size="lg" />
             <div>
               <h3 className="t-h3">{chairman.name}</h3>
               {role ? <p className="t-ui mt-1 text-ink-soft">{role}</p> : null}
@@ -38,6 +41,7 @@ export function Chairman({ chairman, people }: { chairman: AboutContent['chairma
               </blockquote>
             ) : null}
             {summary ? <p className={`t-body ${quote ? 'mt-8' : ''}`}>{summary}</p> : null}
+            <ChairmanVideo chairman={chairman} className="mt-10 max-w-[44rem]" />
             {partners.length ? (
               <div className="mt-8">
                 <p className="t-label text-teal-deep">Partners</p>
